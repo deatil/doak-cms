@@ -1,0 +1,85 @@
+{{extends "/admin/common/base_content"}}
+
+{{block title()}}分类管理 - Doak CMS{{end}}
+
+{{block body()}}
+
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-sm-12 col-xl-12">
+        
+            <div class="bg-light rounded h-100 p-4">
+                <h6 class="mb-4">分类管理</h6>
+                
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">First Name</th>
+                                <th scope="col">Last Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Country</th>
+                                <th scope="col">ZIP</th>
+                                <th scope="col">Status</th>
+                            </tr>
+                        </thead>
+                        
+                        <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>John</td>
+                                <td>Doe</td>
+                                <td><a href="email-protection.html" class="__cf_email__" data-cfemail="1973717677597c74787075377a7674">[email&#160;protected]</a></td>
+                                <td>USA</td>
+                                <td>123</td>
+                                <td>Member</td>
+                            </tr>
+                            
+                            <tr>
+                            <th scope="row">2</th>
+                            <td>Mark</td>
+                            <td>Otto</td>
+                            <td><a href="email-protection.html" class="__cf_email__" data-cfemail="d1bcb0a3ba91b4bcb0b8bdffb2bebc">[email&#160;protected]</a></td>
+                            <td>UK</td>
+                            <td>456</td>
+                            <td>Member</td>
+                            </tr>
+                            <tr>
+                            <th scope="row">3</th>
+                            <td>Jacob</td>
+                            <td>Thornton</td>
+                            <td><a href="email-protection.html" class="__cf_email__" data-cfemail="81ebe0e2eee3c1e4ece0e8edafe2eeec">[email&#160;protected]</a></td>
+                            <td>AU</td>
+                            <td>789</td>
+                            <td>Member</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <nav aria-label="Page navigation example">
+                  <ul class="pagination">
+                    <li class="page-item disabled">
+                      <a class="page-link" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                      </a>
+                    </li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item">
+                      <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                      </a>
+                    </li>
+                  </ul>
+                </nav>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{{end}}

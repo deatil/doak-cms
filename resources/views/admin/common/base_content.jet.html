@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>{{block title()}}Doak CMS{{end}}</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="{{block title()}}Doak CMS{{end}}" name="keywords">
+    <meta content="{{block title()}}Doak CMS{{end}}" name="description">
+
+    {{block link_before()}}{{end}}
+    {{block link()}}
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+    <link href="/static/admin/css/css2.css" rel="stylesheet">
+
+    <link href="/static/admin/css/all.min.css" rel="stylesheet">
+    <link href="/static/admin/css/bootstrap-icons.css" rel="stylesheet">
+
+    <link href="/static/admin/css/owl.carousel.min.css" rel="stylesheet">
+    <link href="/static/admin/css/tempusdominus-bootstrap-4.min.css" rel="stylesheet">
+
+    <link href="/static/admin/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="/static/admin/css/style.css" rel="stylesheet">
+    {{end}}
+    {{block link_after()}}{{end}}
+
+</head>
+
+<body>
+    <div class="container-fluid position-relative bg-white d-flex p-0">
+        <div id="spinner" class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+                <span class="sr-only">加载中...</span>
+            </div>
+        </div>
+        
+        {{include "/admin/common/sidebar"}}
+        
+        <div class="content">
+
+            {{include "/admin/common/topnav"}}
+            
+            {{block body()}}{{end}}
+            
+            {{include "/admin/common/footer"}}
+        </div>
+        
+        {{include "/admin/common/totop"}}
+    </div>
+
+    {{block script_before()}}{{end}}
+    {{block script()}}
+    <script src="/static/admin/js/jquery-3.4.1.min.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
+    <script src="/static/admin/js/bootstrap.bundle.min.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
+    <script src="/static/admin/js/chart.min.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
+    <script src="/static/admin/js/easing.min.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
+    <script src="/static/admin/js/waypoints.min.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
+    <script src="/static/admin/js/owl.carousel.min.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
+    <script src="/static/admin/js/moment.min.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
+    <script src="/static/admin/js/moment-timezone.min.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
+    <script src="/static/admin/js/tempusdominus-bootstrap-4.min.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
+    <script src="/static/admin/js/layer/layer.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
+
+    <script src="/static/admin/js/main.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
+    <script src="/static/admin/js/rocket-loader.min.js" data-cf-settings="3029259e35d7bc1c98cd40a8-|49" defer=""></script>
+
+    <script src="/static/admin/js/app/app.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
+    {{end}}
+    {{block script_after()}}{{end}}
+</body>
+</html>

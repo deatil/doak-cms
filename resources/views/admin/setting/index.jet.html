@@ -1,0 +1,170 @@
+{{extends "/admin/common/base_content"}}
+
+{{block title()}}网站设置 - Doak CMS{{end}}
+
+{{block body()}}
+
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-sm-12 col-xl-12">
+            <div class="bg-light rounded h-100 p-4">
+                <h6 class="mb-4">网站设置</h6>
+                
+                <form class="setting-form">
+                    <div class="mb-3">
+                        <label for="inputWebsiteName" 
+                            class="form-label">网站名称</label>
+                        <input type="text" 
+                            name="website_name"
+                            value="{{ settings.website_name }}" 
+                            class="form-control" 
+                            id="inputWebsiteName" 
+                            aria-describedby="websiteNameHelp">
+                        <div id="websiteNameHelp" class="form-text">
+                            网站的名称
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="inputWebsiteKeywords" 
+                            class="form-label">网站关键字</label>
+                        <input type="text" 
+                            name="website_keywords" 
+                            value="{{ settings.website_keywords }}" 
+                            class="form-control" 
+                            id="inputWebsiteKeywords" 
+                            aria-describedby="websiteKeywordsHelp">
+                        <div id="websiteKeywordsHelp" class="form-text">
+                            网站的关键字
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="websiteDescriptionTextarea" 
+                            class="form-label">网站描述</label>
+                        <textarea class="form-control" 
+                            name="website_description"
+                            placeholder="网站描述" 
+                            id="websiteDescriptionTextarea" 
+                            style="height: 150px;"
+                            aria-describedby="websiteDescriptionHelp">{{ settings.website_description }}</textarea>
+                        <div id="websiteDescriptionHelp" class="form-text">
+                            网站的描述
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="inputWebsiteCopyright" 
+                            class="form-label">版权</label>
+                        <input type="text" 
+                            name="website_copyright" 
+                            value="{{ settings.website_copyright }}" 
+                            class="form-control" 
+                            id="inputWebsiteCopyright" 
+                            aria-describedby="websiteCopyrightHelp">
+                        <div id="websiteCopyrightHelp" class="form-text">
+                            网站的相关版权
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="inputWebsiteBeian" 
+                            class="form-label">网站备案</label>
+                        <input type="text" 
+                            name="website_beian" 
+                            value="{{ settings.website_beian }}" 
+                            class="form-control" 
+                            id="inputWebsiteBeian" 
+                            aria-describedby="websiteBeianHelp">
+                        <div id="websiteBeianHelp" class="form-text">
+                            网站的相关备案
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">网站状态</label>
+                        <div class="form-control">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input website-status" 
+                                    type="radio" 
+                                    name="website_status" 
+                                    {{if settings.website_status == "1" }}
+                                    checked=""
+                                    {{end}}
+                                    id="inlineRadioStatus1" 
+                                    value="1">
+                                <label class="form-check-label" 
+                                    for="inlineRadioStatus1">开启</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input website-status" 
+                                    type="radio" 
+                                    name="website_status" 
+                                    {{if settings.website_status == "2" }}
+                                    checked=""
+                                    {{end}}
+                                    id="inlineRadioStatus2" 
+                                    value="2">
+                                <label class="form-check-label" 
+                                    for="inlineRadioStatus2">关闭</label>
+                            </div>
+                        </div>
+                        <div id="websiteBeianHelp" class="form-text">
+                            网站是否开启或者关闭
+                        </div>
+                    </div>
+                    
+                    <button type="button" 
+                        class="btn btn-primary js-save-button">保存修改</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{{end}}
+
+{{block script_after()}}
+<script type="3029259e35d7bc1c98cd40a8-text/javascript">
+(function($) {
+    "use strict";
+    
+    $(".sidebar-doak-index").addClass("active");
+    
+    // 保存
+    $(".js-save-button").click(function(e) {
+        e.stopPropagation;
+        e.preventDefault;
+
+        var website_name = $("#inputWebsiteName").val();
+        var website_keywords = $("#inputWebsiteKeywords").val();
+        var website_description = $("#websiteDescriptionTextarea").val();
+        var website_copyright = $("#inputWebsiteCopyright").val();
+        var website_beian = $("#inputWebsiteBeian").val();
+        var website_status = $(".website-status:checked").val();
+
+        var url = "/sys/setting/save";
+        $.post(url, {
+            website_name: website_name,
+            website_keywords: website_keywords,
+            website_description: website_description,
+            website_copyright: website_copyright,
+            website_beian: website_beian,
+            website_status: website_status,
+        }, function(data) {
+            if (data.code == 0) {
+                layer.msg("保存成功");
+                
+                setTimeout(function() {
+                    window.location.reload();
+                }, 1500);
+            } else {
+                layer.msg(data.message);
+            }
+        });
+    });
+
+})(jQuery);
+</script>
+{{end}}
