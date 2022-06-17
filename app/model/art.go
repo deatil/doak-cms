@@ -10,6 +10,7 @@ type Art struct {
     Tags string `xorm:"varchar(250)"`
     UserId string `xorm:"int(11)"`
     From string `xorm:"varchar(200)"`
+    Status string `xorm:"tinyint(1)"`
     AddTime int64 `xorm:"created"`
     AddIp string `xorm:"varchar(50)"`
 }

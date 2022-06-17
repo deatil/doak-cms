@@ -4,76 +4,86 @@
 
 {{block body()}}
 
+<style>
+.nodata {
+    text-align: center;
+    padding: 15px;
+}
+.table tr {
+    vertical-align: middle;
+}
+</style>
 <div class="container-fluid pt-4 px-4">
     <div class="row g-4">
         <div class="col-sm-12 col-xl-12">
         
             <div class="bg-light rounded h-100 p-4">
-                <h6 class="mb-4">分类管理</h6>
+                <h6 class="mb-4">
+                    分类管理
+                    <a href="/sys/cate/add" class="ms-1" title="添加分类">
+                        <i class="fa fa-plus"></i>
+                    </a>
+                </h6>
                 
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered table-hover">
                         <thead>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">First Name</th>
-                                <th scope="col">Last Name</th>
-                                <th scope="col">Email</th>
-                                <th scope="col">Country</th>
-                                <th scope="col">ZIP</th>
-                                <th scope="col">Status</th>
+                                <th scope="col">名称</th>
+                                <th scope="col">标识</th>
+                                <th scope="col">添加时间</th>
+                                <th scope="col">状态</th>
+                                <th scope="col">操作</th>
                             </tr>
                         </thead>
                         
                         <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>John</td>
-                                <td>Doe</td>
-                                <td><a href="email-protection.html" class="__cf_email__" data-cfemail="1973717677597c74787075377a7674">[email&#160;protected]</a></td>
-                                <td>USA</td>
-                                <td>123</td>
-                                <td>Member</td>
-                            </tr>
+                            {{ range index, value := list }} 
+                                <tr>
+                                    <th scope="row">{{ value.Id }}</th>
+                                    <td>{{ value.Name }}</td>
+                                    <td>{{ value.Slug }}</td>
+                                    <td width="165">
+                                        {{ createTime(value.AddTime, "Asia/Shanghai").DateTimeString() }}
+                                    </td>
+                                    <td width="45">
+                                        {{if value.Status == "1" }}
+                                            <span class="badge bg-success">启用</span>
+                                        {{else}}
+                                            <span class="badge bg-danger">禁用</span>
+                                        {{end}}
+                                    </td>
+                                    <td width="150">
+                                        <a class="btn btn-primary btn-sm" 
+                                            href="/sys/cate/{{ value.Id }}/edit" >
+                                            编辑
+                                        </a>
+                                        
+                                        <a href="javascript:;" 
+                                            class="btn btn-danger btn-sm js-delete-btn"
+                                            data-url="/sys/cate/{{ value.Id }}/delete"
+                                        >
+                                            删除
+                                        </a>
+                                    </td>
+                                </tr>
+                            {{ else }} 
+                                <tr>
+                                    <td colspan="6">
+                                        <div class="nodata">
+                                            无数据
+                                        </div>
+                                    </td>
+                                </tr>
+                            {{ end }}
                             
-                            <tr>
-                            <th scope="row">2</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td><a href="email-protection.html" class="__cf_email__" data-cfemail="d1bcb0a3ba91b4bcb0b8bdffb2bebc">[email&#160;protected]</a></td>
-                            <td>UK</td>
-                            <td>456</td>
-                            <td>Member</td>
-                            </tr>
-                            <tr>
-                            <th scope="row">3</th>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td><a href="email-protection.html" class="__cf_email__" data-cfemail="81ebe0e2eee3c1e4ece0e8edafe2eeec">[email&#160;protected]</a></td>
-                            <td>AU</td>
-                            <td>789</td>
-                            <td>Member</td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>
                 
                 <nav aria-label="Page navigation example">
-                  <ul class="pagination">
-                    <li class="page-item disabled">
-                      <a class="page-link" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                      </a>
-                    </li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item">
-                      <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                      </a>
-                    </li>
-                  </ul>
+                    {{ pageHtml|raw }}
                 </nav>
 
             </div>
@@ -82,4 +92,43 @@
     </div>
 </div>
 
+{{end}}
+
+{{block script_after()}}
+<script type="3029259e35d7bc1c98cd40a8-text/javascript">
+(function($) {
+    "use strict";
+    
+    $(".sidebar-cate-index").addClass("active");
+    
+    // 删除
+    $('.js-delete-btn').click(function() {
+        var url = $(this).data('url');
+        
+        layer.confirm('您确定要删除该分类吗？', {
+            offset: 'c',
+            btn: ['确定', '取消']
+        }, function(index){
+            $.post(url, {}, function(data) {
+                if (data.code == 0) {
+                    layer.msg(data.message, {
+                        offset: 'c',
+                        icon: 1
+                    });
+
+                    setTimeout(function() {
+                        location.reload();
+                    }, 2000);
+                } else {
+                    layer.msg(data.message, {
+                        offset: 'c',
+                        icon: 2
+                    });
+                }
+            });
+        });
+    });
+
+})(jQuery);
+</script>
 {{end}}

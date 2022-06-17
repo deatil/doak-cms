@@ -5,6 +5,7 @@ type Tag struct {
     Id int64 `xorm:"int(11)"`
     Name string `xorm:"varchar(50)"`
     Desc string `xorm:"varchar(200)"`
+    Status string `xorm:"tinyint(1)"`
     AddTime int64 `xorm:"created"`
     AddIp string `xorm:"varchar(50)"`
 }

@@ -41,8 +41,30 @@ func Manager(typ string) *xorm.Engine {
         panic("连接数据库失败")
     }
 
+    logLevel := cfg.Key("log-level").MustString("info")
+    showSql := cfg.Key("show-sql").MustBool(false)
+
+    if showSql {
+        engine.ShowSQL(true)
+    }
+
+    // 记录等级
+    switch logLevel {
+        case "debug":
+            engine.Logger().SetLevel(log.LOG_DEBUG)
+        case "info":
+            engine.Logger().SetLevel(log.LOG_INFO)
+        case "warning":
+            engine.Logger().SetLevel(log.LOG_WARNING)
+        case "err":
+            engine.Logger().SetLevel(log.LOG_ERR)
+    }
+
+    // 日志文件
+    logFile := cfg.Key("log-file").MustString("")
+
     // 日志
-    f, err := os.Create("runtime/log/db-sql.log")
+    f, err := os.Create(logFile)
     if err != nil {
         panic(err.Error())
     }
