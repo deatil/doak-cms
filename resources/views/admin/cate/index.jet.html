@@ -12,16 +12,68 @@
 .table tr {
     vertical-align: middle;
 }
+.table thead tr {
+    background: #ebeff1;
+}
 </style>
 <div class="container-fluid pt-4 px-4">
     <div class="row g-4">
+    
+        <div class="col-sm-12 col-xl-12">
+            <div class="bg-light rounded h-100 p-4">
+                <h6 class="mb-4">条件搜索</h6>
+                
+                <form method="get">
+                    <div class="row">
+                        <div class="col-auto">
+                            <div class="input-group my-1">
+                                <span class="input-group-text" id="input-keywords">关键字</span>
+                                <input type="text" 
+                                    name="keywords"
+                                    value="{{ keywords }}"
+                                    class="form-control" 
+                                    placeholder="" 
+                                    aria-label="keywords" 
+                                    aria-describedby="input-keywords">
+                            </div>
+                        </div>
+                        
+                        <div class="col-auto">
+                            <div class="input-group my-1">
+                                <span class="input-group-text" id="input-status">状态</span>
+                                <select name="status"
+                                    class="form-select" 
+                                    aria-label="status"
+                                    aria-describedby="input-status"
+                                >
+                                    <option value="">全部</option>
+                                    <option value="1" {{if status== "1"}}selected=""{{end}}>启用</option>
+                                    <option value="0" {{if status== "0"}}selected=""{{end}}>禁用</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="col-auto">
+                            <button type="submit" 
+                                class="btn btn-primary my-1"
+                            >
+                                <i class="fa fa-search me-2"></i>
+                                搜 索
+                            </button>
+                        </div>
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
+        
         <div class="col-sm-12 col-xl-12">
         
             <div class="bg-light rounded h-100 p-4">
                 <h6 class="mb-4">
                     分类管理
                     <a href="/sys/cate/add" class="ms-1" title="添加分类">
-                        <i class="fa fa-plus"></i>
+                        <i class="fa fa-plus-circle"></i>
                     </a>
                 </h6>
                 

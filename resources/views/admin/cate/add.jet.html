@@ -10,63 +10,82 @@
             <div class="bg-light rounded h-100 p-4">
                 <h6 class="mb-4">
                     添加分类
+                    
+                    <a href="/sys/cate" class="ms-1" title="返回列表">
+                        <i class="fa fa-arrow-circle-left"></i>
+                    </a>
                 </h6>
                 
                 <form class="profile-form">
                     <div class="mb-3">
-                        <label for="inputUsername" class="form-label">登录账号</label>
+                        <label for="nameInput" class="form-label">分类名称</label>
                         <input type="text" 
-                            disabled=""
-                            value="{{ user.Username }}" 
+                            name="name" 
+                            value="" 
                             class="form-control" 
-                            id="inputUsername" 
-                            aria-describedby="usernameHelp">
-                        <div id="usernameHelp" class="form-text">
-                            管理员登录使用的账号，不能被修改
+                            id="nameInput" 
+                            aria-describedby="nameHelp">
+                        <div id="nameHelp" class="form-text">
+                            分类的名称
                         </div>
                     </div>
                     
                     <div class="mb-3">
-                        <label for="inputNickname" class="form-label">账号昵称</label>
+                        <label for="slugInput" class="form-label">分类标识</label>
                         <input type="text" 
-                            name="nickname" 
-                            value="{{ user.Nickname }}" 
+                            name="slug" 
+                            value="" 
                             class="form-control" 
-                            id="inputNickname" 
-                            aria-describedby="nicknameHelp">
-                        <div id="nicknameHelp" class="form-text">
-                            管理员账号的昵称
+                            id="slugInput" 
+                            aria-describedby="slugHelp">
+                        <div id="slugHelp" class="form-text">
+                            分类的标识
                         </div>
                     </div>
                     
                     <div class="mb-3">
-                        <label for="inputPassword" class="form-label">账号密码</label>
-                        <input type="password" 
-                            name="password"
-                            class="form-control" 
-                            id="inputPassword"
-                            autocomplete="false"
-                            aria-describedby="passwordHelp">
-                        <div id="passwordHelp" class="form-text">
-                            管理员账号的密码，为空不修改密码
-                        </div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="signTextarea" class="form-label">签名</label>
+                        <label for="descTextarea" class="form-label">分类描述</label>
                         <textarea class="form-control" 
-                            name="sign"
-                            placeholder="自定义签名" 
-                            id="signTextarea" 
+                            name="desc"
+                            placeholder="分类描述" 
+                            id="descTextarea" 
                             style="height: 150px;"
-                            aria-describedby="signHelp">{{ user.Sign }}</textarea>
-                        <div id="signHelp" class="form-text">
-                            管理员账号的自定义签名
+                            aria-describedby="descHelp"></textarea>
+                        <div id="descHelp" class="form-text">
+                            分类的描述
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">分类状态</label>
+                        <div class="form-control">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" 
+                                    type="radio" 
+                                    name="status" 
+                                    checked=""
+                                    id="inlineRadioStatus1" 
+                                    value="1">
+                                <label class="form-check-label" 
+                                    for="inlineRadioStatus1">启用</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" 
+                                    type="radio" 
+                                    name="status" 
+                                    id="inlineRadioStatus2" 
+                                    value="0">
+                                <label class="form-check-label" 
+                                    for="inlineRadioStatus2">禁用</label>
+                            </div>
+                        </div>
+                        <div id="websiteBeianHelp" class="form-text">
+                            分类是否开启或者关闭
                         </div>
                     </div>
                     
                     <button type="button" 
-                        class="btn btn-primary js-save-button">保存修改</button>
+                        class="btn btn-primary js-save-button">确认</button>
                 </form>
             </div>
 
@@ -81,25 +100,27 @@
 (function($) {
     "use strict";
     
-    $(".sidebar-doak-index").addClass("active");
+    $(".sidebar-cate-index").addClass("active");
     
     // 保存
     $(".js-save-button").click(function(e) {
         e.stopPropagation;
         e.preventDefault;
 
-        var nickname = $("#inputNickname").val();
-        var password = $("#inputPassword").val();
-        var sign = $("#signTextarea").val();
+        var name = $("[name=name]").val();
+        var slug = $("[name=slug]").val();
+        var desc = $("[name=desc]").val();
+        var status = $("[name=status]:checked").val();
 
-        var url = "/sys/profile/save";
+        var url = "/sys/cate/add";
         $.post(url, {
-            nickname: nickname,
-            password: password,
-            sign: sign,
+            name: name,
+            slug: slug,
+            desc: desc,
+            status: status,
         }, function(data) {
             if (data.code == 0) {
-                layer.msg("保存成功");
+                layer.msg("添加成功");
                 
                 setTimeout(function() {
                     window.location.reload();

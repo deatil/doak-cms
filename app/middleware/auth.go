@@ -5,12 +5,12 @@ import (
     "github.com/gofiber/fiber/v2"
 
     "github.com/deatil/doak-cms/pkg/db"
-    "github.com/deatil/doak-cms/pkg/http"
     "github.com/deatil/doak-cms/pkg/config"
     "github.com/deatil/doak-cms/pkg/cookie"
     "github.com/deatil/doak-cms/pkg/session"
 
     "github.com/deatil/doak-cms/app/model"
+    "github.com/deatil/doak-cms/app/response"
 )
 
 // 权限验证
@@ -22,17 +22,19 @@ func NewAuth() fiber.Handler {
 
             userid = cookie.Get(ctx, cookieKey)
             if userid == nil {
-                return http.ErrorRender(ctx, "请先登录")
+                return response.AdminErrorRender(ctx, "请先登录")
             }
         }
 
         // 账号信息
         var user model.User
-        _, err := db.Engine().Where("id = ?", cast.ToInt64(userid)).Get(&user)
+        _, err := db.Engine().
+            Where("id = ?", cast.ToInt64(userid)).
+            Get(&user)
         if err != nil {
             session.Delete(ctx, "userid")
 
-            return http.ErrorRender(ctx, "账号不存在或者被禁用")
+            return response.AdminErrorRender(ctx, "账号不存在或者被禁用")
         }
 
         ctx.Locals("userid", userid)

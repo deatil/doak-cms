@@ -16,6 +16,7 @@ import (
     "github.com/deatil/doak-cms/pkg/validate"
 
     "github.com/deatil/doak-cms/app/model"
+    "github.com/deatil/doak-cms/app/response"
 )
 
 // 账号
@@ -128,12 +129,12 @@ func (this *Auth) Logout(ctx *fiber.Ctx) error {
     // 未登录
     userid := session.Get(ctx, "userid")
     if userid == nil {
-        return http.ErrorRender(ctx, "请先登录")
+        return response.AdminErrorRender(ctx, "请先登录")
     }
 
     // 删除登录信息
     if err := session.Delete(ctx, "userid"); err != nil {
-        return http.ErrorRender(ctx, "退出登录失败")
+        return response.AdminErrorRender(ctx, "退出登录失败")
     }
 
     // 删除 cookie 信息

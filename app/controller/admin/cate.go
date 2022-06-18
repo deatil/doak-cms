@@ -12,6 +12,7 @@ import (
     "github.com/deatil/doak-cms/pkg/validate"
 
     "github.com/deatil/doak-cms/app/model"
+    "github.com/deatil/doak-cms/app/response"
 )
 
 // 分类
@@ -28,6 +29,9 @@ func (this *Cate) Index(ctx *fiber.Ctx) error {
         Where("id >?", 1).
         Count(cate)
 
+    // 状态
+    status := cast.ToString(ctx.Query("status", ""))
+
     // 当前页码
     currentPage := cast.ToInt(ctx.Query("page", "1"))
     if currentPage < 1 {
@@ -38,12 +42,21 @@ func (this *Cate) Index(ctx *fiber.Ctx) error {
     listRows := 5
     start := (currentPage - 1) * listRows
 
+    // 搜索关键字
+    keywords := cast.ToString(ctx.Query("keywords", ""))
+
     // 列表
     cates := make([]model.Cate, 0)
-    db.Engine().
+    modeldb := db.Engine().
         Limit(listRows, start).
-        Asc("id").
-        Find(&cates)
+        Where("name like ?", "%" + keywords + "%").
+        Desc("sort").
+        Asc("id")
+    if status != "" {
+        modeldb = modeldb.Where("status = ?", status)
+    }
+
+    modeldb.Find(&cates)
 
     // url 链接信息
     urlPath := string(ctx.Request().URI().Path())
@@ -56,6 +69,8 @@ func (this *Cate) Index(ctx *fiber.Ctx) error {
     return this.View(ctx, "cate/index", fiber.Map{
         "total": total,
         "list": cates,
+        "keywords": keywords,
+        "status": status,
         "currentPage": currentPage,
         "pageHtml": pageHtml,
     })
@@ -63,11 +78,7 @@ func (this *Cate) Index(ctx *fiber.Ctx) error {
 
 // 添加
 func (this *Cate) Add(ctx *fiber.Ctx) error {
-    data := "data"
-
-    return this.View(ctx, "cate/add", fiber.Map{
-        "Title": data,
-    })
+    return this.View(ctx, "cate/add", fiber.Map{})
 }
 
 // 添加保存
@@ -85,13 +96,13 @@ func (this *Cate) AddSave(ctx *fiber.Ctx) error {
             "status": status,
         },
         map[string]string{
-            "name": "required|minLen:3",
+            "name": "required|minLen:1",
             "slug": "required|minLen:3",
             "status": "required",
         },
         map[string]string{
             "name.required": "分类名称不能为空",
-            "name.minLen": "分类名称不能少于3位",
+            "name.minLen": "分类名称不能少于1位",
             "slug.required": "分类标志不能为空",
             "slug.minLen": "分类标志不能少于3位",
             "status.required": "分类状态不能为空",
@@ -102,10 +113,21 @@ func (this *Cate) AddSave(ctx *fiber.Ctx) error {
         return http.Error(ctx, 1, errs.One())
     }
 
+    // 分类信息
+    var data model.Cate
+    db.Engine().
+        Where("slug = ?", slug).
+        Get(&data)
+    if data.Id > 0 {
+        return http.Error(ctx, 1, "添加失败, [" + slug + "] 标识已经存在")
+    }
+
     cate := new(model.Cate)
+    cate.Pid = 0
     cate.Name = name
     cate.Slug = slug
     cate.Desc = desc
+    cate.Sort = 100
     cate.Status = status
     cate.AddIp = ctx.IP()
     _, err := db.Engine().Insert(cate)
@@ -118,21 +140,112 @@ func (this *Cate) AddSave(ctx *fiber.Ctx) error {
 
 // 编辑
 func (this *Cate) Edit(ctx *fiber.Ctx) error {
-    data := "data"
+    id := cast.ToInt64(ctx.Params("id"))
+    if id == 0 {
+        return response.AdminErrorRender(ctx, "数据不存在")
+    }
+
+    // 分类信息
+    var data model.Cate
+    _, err := db.Engine().
+        Where("id = ?", id).
+        Get(&data)
+    if err != nil {
+        return response.AdminErrorRender(ctx, "数据不存在")
+    }
+
+    // 分类列表
+    cates := make([]model.Cate, 0)
+    db.Engine().
+        Desc("sort").
+        Asc("id").
+        Find(&cates)
+
+    // 转为树结构
+    newCates := model.ToCateTree(cates, 0)
 
     return this.View(ctx, "cate/edit", fiber.Map{
-        "Title": data,
+        "id": id,
+        "data": data,
+        "cates": newCates,
     })
 }
 
 // 编辑保存
 func (this *Cate) EditSave(ctx *fiber.Ctx) error {
-    return http.Success(ctx, "保存成功", "")
+    id := cast.ToInt64(ctx.Params("id"))
+    if id == 0 {
+        return http.Error(ctx, 1, "编辑失败")
+    }
+
+    pid := cast.ToInt64(ctx.FormValue("pid"))
+    name := cast.ToString(ctx.FormValue("name"))
+    slug := cast.ToString(ctx.FormValue("slug"))
+    desc := cast.ToString(ctx.FormValue("desc"))
+    sort := cast.ToInt(ctx.FormValue("sort"))
+    status := cast.ToInt(ctx.FormValue("status"))
+
+    // 验证
+    errs := validate.Validate(
+        map[string]any{
+            "pid": pid,
+            "name": name,
+            "slug": slug,
+            "sort": sort,
+            "status": status,
+        },
+        map[string]string{
+            "pid": "required",
+            "name": "required|minLen:1",
+            "slug": "required|minLen:3",
+            "sort": "required",
+            "status": "required",
+        },
+        map[string]string{
+            "pid.required": "分类父级不能为空",
+            "name.required": "分类名称不能为空",
+            "name.minLen": "分类名称不能少于1位",
+            "slug.required": "分类标志不能为空",
+            "slug.minLen": "分类标志不能少于3位",
+            "sort.required": "分类排序不能为空",
+            "status.required": "分类状态不能为空",
+        },
+    )
+
+    if (errs != nil) {
+        return http.Error(ctx, 1, errs.One())
+    }
+
+    // 分类信息
+    var data model.Cate
+    db.Engine().
+        Where("slug = ?", slug).
+        Get(&data)
+    if data.Id > 0 && data.Id != id {
+        return http.Error(ctx, 1, "添加失败, [" + slug + "] 标识已经存在")
+    }
+
+    _, err := db.Engine().
+        Table(new(model.Cate)).
+        Where("id = ?", id).
+        Update(map[string]any{
+            "pid": pid,
+            "name": name,
+            "slug": slug,
+            "desc": desc,
+            "sort": sort,
+            "status": status,
+        })
+    if err != nil {
+        return http.Error(ctx, 1, "编辑失败")
+    }
+
+    return http.Success(ctx, "编辑成功", "")
 }
 
 // 删除
 func (this *Cate) Delete(ctx *fiber.Ctx) error {
-    id := cast.ToInt(ctx.Params("id"))
+    id := cast.ToInt64(ctx.Params("id"))
     if id == 0 {
         return http.Error(ctx, 1, "删除失败")
     }

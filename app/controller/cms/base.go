@@ -1,19 +1,12 @@
 package cms
 
 import (
-    "github.com/deatil/doak-cms/pkg/config"
+    "github.com/deatil/doak-cms/app/response"
 )
 
 // Base
 type Base struct{}
 
 func (this *Base) Theme(tpl string) string {
-    // 配置
-    cfg := config.Section("view")
-
-    theme := cfg.Key("theme").MustString("doak")
-
-    view := theme + "/" + tpl
-
-    return view
+    return response.CmsTheme(tpl)
 }

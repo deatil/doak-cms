@@ -1,1 +1,186 @@
-edit
+{{extends "/admin/common/base_content"}}
+
+{{block title()}}编辑分类 - Doak CMS{{end}}
+
+{{block body()}}
+
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-sm-12 col-xl-12">
+            <div class="bg-light rounded h-100 p-4">
+                <h6 class="mb-4">
+                    编辑分类
+                    
+                    <a href="/sys/cate" class="ms-1" title="返回列表">
+                        <i class="fa fa-arrow-circle-left"></i>
+                    </a>
+                </h6>
+                
+                <form class="profile-form">
+                    <div class="mb-3">
+                        <label for="pidSelect" 
+                            class="form-label">父级分类</label>
+                        <select class="form-select" 
+                            name="pid"
+                            id="pidSelect"
+                            aria-label="pidHelp"
+                        >
+                            <option value="0">顶级分类</option>
+                            {{ range index, value := cates }} 
+                                {{if value.Id != id}}
+                                    <option value="{{ value.Id }}" {{if data.Pid == value.Id}}selected=""{{end}}>{{ value.Name }}</option>
+                                    
+                                    {{if len(value.Children) > 0}}
+                                        {{ range i2, v2 := value.Children }}
+                                            {{if v2.Id != id}}
+                                                <option value="{{ v2.Id }}" {{if data.Pid == v2.Id}}selected=""{{end}}>└{{ v2.Name }}</option>
+                                            {{end}}
+                                        {{end}}
+                                    {{end}}
+                                {{end}}
+                            {{ end }}
+                        </select>
+                        <div id="pidHelp" class="form-text">
+                            选择分类的父级
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="nameInput" class="form-label">分类名称</label>
+                        <input type="text" 
+                            name="name" 
+                            value="{{ data.Name }}" 
+                            class="form-control" 
+                            id="nameInput" 
+                            aria-describedby="nameHelp">
+                        <div id="nameHelp" class="form-text">
+                            分类的名称
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="slugInput" class="form-label">分类标识</label>
+                        <input type="text" 
+                            name="slug" 
+                            value="{{ data.Slug }}" 
+                            class="form-control" 
+                            id="slugInput" 
+                            aria-describedby="slugHelp">
+                        <div id="slugHelp" class="form-text">
+                            分类的标识
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="descTextarea" class="form-label">分类描述</label>
+                        <textarea class="form-control" 
+                            name="desc"
+                            placeholder="分类描述" 
+                            id="descTextarea" 
+                            style="height: 150px;"
+                            aria-describedby="descHelp">{{ data.Desc }}</textarea>
+                        <div id="descHelp" class="form-text">
+                            分类的描述
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="sortInput" class="form-label">分类排序</label>
+                        <input type="text" 
+                            name="sort" 
+                            value="{{ data.Sort }}" 
+                            class="form-control" 
+                            id="sortInput" 
+                            aria-describedby="sortHelp">
+                        <div id="sortHelp" class="form-text">
+                            分类的排序
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">分类状态</label>
+                        <div class="form-control">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" 
+                                    type="radio" 
+                                    name="status" 
+                                    {{if data.Status == 1 }}
+                                    checked=""
+                                    {{end}}
+                                    id="inlineRadioStatus1" 
+                                    value="1">
+                                <label class="form-check-label" 
+                                    for="inlineRadioStatus1">启用</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" 
+                                    type="radio" 
+                                    name="status" 
+                                    {{if data.Status == 0 }}
+                                    checked=""
+                                    {{end}}
+                                    id="inlineRadioStatus2" 
+                                    value="0">
+                                <label class="form-check-label" 
+                                    for="inlineRadioStatus2">禁用</label>
+                            </div>
+                        </div>
+                        <div id="websiteBeianHelp" class="form-text">
+                            分类是否开启或者关闭
+                        </div>
+                    </div>
+                    
+                    <button type="button" 
+                        class="btn btn-primary js-save-button">确认</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{{end}}
+
+{{block script_after()}}
+<script type="3029259e35d7bc1c98cd40a8-text/javascript">
+(function($) {
+    "use strict";
+    
+    $(".sidebar-cate-index").addClass("active");
+    
+    // 保存
+    $(".js-save-button").click(function(e) {
+        e.stopPropagation;
+        e.preventDefault;
+
+        var pid = $("[name=pid]").val();
+        var name = $("[name=name]").val();
+        var slug = $("[name=slug]").val();
+        var desc = $("[name=desc]").val();
+        var sort = $("[name=sort]").val();
+        var status = $("[name=status]:checked").val();
+
+        var url = "/sys/cate/{{id}}/edit";
+        $.post(url, {
+            pid: pid,
+            name: name,
+            slug: slug,
+            desc: desc,
+            sort: sort,
+            status: status,
+        }, function(data) {
+            if (data.code == 0) {
+                layer.msg("编辑成功");
+                
+                setTimeout(function() {
+                    window.location.reload();
+                }, 1500);
+            } else {
+                layer.msg(data.message);
+            }
+        });
+    });
+
+})(jQuery);
+</script>
+{{end}}

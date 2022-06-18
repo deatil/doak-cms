@@ -28,12 +28,3 @@ func Success(ctx *fiber.Ctx, msg string, data any) error {
 func Error(ctx *fiber.Ctx, code int, msg string) error {
     return Response(ctx, code, msg, "")
 }
-
-// 错误显示
-func ErrorRender(ctx *fiber.Ctx, msg string) error {
-    ctx.Render("admin/error/index", fiber.Map{
-        "Msg": msg,
-    })
-
-    return nil
-}
