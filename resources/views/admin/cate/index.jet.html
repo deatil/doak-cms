@@ -81,32 +81,38 @@
                     <table class="table table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th scope="col">#</th>
+                                <th scope="col" class="text-center">#</th>
                                 <th scope="col">名称</th>
                                 <th scope="col">标识</th>
+                                <th scope="col" class="text-center">排序</th>
                                 <th scope="col">添加时间</th>
-                                <th scope="col">状态</th>
-                                <th scope="col">操作</th>
+                                <th scope="col" class="text-center">状态</th>
+                                <th scope="col" class="text-center">操作</th>
                             </tr>
                         </thead>
                         
                         <tbody>
                             {{ range index, value := list }} 
                                 <tr>
-                                    <th scope="row">{{ value.Id }}</th>
+                                    <th scope="row" width="50" class="text-center">
+                                        {{ value.Id }}
+                                    </th>
                                     <td>{{ value.Name }}</td>
                                     <td>{{ value.Slug }}</td>
+                                    <td width="65" class="text-center">
+                                        {{ value.Sort }}
+                                    </td>
                                     <td width="165">
                                         {{ createTime(value.AddTime, "Asia/Shanghai").DateTimeString() }}
                                     </td>
-                                    <td width="45">
-                                        {{if value.Status == "1" }}
+                                    <td width="45" class="text-center">
+                                        {{if value.Status == 1 }}
                                             <span class="badge bg-success">启用</span>
                                         {{else}}
                                             <span class="badge bg-danger">禁用</span>
                                         {{end}}
                                     </td>
-                                    <td width="150">
+                                    <td width="135" class="text-center">
                                         <a class="btn btn-primary btn-sm" 
                                             href="/sys/cate/{{ value.Id }}/edit" >
                                             编辑

@@ -86,7 +86,7 @@ func (this *Cate) AddSave(ctx *fiber.Ctx) error {
     name := cast.ToString(ctx.FormValue("name"))
     slug := cast.ToString(ctx.FormValue("slug"))
     desc := cast.ToString(ctx.FormValue("desc"))
-    status := cast.ToInt(ctx.FormValue("status"))
+    status := cast.ToString(ctx.FormValue("status"))
 
     // 验证
     errs := validate.Validate(
@@ -98,7 +98,7 @@ func (this *Cate) AddSave(ctx *fiber.Ctx) error {
         map[string]string{
             "name": "required|minLen:1",
             "slug": "required|minLen:3",
-            "status": "required",
+            "status": "required|in:y,n",
         },
         map[string]string{
             "name.required": "分类名称不能为空",
@@ -106,6 +106,7 @@ func (this *Cate) AddSave(ctx *fiber.Ctx) error {
             "slug.required": "分类标志不能为空",
             "slug.minLen": "分类标志不能少于3位",
             "status.required": "分类状态不能为空",
+            "status.in": "分类状态信息错误",
         },
     )
 
@@ -122,13 +123,18 @@ func (this *Cate) AddSave(ctx *fiber.Ctx) error {
         return http.Error(ctx, 1, "添加失败, [" + slug + "] 标识已经存在")
     }
 
+    newStatus := 0
+    if status == "y" {
+        newStatus = 1
+    }
+
     cate := new(model.Cate)
     cate.Pid = 0
     cate.Name = name
     cate.Slug = slug
     cate.Desc = desc
     cate.Sort = 100
-    cate.Status = status
+    cate.Status = newStatus
     cate.AddIp = ctx.IP()
     _, err := db.Engine().Insert(cate)
     if err != nil {
@@ -183,37 +189,39 @@ func (this *Cate) EditSave(ctx *fiber.Ctx) error {
     slug := cast.ToString(ctx.FormValue("slug"))
     desc := cast.ToString(ctx.FormValue("desc"))
     sort := cast.ToInt(ctx.FormValue("sort"))
-    status := cast.ToInt(ctx.FormValue("status"))
+    status := cast.ToString(ctx.FormValue("status"))
 
     // 验证
     errs := validate.Validate(
         map[string]any{
-            "pid": pid,
             "name": name,
             "slug": slug,
             "sort": sort,
             "status": status,
         },
         map[string]string{
-            "pid": "required",
             "name": "required|minLen:1",
             "slug": "required|minLen:3",
             "sort": "required",
-            "status": "required",
+            "status": "required|in:y,n",
         },
         map[string]string{
-            "pid.required": "分类父级不能为空",
             "name.required": "分类名称不能为空",
             "name.minLen": "分类名称不能少于1位",
             "slug.required": "分类标志不能为空",
             "slug.minLen": "分类标志不能少于3位",
             "sort.required": "分类排序不能为空",
             "status.required": "分类状态不能为空",
+            "status.in": "分类状态信息错误",
         },
     )
 
     if (errs != nil) {
         return http.Error(ctx, 1, errs.One())
+    }
+
+    if pid < 0 {
+        return http.Error(ctx, 1, "父级ID错误")
     }
 
     // 分类信息
@@ -225,6 +233,11 @@ func (this *Cate) EditSave(ctx *fiber.Ctx) error {
         return http.Error(ctx, 1, "添加失败, [" + slug + "] 标识已经存在")
     }
 
+    newStatus := 0
+    if status == "y" {
+        newStatus = 1
+    }
+
     _, err := db.Engine().
         Table(new(model.Cate)).
         Where("id = ?", id).
@@ -234,7 +247,7 @@ func (this *Cate) EditSave(ctx *fiber.Ctx) error {
             "slug": slug,
             "desc": desc,
             "sort": sort,
-            "status": status,
+            "status": newStatus,
         })
     if err != nil {
         return http.Error(ctx, 1, "编辑失败")
@@ -248,6 +261,15 @@ func (this *Cate) Delete(ctx *fiber.Ctx) error {
     id := cast.ToInt64(ctx.Params("id"))
     if id == 0 {
         return http.Error(ctx, 1, "删除失败")
+    }
+
+    // 分类信息
+    var data model.Cate
+    db.Engine().
+        Where("pid = ?", id).
+        Get(&data)
+    if data.Id > 0 {
+        return http.Error(ctx, 1, "当前分类有子级，不能被删除")
     }
 
     _, err := db.Engine().
