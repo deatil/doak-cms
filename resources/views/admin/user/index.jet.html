@@ -1,1 +1,189 @@
-index
+{{extends "/admin/common/base_content"}}
+
+{{block title()}}账号管理 - Doak CMS{{end}}
+
+{{block body()}}
+
+<style>
+.nodata {
+    text-align: center;
+    padding: 15px;
+    color: #c0c3c5;
+}
+.table tr {
+    vertical-align: middle;
+}
+.table thead tr {
+    background: #ebeff1;
+}
+</style>
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+    
+        <div class="col-sm-12 col-xl-12">
+            <div class="bg-light rounded h-100 p-4">
+                <h6 class="mb-4">条件搜索</h6>
+                
+                <form method="get">
+                    <div class="row">
+                        <div class="col-auto">
+                            <div class="input-group my-1">
+                                <span class="input-group-text" id="input-keywords">关键字</span>
+                                <input type="text" 
+                                    name="keywords"
+                                    value="{{ keywords }}"
+                                    class="form-control" 
+                                    placeholder="" 
+                                    aria-label="keywords" 
+                                    aria-describedby="input-keywords">
+                            </div>
+                        </div>
+                        
+                        <div class="col-auto">
+                            <div class="input-group my-1">
+                                <span class="input-group-text" id="input-status">状态</span>
+                                <select name="status"
+                                    class="form-select" 
+                                    aria-label="status"
+                                    aria-describedby="input-status"
+                                >
+                                    <option value="">全部</option>
+                                    <option value="1" {{if status== "1"}}selected=""{{end}}>启用</option>
+                                    <option value="0" {{if status== "0"}}selected=""{{end}}>禁用</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="col-auto">
+                            <button type="submit" 
+                                class="btn btn-primary my-1"
+                            >
+                                <i class="fa fa-search me-2"></i>
+                                搜 索
+                            </button>
+                        </div>
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
+        
+        <div class="col-sm-12 col-xl-12">
+        
+            <div class="bg-light rounded h-100 p-4">
+                <h6 class="mb-4">
+                    账号管理
+                    <a href="/sys/user/add" class="ms-1" title="添加账号">
+                        <i class="fa fa-plus-circle"></i>
+                    </a>
+                </h6>
+                
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="text-center">#</th>
+                                <th scope="col">账号名称</th>
+                                <th scope="col">账号昵称</th>
+                                <th scope="col">添加时间</th>
+                                <th scope="col" class="text-center">状态</th>
+                                <th scope="col" class="text-center">操作</th>
+                            </tr>
+                        </thead>
+                        
+                        <tbody>
+                            {{ range index, value := list }} 
+                                <tr>
+                                    <th scope="row" width="50" class="text-center">
+                                        {{ value.Id }}
+                                    </th>
+                                    <td>{{ value.Username }}</td>
+                                    <td>{{ value.Nickname }}</td>
+                                    <td width="165">
+                                        {{ createTime(value.AddTime, "Asia/Shanghai").DateTimeString() }}
+                                    </td>
+                                    <td width="45" class="text-center">
+                                        {{if value.Status == 1 }}
+                                            <span class="badge bg-success">启用</span>
+                                        {{else}}
+                                            <span class="badge bg-danger">禁用</span>
+                                        {{end}}
+                                    </td>
+                                    <td width="135" class="text-center">
+                                        <a class="btn btn-primary btn-sm" 
+                                            href="/sys/user/{{ value.Id }}/edit" >
+                                            编辑
+                                        </a>
+                                        
+                                        <a href="javascript:;" 
+                                            class="btn btn-danger btn-sm js-delete-btn"
+                                            data-url="/sys/user/{{ value.Id }}/delete"
+                                        >
+                                            删除
+                                        </a>
+                                    </td>
+                                </tr>
+                            {{ else }} 
+                                <tr>
+                                    <td colspan="7">
+                                        <div class="nodata">
+                                            无数据
+                                        </div>
+                                    </td>
+                                </tr>
+                            {{ end }}
+                            
+                        </tbody>
+                    </table>
+                </div>
+                
+                <nav aria-label="Page navigation example">
+                    {{ pageHtml|raw }}
+                </nav>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{{end}}
+
+{{block script_after()}}
+<script type="3029259e35d7bc1c98cd40a8-text/javascript">
+(function($) {
+    "use strict";
+    
+    $(".sidebar-user-index").addClass("active");
+    
+    // 删除
+    $('.js-delete-btn').click(function() {
+        var url = $(this).data('url');
+        
+        layer.confirm('您确定要删除该账号吗？', {
+            offset: 'c',
+            btn: ['确定', '取消']
+        }, function(index){
+            $.post(url, {}, function(data) {
+                if (data.code == 0) {
+                    layer.msg(data.message, {
+                        offset: 'c',
+                        icon: 1
+                    });
+
+                    setTimeout(function() {
+                        location.reload();
+                    }, 2000);
+                } else {
+                    layer.msg(data.message, {
+                        offset: 'c',
+                        icon: 2
+                    });
+                }
+            });
+        });
+    });
+
+})(jQuery);
+</script>
+{{end}}

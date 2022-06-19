@@ -53,7 +53,7 @@ func (this *Profile) Save(ctx *fiber.Ctx) error {
         "sign": sign,
     }
 
-    if password != "" && len(password) > 3 {
+    if password != "" {
         updateData["password"] = auth.Hash(password)
     }
 

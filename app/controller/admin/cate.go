@@ -22,16 +22,6 @@ type Cate struct{
 
 // 列表
 func (this *Cate) Index(ctx *fiber.Ctx) error {
-    // 总数
-    cate := new(model.Cate)
-    total, _ := db.
-        Engine().
-        Where("id >?", 1).
-        Count(cate)
-
-    // 状态
-    status := cast.ToString(ctx.Query("status", ""))
-
     // 当前页码
     currentPage := cast.ToInt(ctx.Query("page", "1"))
     if currentPage < 1 {
@@ -44,6 +34,9 @@ func (this *Cate) Index(ctx *fiber.Ctx) error {
 
     // 搜索关键字
     keywords := cast.ToString(ctx.Query("keywords", ""))
+
+    // 状态
+    status := cast.ToString(ctx.Query("status", ""))
 
     // 列表
     cates := make([]model.Cate, 0)
@@ -58,6 +51,15 @@ func (this *Cate) Index(ctx *fiber.Ctx) error {
 
     modeldb.Find(&cates)
 
+    // 总数
+    countdb := db.Engine().
+        Where("name like ?", "%" + keywords + "%")
+    if status != "" {
+        countdb = countdb.Where("status = ?", status)
+    }
+
+    total, _ := countdb.Count(new(model.Cate))
+
     // url 链接信息
     urlPath := string(ctx.Request().URI().Path())
     urlQuery := ctx.Request().URI().QueryArgs().String()
@@ -67,10 +69,10 @@ func (this *Cate) Index(ctx *fiber.Ctx) error {
         PageHtml
 
     return this.View(ctx, "cate/index", fiber.Map{
-        "total": total,
-        "list": cates,
         "keywords": keywords,
         "status": status,
+        "total": total,
+        "list": cates,
         "currentPage": currentPage,
         "pageHtml": pageHtml,
     })
@@ -128,15 +130,15 @@ func (this *Cate) AddSave(ctx *fiber.Ctx) error {
         newStatus = 1
     }
 
-    cate := new(model.Cate)
-    cate.Pid = 0
-    cate.Name = name
-    cate.Slug = slug
-    cate.Desc = desc
-    cate.Sort = 100
-    cate.Status = newStatus
-    cate.AddIp = ctx.IP()
-    _, err := db.Engine().Insert(cate)
+    _, err := db.Engine().Insert(&model.Cate{
+        Pid: 0,
+        Name: name,
+        Slug: slug,
+        Desc: desc,
+        Sort: 100,
+        Status: newStatus,
+        AddIp: ctx.IP(),
+    })
     if err != nil {
         return http.Error(ctx, 1, "添加失败")
     }
@@ -230,7 +232,7 @@ func (this *Cate) EditSave(ctx *fiber.Ctx) error {
         Where("slug = ?", slug).
         Get(&data)
     if data.Id > 0 && data.Id != id {
-        return http.Error(ctx, 1, "添加失败, [" + slug + "] 标识已经存在")
+        return http.Error(ctx, 1, "编辑失败, [" + slug + "] 标识已经存在")
     }
 
     newStatus := 0

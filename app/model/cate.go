@@ -15,15 +15,7 @@ type Cate struct {
 
 // 分类树
 type CateTree struct {
-    Id       int64
-    Pid      int64
-    Name     string
-    Slug     string
-    Desc     string
-    Sort     int
-    Status   int
-    AddTime  int64
-    AddIp    string
+    Cate
     Children []CateTree
 }
 
@@ -34,14 +26,7 @@ func ToCateTree(data []Cate, pid int64) []CateTree {
     for _, item := range data {
         if item.Pid == pid {
             newItem := CateTree{
-                Id: item.Id,
-                Pid: item.Pid,
-                Name: item.Name,
-                Slug: item.Slug,
-                Desc: item.Desc,
-                Sort: item.Sort,
-                AddTime: item.AddTime,
-                AddIp: item.AddIp,
+                Cate: item,
                 Children: ToCateTree(data, item.Id),
             }
 

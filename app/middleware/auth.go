@@ -13,7 +13,7 @@ import (
     "github.com/deatil/doak-cms/app/response"
 )
 
-// 权限验证
+// 登录检测
 func NewAuth() fiber.Handler {
     return func(ctx *fiber.Ctx) error {
         userid := session.Get(ctx, "userid")
@@ -21,7 +21,7 @@ func NewAuth() fiber.Handler {
             cookieKey := config.Section("cookie").Key("key").MustString("doak")
 
             userid = cookie.Get(ctx, cookieKey)
-            if userid == nil {
+            if userid == "" {
                 return response.AdminErrorRender(ctx, "请先登录")
             }
         }
@@ -31,7 +31,7 @@ func NewAuth() fiber.Handler {
         _, err := db.Engine().
             Where("id = ?", cast.ToInt64(userid)).
             Get(&user)
-        if err != nil {
+        if err != nil || user.Status != 1 {
             session.Delete(ctx, "userid")
 
             return response.AdminErrorRender(ctx, "账号不存在或者被禁用")

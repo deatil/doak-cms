@@ -1,6 +1,6 @@
 {{extends "/admin/common/base_content"}}
 
-{{block title()}}分类管理 - Doak CMS{{end}}
+{{block title()}}文章管理 - Doak CMS{{end}}
 
 {{block body()}}
 
@@ -72,8 +72,8 @@
         
             <div class="bg-light rounded h-100 p-4">
                 <h6 class="mb-4">
-                    分类管理
-                    <a href="/sys/cate/add" class="ms-1" title="添加分类">
+                    文章管理
+                    <a href="/sys/art/add" class="ms-1" title="添加文章">
                         <i class="fa fa-plus-circle"></i>
                     </a>
                 </h6>
@@ -83,11 +83,9 @@
                         <thead>
                             <tr>
                                 <th scope="col" class="text-center">#</th>
-                                <th scope="col">名称</th>
-                                <th scope="col">标识</th>
-                                <th scope="col" class="text-center">排序</th>
-                                <th scope="col">添加时间</th>
+                                <th scope="col">标题</th>
                                 <th scope="col" class="text-center">状态</th>
+                                <th scope="col">添加时间</th>
                                 <th scope="col" class="text-center">操作</th>
                             </tr>
                         </thead>
@@ -98,30 +96,32 @@
                                     <th scope="row" width="50" class="text-center">
                                         {{ value.Id }}
                                     </th>
-                                    <td>{{ value.Name }}</td>
-                                    <td>{{ value.Slug }}</td>
-                                    <td width="65" class="text-center">
-                                        {{ value.Sort }}
-                                    </td>
-                                    <td width="165">
-                                        {{ createTime(value.AddTime, "Asia/Shanghai").DateTimeString() }}
-                                    </td>
-                                    <td width="45" class="text-center">
+                                    <td>{{ value.Title }}</td>
+                                    <td width="120" class="text-center">
                                         {{if value.Status == 1 }}
                                             <span class="badge bg-success">启用</span>
                                         {{else}}
                                             <span class="badge bg-danger">禁用</span>
                                         {{end}}
+                                        
+                                        {{if value.IsTop == 1 }}
+                                            <span class="badge bg-primary">已置顶</span>
+                                        {{else}}
+                                            <span class="badge bg-secondary">未置顶</span>
+                                        {{end}}
+                                    </td>
+                                    <td width="165">
+                                        {{ createTime(value.AddTime, "Asia/Shanghai").DateTimeString() }}
                                     </td>
                                     <td width="135" class="text-center">
                                         <a class="btn btn-primary btn-sm" 
-                                            href="/sys/cate/{{ value.Id }}/edit" >
+                                            href="/sys/art/{{ value.Id }}/edit" >
                                             编辑
                                         </a>
                                         
                                         <a href="javascript:;" 
                                             class="btn btn-danger btn-sm js-delete-btn"
-                                            data-url="/sys/cate/{{ value.Id }}/delete"
+                                            data-url="/sys/art/{{ value.Id }}/delete"
                                         >
                                             删除
                                         </a>
@@ -129,7 +129,7 @@
                                 </tr>
                             {{ else }} 
                                 <tr>
-                                    <td colspan="7">
+                                    <td colspan="5">
                                         <div class="nodata">
                                             无数据
                                         </div>
@@ -158,13 +158,13 @@
 (function($) {
     "use strict";
     
-    $(".sidebar-cate-index").addClass("active");
+    $(".sidebar-art-index").addClass("active");
     
     // 删除
     $('.js-delete-btn').click(function() {
         var url = $(this).data('url');
         
-        layer.confirm('您确定要删除该分类吗？', {
+        layer.confirm('您确定要删除该文章吗？', {
             offset: 'c',
             btn: ['确定', '取消']
         }, function(index){

@@ -1,9 +1,19 @@
 package admin
 
 import (
+    "net/url"
+
+    "github.com/spf13/cast"
     "github.com/gofiber/fiber/v2"
 
+    "github.com/deatil/doak-cms/pkg/db"
+    "github.com/deatil/doak-cms/pkg/auth"
+    "github.com/deatil/doak-cms/pkg/page"
     "github.com/deatil/doak-cms/pkg/http"
+    "github.com/deatil/doak-cms/pkg/validate"
+
+    "github.com/deatil/doak-cms/app/model"
+    "github.com/deatil/doak-cms/app/response"
 )
 
 // 账号
@@ -13,44 +23,227 @@ type User struct{
 
 // 登录
 func (this *User) Index(ctx *fiber.Ctx) error {
-    data := "data"
+    // 当前页码
+    currentPage := cast.ToInt(ctx.Query("page", "1"))
+    if currentPage < 1 {
+        currentPage = 1
+    }
+
+    // 每页数量
+    listRows := 5
+    start := (currentPage - 1) * listRows
+
+    // 搜索关键字
+    keywords := cast.ToString(ctx.Query("keywords", ""))
+
+    // 状态
+    status := cast.ToString(ctx.Query("status", ""))
+
+    // 列表
+    cates := make([]model.User, 0)
+    modeldb := db.Engine().
+        Limit(listRows, start).
+        Where("username like ?", "%" + keywords + "%").
+        Asc("id")
+    if status != "" {
+        modeldb = modeldb.Where("status = ?", status)
+    }
+
+    modeldb.Find(&cates)
+
+    // 总数
+    countdb := db.Engine().
+        Where("username like ?", "%" + keywords + "%")
+    if status != "" {
+        countdb = countdb.Where("status = ?", status)
+    }
+
+    total, _ := countdb.Count(new(model.User))
+
+    // url 链接信息
+    urlPath := string(ctx.Request().URI().Path())
+    urlQuery := ctx.Request().URI().QueryArgs().String()
+    parameters, _ := url.ParseQuery(urlQuery)
+    pageHtml := page.New().
+        Paginate(listRows, int(total), urlPath, parameters).
+        PageHtml
 
     return this.View(ctx, "user/index", fiber.Map{
-        "Title": data,
+        "keywords": keywords,
+        "status": status,
+        "total": total,
+        "list": cates,
+        "currentPage": currentPage,
+        "pageHtml": pageHtml,
     })
 }
 
 // 添加
 func (this *User) Add(ctx *fiber.Ctx) error {
-    data := "data"
-
-    // affected, err := db.Engine().Insert(user)
-
-    return this.View(ctx, "user/add", fiber.Map{
-        "Title": data,
-    })
+    return this.View(ctx, "user/add", fiber.Map{})
 }
 
 // 添加保存
 func (this *User) AddSave(ctx *fiber.Ctx) error {
+    username := cast.ToString(ctx.FormValue("username"))
+    nickname := cast.ToString(ctx.FormValue("nickname"))
+
+    // 验证
+    errs := validate.Validate(
+        map[string]any{
+            "username": username,
+            "nickname": nickname,
+        },
+        map[string]string{
+            "username": "required|minLen:1",
+            "nickname": "required|minLen:2",
+        },
+        map[string]string{
+            "username.required": "账号名称不能为空",
+            "username.minLen": "账号名称不能少于1位",
+            "nickname.required": "账号昵称不能为空",
+            "nickname.minLen": "账号昵称不能少于3位",
+        },
+    )
+
+    if (errs != nil) {
+        return http.Error(ctx, 1, errs.One())
+    }
+
+    // 账号信息
+    var data model.User
+    db.Engine().
+        Where("username = ?", username).
+        Get(&data)
+    if data.Id > 0 {
+        return http.Error(ctx, 1, "添加失败, 账号[" + username + "]已经存在")
+    }
+
+    _, err := db.Engine().Insert(&model.User{
+        Username: username,
+        Password: "",
+        Nickname: nickname,
+        Sign: "",
+        Status: 0,
+        AddIp: ctx.IP(),
+    })
+    if err != nil {
+        return http.Error(ctx, 1, "添加失败")
+    }
+
     return http.Success(ctx, "添加成功", "")
 }
 
 // 编辑
 func (this *User) Edit(ctx *fiber.Ctx) error {
-    data := "data"
+    id := cast.ToInt64(ctx.Params("id"))
+    if id == 0 {
+        return response.AdminErrorRender(ctx, "数据不存在")
+    }
+
+    // 账号信息
+    var data model.User
+    _, err := db.Engine().
+        Where("id = ?", id).
+        Get(&data)
+    if err != nil {
+        return response.AdminErrorRender(ctx, "数据不存在")
+    }
 
     return this.View(ctx, "user/edit", fiber.Map{
-        "Title": data,
+        "id": id,
+        "data": data,
     })
 }
 
 // 编辑保存
 func (this *User) EditSave(ctx *fiber.Ctx) error {
-    return http.Success(ctx, "保存成功", "")
+    id := cast.ToInt64(ctx.Params("id"))
+    if id == 0 {
+        return http.Error(ctx, 1, "编辑失败")
+    }
+
+    username := cast.ToString(ctx.FormValue("username"))
+    password := cast.ToString(ctx.FormValue("password"))
+    nickname := cast.ToString(ctx.FormValue("nickname"))
+    sign := cast.ToString(ctx.FormValue("sign"))
+    status := cast.ToString(ctx.FormValue("status"))
+
+    // 验证
+    errs := validate.Validate(
+        map[string]any{
+            "username": username,
+            "nickname": nickname,
+            "status": status,
+        },
+        map[string]string{
+            "username": "required|minLen:1",
+            "nickname": "required|minLen:2",
+            "status": "required|in:y,n",
+        },
+        map[string]string{
+            "username.required": "账号名称不能为空",
+            "username.minLen": "账号名称不能少于1位",
+            "nickname.required": "账号昵称不能为空",
+            "nickname.minLen": "账号昵称不能少于3位",
+            "status.required": "账号状态不能为空",
+            "status.in": "账号状态信息错误",
+        },
+    )
+
+    if (errs != nil) {
+        return http.Error(ctx, 1, errs.One())
+    }
+
+    // 账号信息
+    var data model.User
+    db.Engine().
+        Where("username = ?", username).
+        Get(&data)
+    if data.Id > 0 && data.Id != id {
+        return http.Error(ctx, 1, "编辑失败, 账号[" + username + "]已经存在")
+    }
+
+    newStatus := 0
+    if status == "y" {
+        newStatus = 1
+    }
+
+    updateData := map[string]any{
+        "username": username,
+        "nickname": nickname,
+        "sign": sign,
+        "status": newStatus,
+    }
+
+    if password != "" {
+        updateData["password"] = auth.Hash(password)
+    }
+
+    _, err := db.Engine().
+        Table(new(model.User)).
+        Where("id = ?", id).
+        Update(updateData)
+    if err != nil {
+        return http.Error(ctx, 1, "编辑失败")
+    }
+
+    return http.Success(ctx, "编辑成功", "")
 }
 
 // 删除
 func (this *User) Delete(ctx *fiber.Ctx) error {
+    id := cast.ToInt64(ctx.Params("id"))
+    if id == 0 {
+        return http.Error(ctx, 1, "删除失败")
+    }
+
+    _, err := db.Engine().
+        Where("id = ?", id).
+        Delete(new(model.User))
+    if err != nil {
+        return http.Error(ctx, 1, "删除失败")
+    }
+
     return http.Success(ctx, "删除成功", "")
 }

@@ -1,6 +1,6 @@
 {{extends "/admin/common/base_content"}}
 
-{{block title()}}编辑账号 - Doak CMS{{end}}
+{{block title()}}添加文章 - Doak CMS{{end}}
 
 {{block body()}}
 
@@ -15,77 +15,77 @@
         <div class="col-sm-12 col-xl-12">
             <div class="bg-light rounded h-100 p-4">
                 <h6 class="mb-4">
-                    编辑账号
+                    添加文章
                     
-                    <a href="/sys/user" class="ms-1" title="返回列表">
+                    <a href="/sys/art" class="ms-1" title="返回列表">
                         <i class="fa fa-arrow-circle-left"></i>
                     </a>
                 </h6>
                 
                 <form class="profile-form">
                     <div class="mb-3">
-                        <label for="usernameInput" class="form-label">账号名称</label>
-                        <input type="text" 
-                            name="username" 
-                            value="{{ data.Username }}" 
-                            class="form-control" 
-                            id="usernameInput" 
-                            aria-describedby="usernameHelp">
-                        <div id="usernameHelp" class="form-text">
-                            账号的名称，包括大小写字母、数字、下划线及其组合
+                        <label for="cateidSelect" 
+                            class="form-label">文章分类</label>
+                        <select class="form-select" 
+                            name="cate_id"
+                            id="cateidSelect"
+                            aria-label="cateidHelp"
+                        >
+                            {{ range index, value := cates }} 
+                                <option value="{{ value.Id }}">{{ value.Name }}</option>
+                                
+                                {{if len(value.Children) > 0}}
+                                    {{ range i2, v2 := value.Children }}
+                                        <option value="{{ v2.Id }}">└{{ v2.Name }}</option>
+                                    
+                                        {{if len(v2.Children) > 0}}
+                                            {{ range i3, v3 := v2.Children }}
+                                                <option value="{{ v3.Id }}">└{{ v3.Name }}</option>
+                                            {{end}}
+                                        {{end}}
+                                    {{end}}
+                                {{end}}
+                            {{ end }}
+                        </select>
+                        <div id="cateidHelp" class="form-text">
+                            选择文章对应的分类
                         </div>
                     </div>
                     
                     <div class="mb-3">
-                        <label for="nicknameInput" class="form-label">账号昵称</label>
+                        <label for="titleInput" class="form-label">文章标题</label>
                         <input type="text" 
-                            name="nickname" 
-                            value="{{ data.Nickname }}" 
-                            class="form-control" 
-                            id="nicknameInput" 
-                            aria-describedby="nicknameHelp">
-                        <div id="nicknameHelp" class="form-text">
-                            账号的昵称
-                        </div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="passwordInput" class="form-label">账号密码</label>
-                        <input type="password" 
-                            name="password" 
+                            name="title" 
                             value="" 
                             class="form-control" 
-                            id="passwordInput" 
-                            autocomplete="false"
-                            aria-describedby="passwordHelp">
-                        <div id="passwordHelp" class="form-text">
-                            更改账号的密码，为空不修改密码
+                            id="titleInput" 
+                            aria-describedby="titleHelp">
+                        <div id="titleHelp" class="form-text">
+                            文章标题
                         </div>
                     </div>
                     
                     <div class="mb-3">
-                        <label for="signTextarea" class="form-label">账号签名</label>
+                        <label for="contentTextarea" class="form-label">文章内容</label>
                         <textarea class="form-control" 
-                            name="sign"
-                            placeholder="账号签名" 
-                            id="signTextarea" 
+                            name="content"
+                            placeholder="文章内容" 
+                            id="contentTextarea" 
                             style="height: 150px;"
-                            aria-describedby="signHelp">{{ data.Sign }}</textarea>
-                        <div id="signHelp" class="form-text">
-                            账号的个人签名
+                            aria-describedby="contentHelp"></textarea>
+                        <div id="contentHelp" class="form-text">
+                            文章内容
                         </div>
                     </div>
                     
                     <div class="mb-3">
-                        <label class="form-label">账号状态</label>
+                        <label class="form-label">文章状态</label>
                         <div class="form-control">
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" 
                                     type="radio" 
                                     name="status" 
-                                    {{if data.Status == 1 }}
                                     checked=""
-                                    {{end}}
                                     id="inlineRadioStatus1" 
                                     value="y">
                                 <label class="form-check-label" 
@@ -95,9 +95,6 @@
                                 <input class="form-check-input" 
                                     type="radio" 
                                     name="status" 
-                                    {{if data.Status == 0 }}
-                                    checked=""
-                                    {{end}}
                                     id="inlineRadioStatus2" 
                                     value="n">
                                 <label class="form-check-label" 
@@ -105,12 +102,12 @@
                             </div>
                         </div>
                         <div id="websiteBeianHelp" class="form-text">
-                            账号是否开启或者关闭
+                            文章是否开启或者关闭
                         </div>
                     </div>
                     
                     <button type="button" 
-                        class="btn btn-primary js-save-button">确认修改</button>
+                        class="btn btn-primary js-save-button">确认</button>
                 </form>
             </div>
 
@@ -125,29 +122,27 @@
 (function($) {
     "use strict";
     
-    $(".sidebar-user-index").addClass("active");
+    $(".sidebar-art-index").addClass("active");
     
     // 保存
     $(".js-save-button").click(function(e) {
         e.stopPropagation;
         e.preventDefault;
 
-        var username = $("[name=username]").val();
-        var nickname = $("[name=nickname]").val();
-        var password = $("[name=password]").val();
-        var sign = $("[name=sign]").val();
+        var cate_id = $("[name=cate_id]").val();
+        var title = $("[name=title]").val();
+        var content = $("[name=content]").val();
         var status = $("[name=status]:checked").val();
 
-        var url = "/sys/user/{{id}}/edit";
+        var url = "/sys/art/add";
         $.post(url, {
-            username: username,
-            nickname: nickname,
-            password: password,
-            sign: sign,
+            cate_id: cate_id,
+            title: title,
+            content: content,
             status: status,
         }, function(data) {
             if (data.code == 0) {
-                layer.msg("编辑成功");
+                layer.msg("添加成功");
                 
                 setTimeout(function() {
                     window.location.reload();
