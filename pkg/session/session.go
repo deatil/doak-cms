@@ -2,6 +2,7 @@ package session
 
 import (
     "time"
+    "sync"
 
     "github.com/gofiber/fiber/v2"
     "github.com/gofiber/fiber/v2/middleware/session"
@@ -11,12 +12,13 @@ import (
 )
 
 var store *session.Store
+var once sync.Once
 
 // Session
 func Session(ctx *fiber.Ctx) *session.Session {
-    if store == nil {
+    once.Do(func() {
         store = Store("session")
-    }
+    })
 
     // 从 storage 获取 session
     sess, err := store.Get(ctx)

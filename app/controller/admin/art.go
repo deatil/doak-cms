@@ -114,7 +114,6 @@ func (this *Art) Add(ctx *fiber.Ctx) error {
 func (this *Art) AddSave(ctx *fiber.Ctx) error {
     cateId := cast.ToInt64(ctx.FormValue("cate_id"))
     title := cast.ToString(ctx.FormValue("title"))
-    content := cast.ToString(ctx.FormValue("content"))
     status := cast.ToString(ctx.FormValue("status"))
 
     // 验证
@@ -122,19 +121,16 @@ func (this *Art) AddSave(ctx *fiber.Ctx) error {
         map[string]any{
             "cate_id": cateId,
             "title": title,
-            "content": content,
             "status": status,
         },
         map[string]string{
             "cate_id": "required",
             "title": "required",
-            "content": "required",
             "status": "required|in:y,n",
         },
         map[string]string{
             "cate_id.required": "文章分类不能为空",
             "title.required": "文章标题不能为空",
-            "content.required": "文章内容不能为空",
             "status.required": "文章状态不能为空",
             "status.in": "文章状态信息错误",
         },
@@ -155,9 +151,9 @@ func (this *Art) AddSave(ctx *fiber.Ctx) error {
     _, err := db.Engine().Insert(&model.Art{
         Uuid: utils.Uniqueid(),
         CateId: cateId,
-        Title: title,
-        Content: content,
         UserId: userId,
+        Title: title,
+        Content: "",
         IsTop: 0,
         Status: newStatus,
         AddIp: ctx.IP(),
@@ -213,6 +209,7 @@ func (this *Art) EditSave(ctx *fiber.Ctx) error {
     title := cast.ToString(ctx.FormValue("title"))
     keywords := cast.ToString(ctx.FormValue("keywords"))
     description := cast.ToString(ctx.FormValue("description"))
+    cover := cast.ToString(ctx.FormValue("cover"))
     content := cast.ToString(ctx.FormValue("content"))
     tags := cast.ToString(ctx.FormValue("tags"))
     from := cast.ToString(ctx.FormValue("from"))
@@ -268,6 +265,7 @@ func (this *Art) EditSave(ctx *fiber.Ctx) error {
             "title": title,
             "keywords": keywords,
             "description": description,
+            "cover": cover,
             "content": content,
             "tags": tags,
             "from": from,

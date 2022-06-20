@@ -1,12 +1,15 @@
 {{extends "/admin/common/base_content"}}
 
-{{block title()}}编辑分类 - Doak CMS{{end}}
+{{block title()}}编辑文章 - Doak CMS{{end}}
 
 {{block body()}}
 
 <style>
 .form-text {
     color: #b7bbbf;
+}
+.art-thumbnail img {
+    width: 150px;
 }
 </style>
 
@@ -15,96 +18,200 @@
         <div class="col-sm-12 col-xl-12">
             <div class="bg-light rounded h-100 p-4">
                 <h6 class="mb-4">
-                    编辑分类
+                    编辑文章
                     
-                    <a href="/sys/cate" class="ms-1" title="返回列表">
+                    <a href="/sys/art" class="ms-1" title="返回列表">
                         <i class="fa fa-arrow-circle-left"></i>
                     </a>
                 </h6>
                 
-                <form class="profile-form">
+                <form class="profile-form" method="post">
                     <div class="mb-3">
-                        <label for="pidSelect" 
-                            class="form-label">父级分类</label>
-                        <select class="form-select" 
-                            name="pid"
-                            id="pidSelect"
-                            aria-label="pidHelp"
+                        <label for="cateidSelect" 
+                            class="form-label"
                         >
-                            <option value="0">顶级分类</option>
+                            文章分类
+                            <span class="text-danger">*</span>
+                        </label>
+                        <select class="form-select" 
+                            name="cate_id"
+                            id="cateidSelect"
+                            aria-label="cateidHelp"
+                        >
                             {{ range index, value := cates }} 
-                                {{if value.Id != id}}
-                                    <option value="{{ value.Id }}" {{if data.Pid == value.Id}}selected=""{{end}}>{{ value.Name }}</option>
+                                <option value="{{ value.Id }}" {{if data.CateId == value.Id}}selected=""{{end}}>{{ value.Name }}</option>
+                                
+                                {{if len(value.Children) > 0}}
+                                    {{ range i2, v2 := value.Children }}
+                                        <option value="{{ v2.Id }}" {{if data.CateId == v2.Id}}selected=""{{end}}>└{{ v2.Name }}</option>
                                     
-                                    {{if len(value.Children) > 0}}
-                                        {{ range i2, v2 := value.Children }}
-                                            {{if v2.Id != id}}
-                                                <option value="{{ v2.Id }}" {{if data.Pid == v2.Id}}selected=""{{end}}>└{{ v2.Name }}</option>
+                                        {{if len(v2.Children) > 0}}
+                                            {{ range i3, v3 := v2.Children }}
+                                                <option value="{{ v3.Id }}" {{if data.CateId == v3.Id}}selected=""{{end}}>└{{ v3.Name }}</option>
                                             {{end}}
                                         {{end}}
                                     {{end}}
                                 {{end}}
                             {{ end }}
                         </select>
-                        <div id="pidHelp" class="form-text">
-                            选择分类的父级
+                        <div id="cateidHelp" class="form-text">
+                            选择文章对应的分类
                         </div>
                     </div>
                     
                     <div class="mb-3">
-                        <label for="nameInput" class="form-label">分类名称</label>
+                        <label for="titleInput" class="form-label">
+                            文章标题
+                            <span class="text-danger">*</span>
+                        </label>
                         <input type="text" 
-                            name="name" 
-                            value="{{ data.Name }}" 
+                            name="title" 
+                            value="{{ data.Title }}" 
                             class="form-control" 
-                            id="nameInput" 
-                            aria-describedby="nameHelp">
-                        <div id="nameHelp" class="form-text">
-                            分类的名称
+                            id="titleInput" 
+                            aria-describedby="titleHelp">
+                        <div id="titleHelp" class="form-text">
+                            文章标题
                         </div>
                     </div>
                     
                     <div class="mb-3">
-                        <label for="slugInput" class="form-label">分类标识</label>
-                        <input type="text" 
-                            name="slug" 
-                            value="{{ data.Slug }}" 
-                            class="form-control" 
-                            id="slugInput" 
-                            aria-describedby="slugHelp">
-                        <div id="slugHelp" class="form-text">
-                            分类的标识
-                        </div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="descTextarea" class="form-label">分类描述</label>
-                        <textarea class="form-control" 
-                            name="desc"
-                            placeholder="分类描述" 
-                            id="descTextarea" 
+                        <label for="contentTextarea" class="form-label">
+                            文章内容
+                            <span class="text-danger">*</span>
+                        </label>
+                        <textarea class="form-control d-none" 
+                            name="content"
+                            placeholder="文章内容" 
+                            id="contentTextarea" 
                             style="height: 150px;"
-                            aria-describedby="descHelp">{{ data.Desc }}</textarea>
-                        <div id="descHelp" class="form-text">
-                            分类的描述
+                            aria-describedby="contentHelp">{{ data.Content | raw }}</textarea>
+                        <div id="editor-toolbar" style="border: 1px solid #ced4da;border-radius: 5px 5px; 0 0"></div>
+                        <div id="editor-text-area" style="height: 350px;border: 1px solid #ced4da;border-radius: 0 0 5px 5px;"></div>
+                        <div id="contentHelp" class="form-text">
+                            文章的内容
                         </div>
                     </div>
                     
                     <div class="mb-3">
-                        <label for="sortInput" class="form-label">分类排序</label>
+                        <label for="descriptionTextarea" class="form-label">文章描述</label>
+                        <textarea class="form-control" 
+                            name="description"
+                            placeholder="文章描述" 
+                            id="descriptionTextarea" 
+                            style="height: 90px;"
+                            aria-describedby="descriptionHelp">{{ data.Description }}</textarea>
+                        <div id="descriptionHelp" class="form-text">
+                            文章的描述
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="keywordsInput" class="form-label">文章关键字</label>
                         <input type="text" 
-                            name="sort" 
-                            value="{{ data.Sort }}" 
+                            name="keywords" 
+                            value="{{ data.Keywords }}" 
                             class="form-control" 
-                            id="sortInput" 
-                            aria-describedby="sortHelp">
-                        <div id="sortHelp" class="form-text">
-                            分类的排序
+                            id="keywordsInput" 
+                            aria-describedby="keywordsHelp">
+                        <div id="keywordsHelp" class="form-text">
+                            文章的关键字
                         </div>
                     </div>
                     
                     <div class="mb-3">
-                        <label class="form-label">分类状态</label>
+                        <label class="form-label">封面</label>
+                        <input type="text" 
+                            name="cover" 
+                            value="{{ data.Cover }}" 
+                            class="form-control d-none" 
+                            id="coverInput">
+                        <div class="art-thumbnail">
+                            {{if data.Cover != ""}}
+                                <div class="mb-2" id="art-preview">
+                                    <img src="{{ attachUrlWithId(data.Cover) }}" class="img-thumbnail" alt="文章封面">
+                                </div>
+                            {{else}}
+                                <div class="mb-2" id="art-preview">
+                                    <img src="/static/admin/image/nopic.png" class="img-thumbnail" alt="文章封面">
+                                </div>
+                            {{end}}
+                            
+                            <button type="button" 
+                                id="btn-remove-cover" 
+                                data-img="/static/admin/image/nopic.png"
+                                class="btn btn-danger btn-sm">移除封面</button>
+                            <button type="button" id="btn-upload-cover" class="btn btn-primary btn-sm">选择封面</button>
+                        </div>
+                        <div class="form-text">
+                            设置文章的封面
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="tagsInput" class="form-label">文章标签</label>
+                        <input type="text" 
+                            name="tags" 
+                            value="{{ data.Tags }}" 
+                            class="form-control" 
+                            id="tagsInput" 
+                            aria-describedby="tagsHelp">
+                        <div id="tagsHelp" class="form-text">
+                            文章的标签
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="fromInput" class="form-label">文章来源</label>
+                        <input type="text" 
+                            name="from" 
+                            value="{{ data.From }}" 
+                            class="form-control" 
+                            id="fromInput" 
+                            aria-describedby="fromHelp">
+                        <div id="fromHelp" class="form-text">
+                            文章的具体来源
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">置顶</label>
+                        <div class="form-control">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" 
+                                    type="radio" 
+                                    name="is_top" 
+                                    {{if data.IsTop == 1 }}
+                                    checked=""
+                                    {{end}}
+                                    id="istopRadioStatus1" 
+                                    value="y">
+                                <label class="form-check-label" 
+                                    for="istopRadioStatus1">是</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" 
+                                    type="radio" 
+                                    name="is_top" 
+                                    {{if data.IsTop == 0 }}
+                                    checked=""
+                                    {{end}}
+                                    id="istopRadioStatus2" 
+                                    value="n">
+                                <label class="form-check-label" 
+                                    for="istopRadioStatus2">否</label>
+                            </div>
+                        </div>
+                        <div class="form-text">
+                            文章是否置顶处理
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">
+                            文章状态
+                            <span class="text-danger">*</span>
+                        </label>
                         <div class="form-control">
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" 
@@ -131,13 +238,13 @@
                                     for="inlineRadioStatus2">禁用</label>
                             </div>
                         </div>
-                        <div id="websiteBeianHelp" class="form-text">
-                            分类是否开启或者关闭
+                        <div class="form-text">
+                            文章是否开启或者关闭
                         </div>
                     </div>
                     
                     <button type="button" 
-                        class="btn btn-primary js-save-button">确认</button>
+                        class="btn btn-primary js-save-button">确认修改</button>
                 </form>
             </div>
 
@@ -148,31 +255,82 @@
 {{end}}
 
 {{block script_after()}}
+<link href="/static/admin/wangeditor/style.css" rel="stylesheet">
+<link href="/static/admin/tagsinput/jquery.tagsinput.min.css" rel="stylesheet">
+<script src="/static/admin/wangeditor/index.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
+<script src="/static/admin/tagsinput/jquery.tagsinput.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
 <script type="3029259e35d7bc1c98cd40a8-text/javascript">
 (function($) {
     "use strict";
     
-    $(".sidebar-cate-index").addClass("active");
+    $(".sidebar-art-index").addClass("active");
+    
+    // 标签输入
+    $("#tagsInput").tagsInput({
+        width: 'auto',
+        defaultText: '输入后空格确认',
+        minInputWidth: 110,
+        height: '38px',
+        placeholderColor: '#999',
+        onChange: function (row) {
+            if (typeof callback === 'function') {
+
+            } else {
+                $("tagsInput_addTag").focus();
+            }
+        }
+    });
+    
+    // 移除封面
+    $('#btn-remove-cover').click(function() {
+        var img = $(this).data("img");
+        
+        layer.confirm('您确定要移除封面吗？', {
+            btn: ['确定', '取消']
+        }, function(index){
+            layer.msg("移除封面成功", {
+                offset: 'c',
+                icon: 1
+            });
+
+            setTimeout(function() {
+                var $img = $('#art-preview').find('img');
+                
+                $img.attr('src', img);
+                $img.attr('alt', "文章封面");
+                
+                $('#coverInput').val("");
+            }, 1500);
+        });
+    });
     
     // 保存
     $(".js-save-button").click(function(e) {
         e.stopPropagation;
         e.preventDefault;
 
-        var pid = $("[name=pid]").val();
-        var name = $("[name=name]").val();
-        var slug = $("[name=slug]").val();
-        var desc = $("[name=desc]").val();
-        var sort = $("[name=sort]").val();
+        var cate_id = $("[name=cate_id]").val();
+        var title = $("[name=title]").val();
+        var content = $("[name=content]").val();
+        var keywords = $("[name=keywords]").val();
+        var description = $("[name=description]").val();
+        var cover = $("[name=cover]").val();
+        var tags = $("[name=tags]").val();
+        var from = $("[name=from]").val();
+        var is_top = $("[name=is_top]:checked").val();
         var status = $("[name=status]:checked").val();
 
-        var url = "/sys/cate/{{id}}/edit";
+        var url = "/sys/art/{{id}}/edit";
         $.post(url, {
-            pid: pid,
-            name: name,
-            slug: slug,
-            desc: desc,
-            sort: sort,
+            cate_id: cate_id,
+            title: title,
+            content: content,
+            keywords: keywords,
+            description: description,
+            cover: cover,
+            tags: tags,
+            from: from,
+            is_top: is_top,
             status: status,
         }, function(data) {
             if (data.code == 0) {
@@ -187,6 +345,188 @@
         });
     });
 
+})(jQuery);
+</script>
+<script src="/static/admin/js/plupload.full.min.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
+<script type="3029259e35d7bc1c98cd40a8-text/javascript">
+(function($) {
+    "use strict";
+    
+    // 实例化一个plupload上传对象
+    var uploader = new plupload.Uploader({
+        // runtimes: "html5,flash,silverlight,html4",
+        runtimes: "html5",
+        browse_button : 'btn-upload-cover', // 触发文件选择对话框的按钮，为那个元素id
+        url : '/sys/upload/image', // 服务器端的上传页面地址
+        filters: {
+            mime_types : [ // 只允许上传图片
+                { title : "图片文件", extensions : "jpg,jpeg,gif,png" }
+            ],
+            max_file_size : '2500k', // 最大只能上传 500kb 的文件
+            prevent_duplicates : true // 不允许选取重复文件
+        },
+        multipart_params:{
+            // avatar: '1', // 上传参数
+        },
+        multi_selection: false,
+        file_data_name: 'file',
+        multipart: true,
+        resize: {
+            width: 1200
+        }
+    });
+
+    uploader.bind('FilesAdded', function(uploader, files){
+        // 调用实例对象的start()
+        uploader.start();
+    });
+    uploader.bind('UploadProgress',function(uploader,file){
+        // 上传进度
+    });
+    uploader.bind('FileUploaded',function(uploader, file, responseObject){
+        if (responseObject.status == 200) {
+            var data = $.parseJSON(responseObject.response);
+            if (data.code == 0) {
+                var id = data.data.id;
+                var url = data.data.url;
+                var $img = $('#art-preview').find('img');
+                
+                $img.attr('src', url);
+                $img.attr('alt', file.name);
+                
+                $('#coverInput').val(id);
+            } else {
+                layer.msg("上传失败：" + data.message);
+            }
+        } else {
+            layer.msg("上传失败：HTTP状态码：" + responseObject.status);
+        }
+    });
+    uploader.bind('Error', function(uploader,errObject){
+        layer.msg("上传出错了：" + errObject.message);
+    });
+
+    // 在实例对象上调用init()方法进行初始化
+    uploader.init();
+
+})(jQuery);
+</script>
+<script type="3029259e35d7bc1c98cd40a8-text/javascript">
+(function($) {
+    "use strict";
+    
+    // 编辑器
+    var E = window.wangEditor;
+
+    E.i18nChangeLanguage('zh-CN')
+
+    window.editor = E.createEditor({
+      selector: '#editor-text-area',
+      html: '',
+      mode: 'simple',
+      config: {
+        placeholder: '文章内容',
+        MENU_CONF: {
+          uploadImage: {
+            server: '/sys/upload/image', // 上传图片地址
+            timeout: 15 * 1000, // 5s
+            fieldName: 'file',
+            // meta: { token: 'xxx', a: 100 },
+            metaWithUrl: false, // 参数拼接到 url 上
+            headers: { Accept: 'text/x-json' },
+            maxFileSize: 10 * 1024 * 1024, // 10M
+            base64LimitSize: 0, // 5 * 1024 | 5kb 以下插入 base64
+            onBeforeUpload(files) {
+                return files; // 返回哪些文件可以上传
+                // return false 会阻止上传
+            },
+            onProgress(progress) {},
+            onSuccess(file, res) {},
+            onFailed(file, res) {
+                layer.msg("上传失败")
+            },
+            onError(file, err, res) {
+                layer.msg("上传失败")
+            },
+            // // 用户自定义插入图片
+            customInsert(res, insertFn) {
+              if (res.code != 0) {
+                layer.msg(res.message);
+                return false;
+              }
+              
+              var url = res.data.url;
+              if (!url) {
+                layer.msg("上传失败");
+                return false;
+              }
+              
+              var alt = url;
+              var href = url;
+
+              // 自己插入图片
+              insertFn(url, alt, href);
+            },
+          }
+        },
+        onChange(editor) {
+          const html = editor.getHtml()
+          $('#contentTextarea').html(html);
+        }
+      }
+    });
+    
+    // 图片
+    var IMAGE_SVG = '<svg viewBox="0 0 1024 1024"><path d="M959.877 128l0.123 0.123v767.775l-0.123 0.122H64.102l-0.122-0.122V128.123l0.122-0.123h895.775zM960 64H64C28.795 64 0 92.795 0 128v768c0 35.205 28.795 64 64 64h896c35.205 0 64-28.795 64-64V128c0-35.205-28.795-64-64-64zM832 288.01c0 53.023-42.988 96.01-96.01 96.01s-96.01-42.987-96.01-96.01S682.967 192 735.99 192 832 234.988 832 288.01zM896 832H128V704l224.01-384 256 320h64l224.01-192z"></path></svg>';
+
+    window.toolbar = E.createToolbar({
+      editor,
+      mode: '',
+      selector: '#editor-toolbar',
+      config: {
+        toolbarKeys:[
+          'blockquote',
+          'header1',
+          'header2',
+          'header3',
+          '|',
+          'bold',
+          'underline',
+          'italic',
+          'through',
+          'color',
+          'bgColor',
+          'clearStyle',
+          '|',
+          'bulletedList',
+          'numberedList',
+          'todo',
+          'justifyLeft',
+          'justifyRight',
+          'justifyCenter',
+          '|',
+          'insertLink',
+          {
+              key: 'group-image',
+              title: "插入图片",
+              iconSvg: IMAGE_SVG,
+              menuKeys: ['insertImage', 'uploadImage'],
+          },
+          'insertTable',
+          'codeBlock',
+          '|',
+          'undo',
+          'redo',
+          'fullScreen',
+        ]
+      }
+    });
+
+    editor.select([])
+    editor.deleteFragment()
+
+    E.SlateTransforms.setNodes(editor, { type: 'paragraph' }, { mode: 'highest' });
+    editor.dangerouslyInsertHtml(document.getElementById('contentTextarea').value);
 })(jQuery);
 </script>
 {{end}}

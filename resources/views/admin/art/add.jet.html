@@ -66,19 +66,6 @@
                     </div>
                     
                     <div class="mb-3">
-                        <label for="contentTextarea" class="form-label">文章内容</label>
-                        <textarea class="form-control" 
-                            name="content"
-                            placeholder="文章内容" 
-                            id="contentTextarea" 
-                            style="height: 150px;"
-                            aria-describedby="contentHelp"></textarea>
-                        <div id="contentHelp" class="form-text">
-                            文章内容
-                        </div>
-                    </div>
-                    
-                    <div class="mb-3">
                         <label class="form-label">文章状态</label>
                         <div class="form-control">
                             <div class="form-check form-check-inline">
@@ -101,7 +88,7 @@
                                     for="inlineRadioStatus2">禁用</label>
                             </div>
                         </div>
-                        <div id="websiteBeianHelp" class="form-text">
+                        <div class="form-text">
                             文章是否开启或者关闭
                         </div>
                     </div>
@@ -131,14 +118,12 @@
 
         var cate_id = $("[name=cate_id]").val();
         var title = $("[name=title]").val();
-        var content = $("[name=content]").val();
         var status = $("[name=status]:checked").val();
 
         var url = "/sys/art/add";
         $.post(url, {
             cate_id: cate_id,
             title: title,
-            content: content,
             status: status,
         }, function(data) {
             if (data.code == 0) {

@@ -1,7 +1,6 @@
 package view
 
 import (
-    "github.com/uniplaces/carbon"
     "github.com/gofiber/template/jet"
 
     "github.com/deatil/doak-cms/pkg/config"
@@ -17,7 +16,8 @@ func JetEngine(typ string) *jet.Engine {
     engine := jet.New(views, ext)
 
     engine.Delims("{{", "}}")
-    engine.AddFunc("createTime", carbon.CreateFromTimestamp)
+
+    // engine.AddFunc("func", useFunc)
 
     // engine.Layout(key)
     // engine.Reload(false)

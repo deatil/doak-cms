@@ -2,6 +2,7 @@ package log
 
 import (
     "time"
+    "sync"
 
     "go.uber.org/zap"
     "go.uber.org/zap/zapcore"
@@ -11,6 +12,7 @@ import (
 )
 
 var log *zap.Logger
+var once sync.Once
 
 // 日志
 // Log().Info("hello info")
@@ -18,9 +20,9 @@ var log *zap.Logger
 // Log().Error("hello error")
 // Log().Warn("hello Warn")
 func Log() *zap.Logger {
-    if log == nil {
+    once.Do(func() {
         log = Manager("log")
-    }
+    })
 
     return log
 }

@@ -3,6 +3,7 @@ package db
 import (
     "os"
     "time"
+    "sync"
 
     _ "github.com/go-sql-driver/mysql"
     "xorm.io/xorm"
@@ -13,12 +14,13 @@ import (
 )
 
 var enginer *xorm.Engine
+var once sync.Once
 
 // 数据库引擎
 func Engine() *xorm.Engine {
-    if enginer == nil {
+    once.Do(func() {
         enginer = Manager("db")
-    }
+    })
 
     return enginer
 }

@@ -8,6 +8,7 @@ import (
     "github.com/gofiber/fiber/v2/middleware/logger"
     "github.com/gofiber/fiber/v2/middleware/recover"
     "github.com/gofiber/fiber/v2/middleware/encryptcookie"
+    "github.com/gofiber/template/jet"
 
     "github.com/smallnest/rpcx/server"
     "github.com/rpcxio/rpcx-etcd/serverplugin"
@@ -18,12 +19,15 @@ import (
 )
 
 // http 服务
-func HttpServer(f func(*fiber.App)) {
+func HttpServer(jetFunc func(*jet.Engine), appFunc func(*fiber.App)) {
     cfg := config.Section("app")
 
     // 设置模板驱动
+    jetEngine := view.JetEngine("view")
+    jetFunc(jetEngine)
+
     app := fiber.New(fiber.Config{
-        Views: view.JetEngine("view"),
+        Views: jetEngine,
     })
 
     debug := cfg.Key("debug").MustBool(false)
@@ -50,7 +54,7 @@ func HttpServer(f func(*fiber.App)) {
     }))
 
     // 添加路由
-    f(app)
+    appFunc(app)
 
     // 运行端口
     address := cfg.Key("address").String()
@@ -58,7 +62,7 @@ func HttpServer(f func(*fiber.App)) {
 }
 
 // rpc 部分
-func RpcServer(f func(*server.Server)) {
+func RpcServer(rpcFunc func(*server.Server)) {
     s := server.NewServer()
 
     // cors
@@ -71,7 +75,7 @@ func RpcServer(f func(*server.Server)) {
     // s.Register(new(Arith), "")
     // s.RegisterName("Arith", new(Arith), "")
 
-    f(s)
+    rpcFunc(s)
 
     // 地址
     addr := config.Section("rpc").Key("address").String()

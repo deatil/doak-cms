@@ -24,6 +24,7 @@ func Http(app *fiber.App) {
 func HttpStatic(app *fiber.App) {
     // 静态文件
     app.Static("/static/", "./public/static")
+    app.Static("/upload/", "./public/upload")
     app.Static("/favicon.ico", "./public/favicon.ico")
 }
 
@@ -33,10 +34,10 @@ func HttpCms(app *fiber.App) {
     app.Get("/", indexController.Index)
 
     cateController := new(cms.Cate)
-    app.Get("/cate/:slug", cateController.Index)
+    app.Get("/c/:slug", cateController.Index)
 
     viewController := new(cms.View)
-    app.Get("/v/:id", viewController.Index)
+    app.Get("/a/:id", viewController.Index)
 }
 
 // 管理员
@@ -100,6 +101,7 @@ func HttpAdmin(app *fiber.App) {
     // 上传
     uploadController := new(admin.Upload)
     sys.Post("/upload/file", uploadController.File)
+    sys.Post("/upload/image", uploadController.Image)
 
 }
 
