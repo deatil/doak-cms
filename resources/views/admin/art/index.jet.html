@@ -89,7 +89,13 @@
             <div class="bg-light rounded h-100 p-4">
                 <h6 class="mb-4">
                     文章管理
-                    <a href="/sys/art/add" class="ms-1" title="添加文章">
+                    
+                    <a href="/sys/art/add" 
+                        class="ms-1" 
+                        data-bs-toggle="tooltip" 
+                        data-bs-placement="top"
+                        title="添加文章"
+                    >
                         <i class="fa fa-plus-circle"></i>
                     </a>
                 </h6>
@@ -101,6 +107,7 @@
                                 <th scope="col" class="text-center">#</th>
                                 <th scope="col">标题</th>
                                 <th scope="col" class="text-center">所属分类</th>
+                                <th scope="col" class="text-center">阅读量</th>
                                 <th scope="col" class="text-center">状态</th>
                                 <th scope="col">添加时间</th>
                                 <th scope="col" class="text-center">操作</th>
@@ -117,8 +124,8 @@
                                         {{ value.Title }}
                                         
                                         {{if value.Cover != ""}}
-                                            <span class="text-danger" style="font-size: 10px;" title="封面">
-                                                <i class="fa fa-tag"></i>
+                                            <span class="text-primary" style="font-size: 10px;" title="封面">
+                                                <i class="fa fa-file-image"></i>
                                             </span>
                                         {{end}}
                                     </td>
@@ -128,6 +135,9 @@
                                         {{else}}
                                             --
                                         {{end}}
+                                    </td>
+                                    <td width="75" class="text-center">
+                                        {{ value.Views }}
                                     </td>
                                     <td width="120" class="text-center">
                                         {{if value.Status == 1 }}
@@ -161,7 +171,7 @@
                                 </tr>
                             {{ else }} 
                                 <tr>
-                                    <td colspan="6">
+                                    <td colspan="7">
                                         <div class="nodata">
                                             无数据
                                         </div>

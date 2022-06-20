@@ -194,12 +194,12 @@ func (this *Art) Edit(ctx *fiber.Ctx) error {
         return response.AdminErrorRender(ctx, "数据不存在")
     }
 
-    // 分类信息
+    // 文章信息
     var data model.Art
     _, err := db.Engine().
         Where("id = ?", id).
         Get(&data)
-    if err != nil {
+    if err != nil || data.Id == 0 {
         return response.AdminErrorRender(ctx, "数据不存在")
     }
 

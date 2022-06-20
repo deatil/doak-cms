@@ -14,6 +14,7 @@ import (
 
     "github.com/deatil/doak-cms/app/model"
     "github.com/deatil/doak-cms/app/response"
+    appAuth "github.com/deatil/doak-cms/app/auth"
 )
 
 /**
@@ -151,7 +152,7 @@ func (this *User) Edit(ctx *fiber.Ctx) error {
     _, err := db.Engine().
         Where("id = ?", id).
         Get(&data)
-    if err != nil {
+    if err != nil || data.Id == 0 {
         return response.AdminErrorRender(ctx, "数据不存在")
     }
 
@@ -166,6 +167,12 @@ func (this *User) EditSave(ctx *fiber.Ctx) error {
     id := cast.ToInt64(ctx.Params("id"))
     if id == 0 {
         return http.Error(ctx, 1, "编辑失败")
+    }
+
+    // 当前账号
+    userId := appAuth.GetUserInfo(ctx).Id
+    if id == userId {
+        return http.Error(ctx, 1, "你不能编辑自己的账号")
     }
 
     username := cast.ToString(ctx.FormValue("username"))

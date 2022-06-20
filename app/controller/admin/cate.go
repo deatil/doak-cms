@@ -163,7 +163,7 @@ func (this *Cate) Edit(ctx *fiber.Ctx) error {
     _, err := db.Engine().
         Where("id = ?", id).
         Get(&data)
-    if err != nil {
+    if err != nil || data.Id == 0 {
         return response.AdminErrorRender(ctx, "数据不存在")
     }
 

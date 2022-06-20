@@ -1,3 +1,32 @@
-提示
+{{extends "/admin/common/base"}}
 
-{{ Msg }}
+{{block title()}}访问错误 - Doak CMS{{end}}
+
+{{block body()}}
+<div class="container-fluid pt-4 px-4">
+    <div class="row vh-100 bg-light rounded align-items-center justify-content-center mx-0">
+        <div class="col-md-6 text-center p-4">
+            <i class="bi bi-exclamation-triangle display-1 text-primary"></i>
+            <h1 class="display-1 fw-bold">Error</h1>
+            <h1 class="mb-4">Page Is Error</h1>
+            <p class="mb-4">{{ Msg }}</p>
+            <a class="btn btn-primary rounded-pill py-3 px-5" href="/sys">返回首页</a>
+            <a class="btn btn-success rounded-pill py-3 px-5" href="javascript:history.back();">返回上一页</a>
+        </div>
+    </div>
+</div>
+{{end}}
+
+{{block script()}}
+<script src="/static/admin/js/bootstrap.bundle.min.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
+<script src="/static/admin/js/jquery-3.4.1.min.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
+<script src="/static/admin/js/easing.min.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
+<script src="/static/admin/js/waypoints.min.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
+<script src="/static/admin/js/owl.carousel.min.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
+<script src="/static/admin/js/moment.min.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
+<script src="/static/admin/js/moment-timezone.min.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
+<script src="/static/admin/js/tempusdominus-bootstrap-4.min.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
+
+<script src="/static/admin/js/main.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
+<script src="/static/admin/js/rocket-loader.min.js" data-cf-settings="3029259e35d7bc1c98cd40a8-|49" defer=""></script>
+{{end}}

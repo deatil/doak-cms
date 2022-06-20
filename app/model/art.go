@@ -13,6 +13,7 @@ type Art struct {
     Content     string `xorm:"longtext"`
     Tags        string `xorm:"varchar(250)"`
     From        string `xorm:"varchar(200)"`
+    Views       int64  `xorm:"bigint(20)"`
     IsTop       int    `xorm:"tinyint(1)"`
     Status      int    `xorm:"tinyint(1)"`
     AddTime     int64  `xorm:"created"`
