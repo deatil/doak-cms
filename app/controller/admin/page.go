@@ -10,7 +10,6 @@ import (
     "github.com/deatil/doak-cms/pkg/log"
     "github.com/deatil/doak-cms/pkg/page"
     "github.com/deatil/doak-cms/pkg/http"
-    "github.com/deatil/doak-cms/pkg/utils"
     "github.com/deatil/doak-cms/pkg/validate"
 
     "github.com/deatil/doak-cms/app/model"
@@ -19,17 +18,17 @@ import (
 )
 
 /**
- * 文章
+ * 单页
  *
  * @create 2022-6-19
  * @author deatil
  */
-type Art struct{
+type Page struct{
     Base
 }
 
 // 列表
-func (this *Art) Index(ctx *fiber.Ctx) error {
+func (this *Page) Index(ctx *fiber.Ctx) error {
     // 当前页码
     currentPage := cast.ToInt(ctx.Query("page", "1"))
     if currentPage < 1 {
@@ -44,13 +43,13 @@ func (this *Art) Index(ctx *fiber.Ctx) error {
     keywords := cast.ToString(ctx.Query("keywords", ""))
 
     // 分类
-    cateid := cast.ToInt64(ctx.Query("cateid"))
+    cateid := cast.ToInt(ctx.Query("cateid"))
 
     // 状态
     status := cast.ToString(ctx.Query("status", ""))
 
     // 列表
-    arts := make([]model.Art, 0)
+    arts := make([]model.Page, 0)
     modeldb := db.Engine().
         Limit(listRows, start).
         Where("title like ?", "%" + keywords + "%").
@@ -78,7 +77,7 @@ func (this *Art) Index(ctx *fiber.Ctx) error {
         countdb = countdb.Where("status = ?", status)
     }
 
-    total, _ := countdb.Count(new(model.Art))
+    total, _ := countdb.Count(new(model.Page))
 
     // url 链接信息
     urlPath := string(ctx.Request().URI().Path())
@@ -88,25 +87,9 @@ func (this *Art) Index(ctx *fiber.Ctx) error {
         Paginate(listRows, int(total), urlPath, parameters).
         PageHtml
 
-    // 分类列表
-    cates := make([]model.Cate, 0)
-    db.Engine().
-        Desc("sort").
-        Asc("id").
-        Find(&cates)
-    newCates := make(map[int64]string)
-    if len(cates) > 0 {
-        for _, cate := range cates {
-            newCates[cate.Id] = cate.Name
-        }
-    }
-
-    return this.View(ctx, "art/index", fiber.Map{
+    return this.View(ctx, "page/index", fiber.Map{
         "keywords": keywords,
         "status": status,
-        "cateid": cateid,
-
-        "cates": newCates,
 
         "total": total,
         "list": arts,
@@ -116,45 +99,35 @@ func (this *Art) Index(ctx *fiber.Ctx) error {
 }
 
 // 添加
-func (this *Art) Add(ctx *fiber.Ctx) error {
-    // 分类列表
-    cates := make([]model.Cate, 0)
-    db.Engine().
-        Desc("sort").
-        Asc("id").
-        Find(&cates)
-
-    // 转为树结构
-    newCates := model.ToCateTree(cates, 0)
-
-    return this.View(ctx, "art/add", fiber.Map{
-        "cates": newCates,
-    })
+func (this *Page) Add(ctx *fiber.Ctx) error {
+    return this.View(ctx, "page/add", fiber.Map{})
 }
 
 // 添加保存
-func (this *Art) AddSave(ctx *fiber.Ctx) error {
-    cateId := cast.ToInt64(ctx.FormValue("cate_id"))
+func (this *Page) AddSave(ctx *fiber.Ctx) error {
+    slug := cast.ToString(ctx.FormValue("slug"))
     title := cast.ToString(ctx.FormValue("title"))
     status := cast.ToString(ctx.FormValue("status"))
 
     // 验证
     errs := validate.Validate(
         map[string]any{
-            "cate_id": cateId,
+            "slug": slug,
             "title": title,
             "status": status,
         },
         map[string]string{
-            "cate_id": "required",
+            "slug": "required|minLen:3|isAlphaDash",
             "title": "required",
             "status": "required|in:y,n",
         },
         map[string]string{
-            "cate_id.required": "文章分类不能为空",
-            "title.required": "文章标题不能为空",
-            "status.required": "文章状态不能为空",
-            "status.in": "文章状态信息错误",
+            "slug.required": "单页标识不能为空",
+            "slug.minLen": "单页标识不能少于3个字符",
+            "slug.isAlphaDash": "单页标识错误",
+            "title.required": "单页标题不能为空",
+            "status.required": "单页状态不能为空",
+            "status.in": "单页状态信息错误",
         },
     )
 
@@ -170,13 +143,11 @@ func (this *Art) AddSave(ctx *fiber.Ctx) error {
     // 当前账号
     userId := appAuth.GetUserInfo(ctx).Id
 
-    _, err := db.Engine().Insert(&model.Art{
-        Uuid: utils.Uniqueid(),
-        CateId: cateId,
+    _, err := db.Engine().Insert(&model.Page{
         UserId: userId,
+        Slug: slug,
         Title: title,
         Content: "",
-        IsTop: 0,
         Status: newStatus,
         AddIp: ctx.IP(),
     })
@@ -188,14 +159,14 @@ func (this *Art) AddSave(ctx *fiber.Ctx) error {
 }
 
 // 编辑
-func (this *Art) Edit(ctx *fiber.Ctx) error {
+func (this *Page) Edit(ctx *fiber.Ctx) error {
     id := cast.ToInt64(ctx.Params("id"))
     if id == 0 {
         return response.AdminErrorRender(ctx, "数据不存在")
     }
 
     // 分类信息
-    var data model.Art
+    var data model.Page
     _, err := db.Engine().
         Where("id = ?", id).
         Get(&data)
@@ -203,75 +174,53 @@ func (this *Art) Edit(ctx *fiber.Ctx) error {
         return response.AdminErrorRender(ctx, "数据不存在")
     }
 
-    // 分类列表
-    cates := make([]model.Cate, 0)
-    db.Engine().
-        Desc("sort").
-        Asc("id").
-        Find(&cates)
-
-    // 转为树结构
-    newCates := model.ToCateTree(cates, 0)
-
-    return this.View(ctx, "art/edit", fiber.Map{
+    return this.View(ctx, "page/edit", fiber.Map{
         "id": id,
         "data": data,
-        "cates": newCates,
     })
 }
 
 // 编辑保存
-func (this *Art) EditSave(ctx *fiber.Ctx) error {
+func (this *Page) EditSave(ctx *fiber.Ctx) error {
     id := cast.ToInt64(ctx.Params("id"))
     if id == 0 {
         return http.Error(ctx, 1, "编辑失败")
     }
 
-    cateId := cast.ToInt64(ctx.FormValue("cate_id"))
+    slug := cast.ToString(ctx.FormValue("slug"))
     title := cast.ToString(ctx.FormValue("title"))
     keywords := cast.ToString(ctx.FormValue("keywords"))
     description := cast.ToString(ctx.FormValue("description"))
-    cover := cast.ToString(ctx.FormValue("cover"))
     content := cast.ToString(ctx.FormValue("content"))
-    tags := cast.ToString(ctx.FormValue("tags"))
-    from := cast.ToString(ctx.FormValue("from"))
-    isTop := cast.ToString(ctx.FormValue("is_top"))
     status := cast.ToString(ctx.FormValue("status"))
 
     // 验证
     errs := validate.Validate(
         map[string]any{
-            "cate_id": cateId,
+            "slug": slug,
             "title": title,
             "content": content,
             "status": status,
         },
         map[string]string{
-            "cate_id": "required",
+            "slug": "required|minLen:3|isAlphaDash",
             "title": "required",
             "content": "required",
             "status": "required|in:y,n",
         },
         map[string]string{
-            "cate_id.required": "文章分类不能为空",
-            "title.required": "文章标题不能为空",
-            "content.required": "文章内容不能为空",
-            "status.required": "文章状态不能为空",
-            "status.in": "文章状态信息错误",
+            "slug.required": "单页标识不能为空",
+            "slug.minLen": "单页标识不能少于3个字符",
+            "slug.isAlphaDash": "单页标识错误",
+            "title.required": "单页标题不能为空",
+            "content.required": "单页内容不能为空",
+            "status.required": "单页状态不能为空",
+            "status.in": "单页状态信息错误",
         },
     )
 
     if (errs != nil) {
         return http.Error(ctx, 1, errs.One())
-    }
-
-    if cateId < 0 {
-        return http.Error(ctx, 1, "分类选择错误")
-    }
-
-    newIsTop := 0
-    if isTop == "y" {
-        newIsTop = 1
     }
 
     newStatus := 0
@@ -280,31 +229,25 @@ func (this *Art) EditSave(ctx *fiber.Ctx) error {
     }
 
     _, err := db.Engine().
-        Table(new(model.Art)).
+        Table(new(model.Page)).
         Where("id = ?", id).
         Update(map[string]any{
-            "cate_id": cateId,
+            "slug": slug,
             "title": title,
             "keywords": keywords,
             "description": description,
-            "cover": cover,
             "content": content,
-            "tags": tags,
-            "from": from,
-            "is_top": newIsTop,
             "status": newStatus,
         })
     if err != nil {
         return http.Error(ctx, 1, "编辑失败")
     }
 
-    // engine.In("column", []int{1, 2, 3}).Find()
-
     return http.Success(ctx, "编辑成功", "")
 }
 
 // 删除
-func (this *Art) Delete(ctx *fiber.Ctx) error {
+func (this *Page) Delete(ctx *fiber.Ctx) error {
     id := cast.ToInt64(ctx.Params("id"))
     if id == 0 {
         return http.Error(ctx, 1, "删除失败")
@@ -312,7 +255,7 @@ func (this *Art) Delete(ctx *fiber.Ctx) error {
 
     _, err := db.Engine().
         Where("id = ?", id).
-        Delete(new(model.Art))
+        Delete(new(model.Page))
     if err != nil {
         return http.Error(ctx, 1, "删除失败")
     }

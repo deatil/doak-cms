@@ -19,7 +19,12 @@ import (
     "github.com/deatil/doak-cms/app/response"
 )
 
-// 账号
+/**
+ * 账号
+ *
+ * @create 2022-6-19
+ * @author deatil
+ */
 type Auth struct{
     Base
 }

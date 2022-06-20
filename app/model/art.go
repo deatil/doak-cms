@@ -18,3 +18,14 @@ type Art struct {
     AddTime     int64  `xorm:"created"`
     AddIp       string `xorm:"varchar(50)"`
 }
+
+// 文章带分类
+type ArtCate struct {
+    Art  string `xorm:"extends""`
+    User string `xorm:"extends""`
+}
+
+// 表名
+func (ArtCate) TableName() string {
+    return "art_cate"
+}

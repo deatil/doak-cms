@@ -1,6 +1,6 @@
 {{extends "/admin/common/base_content"}}
 
-{{block title()}}文章管理 - Doak CMS{{end}}
+{{block title()}}单页管理 - Doak CMS{{end}}
 
 {{block body()}}
 
@@ -41,22 +41,6 @@
                         
                         <div class="col-auto">
                             <div class="input-group my-1">
-                                <span class="input-group-text" id="input-cateid">分类</span>
-                                <select name="cateid"
-                                    class="form-select" 
-                                    aria-label="cateid"
-                                    aria-describedby="input-cateid"
-                                >
-                                    <option value="">全部分类</option>
-                                    {{ range ci, cv := cates }} 
-                                        <option value="{{ ci }}" {{if cateid == ci}}selected=""{{end}}>{{ cv }}</option>
-                                    {{ end }}
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="col-auto">
-                            <div class="input-group my-1">
                                 <span class="input-group-text" id="input-status">状态</span>
                                 <select name="status"
                                     class="form-select" 
@@ -88,8 +72,8 @@
         
             <div class="bg-light rounded h-100 p-4">
                 <h6 class="mb-4">
-                    文章管理
-                    <a href="/sys/art/add" class="ms-1" title="添加文章">
+                    单页管理
+                    <a href="/sys/page/add" class="ms-1" title="添加单页">
                         <i class="fa fa-plus-circle"></i>
                     </a>
                 </h6>
@@ -100,7 +84,6 @@
                             <tr>
                                 <th scope="col" class="text-center">#</th>
                                 <th scope="col">标题</th>
-                                <th scope="col" class="text-center">所属分类</th>
                                 <th scope="col" class="text-center">状态</th>
                                 <th scope="col">添加时间</th>
                                 <th scope="col" class="text-center">操作</th>
@@ -110,36 +93,25 @@
                         <tbody>
                             {{ range index, value := list }} 
                                 <tr>
-                                    <th scope="row" width="65" class="text-center">
+                                    <th scope="row" width="50" class="text-center">
                                         {{ value.Id }}
                                     </th>
                                     <td>
-                                        {{ value.Title }}
-                                        
-                                        {{if value.Cover != ""}}
-                                            <span class="text-danger" style="font-size: 10px;" title="封面">
-                                                <i class="fa fa-tag"></i>
+                                        <div class="page-slug mb-1" title="单页标识">
+                                            <span class="badge bg-primary">
+                                                {{ value.Slug }}
                                             </span>
-                                        {{end}}
+                                        </div>
+                                        
+                                        <div class="page-title">
+                                            {{ value.Title }}
+                                        </div>
                                     </td>
-                                    <td width="115" class="text-center">
-                                        {{if isset(cates[value.CateId])}}
-                                            {{ cates[value.CateId] }}
-                                        {{else}}
-                                            --
-                                        {{end}}
-                                    </td>
-                                    <td width="120" class="text-center">
+                                    <td width="85" class="text-center">
                                         {{if value.Status == 1 }}
                                             <span class="badge bg-success">启用</span>
                                         {{else}}
                                             <span class="badge bg-danger">禁用</span>
-                                        {{end}}
-                                        
-                                        {{if value.IsTop == 1 }}
-                                            <span class="badge bg-primary">已置顶</span>
-                                        {{else}}
-                                            <span class="badge bg-secondary">未置顶</span>
                                         {{end}}
                                     </td>
                                     <td width="165">
@@ -147,13 +119,13 @@
                                     </td>
                                     <td width="135" class="text-center">
                                         <a class="btn btn-primary btn-sm" 
-                                            href="/sys/art/{{ value.Id }}/edit" >
+                                            href="/sys/page/{{ value.Id }}/edit" >
                                             编辑
                                         </a>
                                         
                                         <a href="javascript:;" 
                                             class="btn btn-danger btn-sm js-delete-btn"
-                                            data-url="/sys/art/{{ value.Id }}/delete"
+                                            data-url="/sys/page/{{ value.Id }}/delete"
                                         >
                                             删除
                                         </a>
@@ -161,7 +133,7 @@
                                 </tr>
                             {{ else }} 
                                 <tr>
-                                    <td colspan="6">
+                                    <td colspan="5">
                                         <div class="nodata">
                                             无数据
                                         </div>
@@ -190,13 +162,13 @@
 (function($) {
     "use strict";
     
-    $(".sidebar-art-index").addClass("active");
+    $(".sidebar-page-index").addClass("active");
     
     // 删除
     $('.js-delete-btn').click(function() {
         var url = $(this).data('url');
         
-        layer.confirm('您确定要删除该文章吗？', {
+        layer.confirm('您确定要删除该单页吗？', {
             offset: 'c',
             btn: ['确定', '取消']
         }, function(index){

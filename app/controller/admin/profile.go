@@ -13,7 +13,12 @@ import (
     appAuth "github.com/deatil/doak-cms/app/auth"
 )
 
-// 我的信息
+/**
+ * 我的信息
+ *
+ * @create 2022-6-19
+ * @author deatil
+ */
 type Profile struct{
     Base
 }
@@ -27,6 +32,7 @@ func (this *Profile) Index(ctx *fiber.Ctx) error {
 func (this *Profile) Save(ctx *fiber.Ctx) error {
     nickname := cast.ToString(ctx.FormValue("nickname"))
     password := cast.ToString(ctx.FormValue("password"))
+    avatar := cast.ToString(ctx.FormValue("avatar"))
     sign := cast.ToString(ctx.FormValue("sign"))
 
     // 验证
@@ -50,6 +56,7 @@ func (this *Profile) Save(ctx *fiber.Ctx) error {
     // 需要更新的数据
     updateData := map[string]any{
         "nickname": nickname,
+        "avatar": avatar,
         "sign": sign,
     }
 

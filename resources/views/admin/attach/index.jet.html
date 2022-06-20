@@ -1,6 +1,6 @@
 {{extends "/admin/common/base_content"}}
 
-{{block title()}}文章管理 - Doak CMS{{end}}
+{{block title()}}附件管理 - Doak CMS{{end}}
 
 {{block body()}}
 
@@ -41,22 +41,6 @@
                         
                         <div class="col-auto">
                             <div class="input-group my-1">
-                                <span class="input-group-text" id="input-cateid">分类</span>
-                                <select name="cateid"
-                                    class="form-select" 
-                                    aria-label="cateid"
-                                    aria-describedby="input-cateid"
-                                >
-                                    <option value="">全部分类</option>
-                                    {{ range ci, cv := cates }} 
-                                        <option value="{{ ci }}" {{if cateid == ci}}selected=""{{end}}>{{ cv }}</option>
-                                    {{ end }}
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="col-auto">
-                            <div class="input-group my-1">
                                 <span class="input-group-text" id="input-status">状态</span>
                                 <select name="status"
                                     class="form-select" 
@@ -88,21 +72,16 @@
         
             <div class="bg-light rounded h-100 p-4">
                 <h6 class="mb-4">
-                    文章管理
-                    <a href="/sys/art/add" class="ms-1" title="添加文章">
-                        <i class="fa fa-plus-circle"></i>
-                    </a>
+                    附件管理
                 </h6>
                 
                 <div class="table-responsive">
                     <table class="table table-bordered table-hover">
                         <thead>
                             <tr>
-                                <th scope="col" class="text-center">#</th>
-                                <th scope="col">标题</th>
-                                <th scope="col" class="text-center">所属分类</th>
-                                <th scope="col" class="text-center">状态</th>
+                                <th scope="col">名称</th>
                                 <th scope="col">添加时间</th>
+                                <th scope="col" class="text-center">状态</th>
                                 <th scope="col" class="text-center">操作</th>
                             </tr>
                         </thead>
@@ -110,50 +89,48 @@
                         <tbody>
                             {{ range index, value := list }} 
                                 <tr>
-                                    <th scope="row" width="65" class="text-center">
-                                        {{ value.Id }}
-                                    </th>
                                     <td>
-                                        {{ value.Title }}
-                                        
-                                        {{if value.Cover != ""}}
-                                            <span class="text-danger" style="font-size: 10px;" title="封面">
-                                                <i class="fa fa-tag"></i>
+                                        <div class="attach-item">
+                                            <span class="badge bg-primary" title="附件ID">
+                                                {{ value.Id }}
                                             </span>
-                                        {{end}}
+                                        </div>
+
+                                        <div class="attach-item mt-2 mb-2">
+                                            {{ value.Name }}
+                                        </div>
+                                        
+                                        <div class="attach-item">
+                                            <span class="badge rounded-pill bg-info" title="附件后缀">{{ value.Ext }}</span>
+                                            <span class="badge rounded-pill bg-warning " title="附件大小">{{ formatSize(value.Size) }}</span>
+                                        </div>
+
+                                        <div class="attach-item">
+                                            <span class="badge bg-secondary">MD5</span>
+                                            <span class="badge rounded-pill bg-success">{{ value.Md5 }}</span>
+                                        </div>
                                     </td>
-                                    <td width="115" class="text-center">
-                                        {{if isset(cates[value.CateId])}}
-                                            {{ cates[value.CateId] }}
-                                        {{else}}
-                                            --
-                                        {{end}}
+                                    <td width="165">
+                                        {{ createTime(value.AddTime, "Asia/Shanghai").DateTimeString() }}
                                     </td>
-                                    <td width="120" class="text-center">
+                                    <td width="45" class="text-center">
                                         {{if value.Status == 1 }}
                                             <span class="badge bg-success">启用</span>
                                         {{else}}
                                             <span class="badge bg-danger">禁用</span>
                                         {{end}}
-                                        
-                                        {{if value.IsTop == 1 }}
-                                            <span class="badge bg-primary">已置顶</span>
-                                        {{else}}
-                                            <span class="badge bg-secondary">未置顶</span>
-                                        {{end}}
-                                    </td>
-                                    <td width="165">
-                                        {{ createTime(value.AddTime, "Asia/Shanghai").DateTimeString() }}
                                     </td>
                                     <td width="135" class="text-center">
-                                        <a class="btn btn-primary btn-sm" 
-                                            href="/sys/art/{{ value.Id }}/edit" >
-                                            编辑
+                                        <a class="btn btn-primary btn-sm js-download-btn" 
+                                            href="javascript:;" 
+                                            data-url="/sys/attach/download/{{ value.Id }}" 
+                                        >
+                                            下载
                                         </a>
                                         
                                         <a href="javascript:;" 
                                             class="btn btn-danger btn-sm js-delete-btn"
-                                            data-url="/sys/art/{{ value.Id }}/delete"
+                                            data-url="/sys/attach/delete/{{ value.Id }}"
                                         >
                                             删除
                                         </a>
@@ -190,13 +167,20 @@
 (function($) {
     "use strict";
     
-    $(".sidebar-art-index").addClass("active");
+    $(".sidebar-attach-index").addClass("active");
+    
+    // 下载
+    $('.js-download-btn').click(function() {
+        var url = $(this).data('url');
+        
+        window.open(url, '_blank');
+    });
     
     // 删除
     $('.js-delete-btn').click(function() {
         var url = $(this).data('url');
         
-        layer.confirm('您确定要删除该文章吗？', {
+        layer.confirm('您确定要删除该附件吗？', {
             offset: 'c',
             btn: ['确定', '取消']
         }, function(index){

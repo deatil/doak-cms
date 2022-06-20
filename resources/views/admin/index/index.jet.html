@@ -4,121 +4,109 @@
 
 {{block body()}}
 
-    <div class="container-fluid pt-4 px-4">
-        <div class="row g-4">
-            <div class="col-sm-6 col-xl-3">
-                <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                    <i class="fa fa-chart-line fa-3x text-primary"></i>
-                    <div class="ms-3">
-                        <p class="mb-2">文章总数</p>
-                        <h6 class="mb-0">{{ artTotal }}</h6>
-                    </div>
+<style>
+.nodata {
+    text-align: center;
+    padding: 15px;
+    color: #c0c3c5;
+}
+.table tr {
+    vertical-align: middle;
+}
+.table thead tr {
+    background: #ebeff1;
+}
+</style>
+
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                <i class="fa fa-chart-line fa-3x text-primary"></i>
+                <div class="ms-3">
+                    <p class="mb-2">文章总数</p>
+                    <h6 class="mb-0">{{ artTotal }}</h6>
                 </div>
             </div>
-            
-            <div class="col-sm-6 col-xl-3">
-                <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                    <i class="fa fa-chart-bar fa-3x text-primary"></i>
-                    <div class="ms-3">
-                        <p class="mb-2">分类总数</p>
-                        <h6 class="mb-0">{{ cateTotal }}</h6>
-                    </div>
+        </div>
+        
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                <i class="fa fa-chart-bar fa-3x text-primary"></i>
+                <div class="ms-3">
+                    <p class="mb-2">分类总数</p>
+                    <h6 class="mb-0">{{ cateTotal }}</h6>
                 </div>
             </div>
-            
-            <div class="col-sm-6 col-xl-3">
-                <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                    <i class="fa fa-chart-area fa-3x text-primary"></i>
-                    <div class="ms-3">
-                        <p class="mb-2">标签总数</p>
-                        <h6 class="mb-0">{{ tagTotal }}</h6>
-                    </div>
+        </div>
+        
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                <i class="fa fa-chart-area fa-3x text-primary"></i>
+                <div class="ms-3">
+                    <p class="mb-2">标签总数</p>
+                    <h6 class="mb-0">{{ tagTotal }}</h6>
                 </div>
             </div>
-            
-            <div class="col-sm-6 col-xl-3">
-                <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
-                    <i class="fa fa-chart-pie fa-3x text-primary"></i>
-                    <div class="ms-3">
-                        <p class="mb-2">账号总数</p>
-                        <h6 class="mb-0">{{ userTotal }}</h6>
-                    </div>
+        </div>
+        
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                <i class="fa fa-chart-pie fa-3x text-primary"></i>
+                <div class="ms-3">
+                    <p class="mb-2">账号总数</p>
+                    <h6 class="mb-0">{{ userTotal }}</h6>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 
-    <div class="container-fluid pt-4 px-4">
+<div class="container-fluid pt-4 px-4">
     <div class="bg-light text-center rounded p-4">
-    <div class="d-flex align-items-center justify-content-between mb-4">
-    <h6 class="mb-0">Recent Salse</h6>
-    <a href="">Show All</a>
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <h6 class="mb-0">最新发布文章</h6>
+            <a href="/sys/art">查看全部</a>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table text-start align-middle table-bordered table-hover mb-0">
+                <thead>
+                    <tr class="text-dark">
+                        <th scope="col" class="text-center">#</th>
+                        <th scope="col">标题</th>
+                        <th scope="col">添加时间</th>
+                        <th scope="col" class="text-center">操作</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    {{ range index, value := artList }} 
+                        <tr>
+                            <td width="50" class="text-center">{{ index+1 }}</td>
+                            <td>{{ value.Title }}</td>
+                            <td width="165">{{ createTime(value.AddTime, "Asia/Shanghai").DateTimeString() }}</td>
+                            <td width="85" class="text-center">
+                                <a class="btn btn-sm btn-primary" href="/sys/art/{{ value.Id }}/edit">
+                                    编辑
+                                </a>
+                            </td>
+                        </tr>
+                    {{ else }} 
+                        <tr>
+                            <td colspan="3">
+                                <div class="nodata">
+                                    无数据
+                                </div>
+                            </td>
+                        </tr>
+                    {{ end }}
+                </tbody>
+            </table>
+        </div>
     </div>
-    <div class="table-responsive">
-    <table class="table text-start align-middle table-bordered table-hover mb-0">
-    <thead>
-    <tr class="text-dark">
-    <th scope="col"><input class="form-check-input" type="checkbox"></th>
-    <th scope="col">Date</th>
-    <th scope="col">Invoice</th>
-    <th scope="col">Customer</th>
-    <th scope="col">Amount</th>
-    <th scope="col">Status</th>
-    <th scope="col">Action</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-    <td><input class="form-check-input" type="checkbox"></td>
-    <td>01 Jan 2045</td>
-    <td>INV-0123</td>
-    <td>Jhon Doe</td>
-    <td>$123</td>
-    <td>Paid</td>
-    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-    </tr>
-    <tr>
-    <td><input class="form-check-input" type="checkbox"></td>
-    <td>01 Jan 2045</td>
-    <td>INV-0123</td>
-    <td>Jhon Doe</td>
-    <td>$123</td>
-    <td>Paid</td>
-    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-    </tr>
-    <tr>
-     <td><input class="form-check-input" type="checkbox"></td>
-    <td>01 Jan 2045</td>
-    <td>INV-0123</td>
-    <td>Jhon Doe</td>
-    <td>$123</td>
-    <td>Paid</td>
-    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-    </tr>
-    <tr>
-    <td><input class="form-check-input" type="checkbox"></td>
-    <td>01 Jan 2045</td>
-    <td>INV-0123</td>
-    <td>Jhon Doe</td>
-    <td>$123</td>
-    <td>Paid</td>
-    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-    </tr>
-    <tr>
-    <td><input class="form-check-input" type="checkbox"></td>
-    <td>01 Jan 2045</td>
-    <td>INV-0123</td>
-    <td>Jhon Doe</td>
-    <td>$123</td>
-    <td>Paid</td>
-    <td><a class="btn btn-sm btn-primary" href="">Detail</a></td>
-    </tr>
-    </tbody>
-    </table>
-    </div>
-    </div>
-    </div>
+</div>
 
 {{end}}
 

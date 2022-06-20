@@ -82,6 +82,15 @@ func HttpAdmin(app *fiber.App) {
     sys.Post("/art/:id/edit", artController.EditSave)
     sys.Post("/art/:id/delete", artController.Delete)
 
+    // 单页
+    pageController := new(admin.Page)
+    sys.Get("/page", pageController.Index)
+    sys.Get("/page/add", pageController.Add)
+    sys.Post("/page/add", pageController.AddSave)
+    sys.Get("/page/:id/edit", pageController.Edit)
+    sys.Post("/page/:id/edit", pageController.EditSave)
+    sys.Post("/page/:id/delete", pageController.Delete)
+
     // 标签
     tagController := new(admin.Tag)
     sys.Get("/tag", tagController.Index)
@@ -97,6 +106,12 @@ func HttpAdmin(app *fiber.App) {
     sys.Get("/user/:id/edit", userController.Edit)
     sys.Post("/user/:id/edit", userController.EditSave)
     sys.Post("/user/:id/delete", userController.Delete)
+
+    // 附件
+    attachController := new(admin.Attach)
+    sys.Get("/attach", attachController.Index)
+    sys.Post("/attach/delete/:id", attachController.Delete)
+    sys.Get("/attach/download/:id", attachController.Download)
 
     // 上传
     uploadController := new(admin.Upload)

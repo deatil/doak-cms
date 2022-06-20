@@ -15,7 +15,12 @@ import (
     "github.com/deatil/doak-cms/app/response"
 )
 
-// 标签
+/**
+ * 标签
+ *
+ * @create 2022-6-19
+ * @author deatil
+ */
 type Tag struct{
     Base
 }

@@ -25,7 +25,11 @@
                 <form class="profile-form">
                     <div class="mb-3">
                         <label for="pidSelect" 
-                            class="form-label">父级分类</label>
+                            class="form-label"
+                        >
+                            父级分类
+                            <span class="text-danger">*</span>
+                        </label>
                         <select class="form-select" 
                             name="pid"
                             id="pidSelect"
@@ -52,7 +56,10 @@
                     </div>
                     
                     <div class="mb-3">
-                        <label for="nameInput" class="form-label">分类名称</label>
+                        <label for="nameInput" class="form-label">
+                            分类名称
+                            <span class="text-danger">*</span>
+                        </label>
                         <input type="text" 
                             name="name" 
                             value="{{ data.Name }}" 
@@ -65,7 +72,10 @@
                     </div>
                     
                     <div class="mb-3">
-                        <label for="slugInput" class="form-label">分类标识</label>
+                        <label for="slugInput" class="form-label">
+                            分类标识
+                            <span class="text-danger">*</span>
+                        </label>
                         <input type="text" 
                             name="slug" 
                             value="{{ data.Slug }}" 
@@ -104,7 +114,10 @@
                     </div>
                     
                     <div class="mb-3">
-                        <label class="form-label">分类状态</label>
+                        <label class="form-label">
+                            分类状态
+                            <span class="text-danger">*</span>
+                        </label>
                         <div class="form-control">
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" 

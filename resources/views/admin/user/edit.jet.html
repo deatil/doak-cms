@@ -24,7 +24,10 @@
                 
                 <form class="profile-form">
                     <div class="mb-3">
-                        <label for="usernameInput" class="form-label">账号名称</label>
+                        <label for="usernameInput" class="form-label">
+                            账号名称
+                            <span class="text-danger">*</span>
+                        </label>
                         <input type="text" 
                             name="username" 
                             value="{{ data.Username }}" 
@@ -37,7 +40,10 @@
                     </div>
                     
                     <div class="mb-3">
-                        <label for="nicknameInput" class="form-label">账号昵称</label>
+                        <label for="nicknameInput" class="form-label">
+                            账号昵称
+                            <span class="text-danger">*</span>
+                        </label>
                         <input type="text" 
                             name="nickname" 
                             value="{{ data.Nickname }}" 
@@ -77,7 +83,10 @@
                     </div>
                     
                     <div class="mb-3">
-                        <label class="form-label">账号状态</label>
+                        <label class="form-label">
+                            账号状态
+                            <span class="text-danger">*</span>
+                        </label>
                         <div class="form-control">
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" 

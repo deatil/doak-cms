@@ -141,7 +141,7 @@
                                 id="btn-remove-cover" 
                                 data-img="/static/admin/image/nopic.png"
                                 class="btn btn-danger btn-sm">移除封面</button>
-                            <button type="button" id="btn-upload-cover" class="btn btn-primary btn-sm">选择封面</button>
+                            <span id="btn-upload-cover"></button>
                         </div>
                         <div class="form-text">
                             设置文章的封面
@@ -281,29 +281,6 @@
         }
     });
     
-    // 移除封面
-    $('#btn-remove-cover').click(function() {
-        var img = $(this).data("img");
-        
-        layer.confirm('您确定要移除封面吗？', {
-            btn: ['确定', '取消']
-        }, function(index){
-            layer.msg("移除封面成功", {
-                offset: 'c',
-                icon: 1
-            });
-
-            setTimeout(function() {
-                var $img = $('#art-preview').find('img');
-                
-                $img.attr('src', img);
-                $img.attr('alt', "文章封面");
-                
-                $('#coverInput').val("");
-            }, 1500);
-        });
-    });
-    
     // 保存
     $(".js-save-button").click(function(e) {
         e.stopPropagation;
@@ -347,45 +324,25 @@
 
 })(jQuery);
 </script>
-<script src="/static/admin/js/plupload.full.min.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
+<link href="/static/admin/huploadify/Huploadify.css" rel="stylesheet">
+<script src="/static/admin/huploadify/jquery.Huploadify.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
 <script type="3029259e35d7bc1c98cd40a8-text/javascript">
 (function($) {
     "use strict";
     
-    // 实例化一个plupload上传对象
-    var uploader = new plupload.Uploader({
-        // runtimes: "html5,flash,silverlight,html4",
-        runtimes: "html5",
-        browse_button : 'btn-upload-cover', // 触发文件选择对话框的按钮，为那个元素id
-        url : '/sys/upload/image', // 服务器端的上传页面地址
-        filters: {
-            mime_types : [ // 只允许上传图片
-                { title : "图片文件", extensions : "jpg,jpeg,gif,png" }
-            ],
-            max_file_size : '2500k', // 最大只能上传 500kb 的文件
-            prevent_duplicates : true // 不允许选取重复文件
-        },
-        multipart_params:{
-            // avatar: '1', // 上传参数
-        },
-        multi_selection: false,
-        file_data_name: 'file',
-        multipart: true,
-        resize: {
-            width: 1200
-        }
-    });
-
-    uploader.bind('FilesAdded', function(uploader, files){
-        // 调用实例对象的start()
-        uploader.start();
-    });
-    uploader.bind('UploadProgress',function(uploader,file){
-        // 上传进度
-    });
-    uploader.bind('FileUploaded',function(uploader, file, responseObject){
-        if (responseObject.status == 200) {
-            var data = $.parseJSON(responseObject.response);
+    // 上传
+    $('#btn-upload-cover').Huploadify({
+        auto: true,
+        fileTypeExts: '*.png;*.jpg;*.JPG;*.bmp;*.gif',// 不限制上传文件请修改成'*.*'
+        multi: true,
+        fileSizeLimit: 5*1024*1024, // 大小限制
+        uploader : '/sys/upload/image', // 文件上传目标地址
+        buttonText : '选择文件',
+        fileObjName : 'file',
+        btnClass: 'btn btn-primary btn-sm',
+        showUploadedPercent: false,
+        onUploadSuccess : function(file, data) {
+            data = $.parseJSON(data);
             if (data.code == 0) {
                 var id = data.data.id;
                 var url = data.data.url;
@@ -398,16 +355,31 @@
             } else {
                 layer.msg("上传失败：" + data.message);
             }
-        } else {
-            layer.msg("上传失败：HTTP状态码：" + responseObject.status);
         }
     });
-    uploader.bind('Error', function(uploader,errObject){
-        layer.msg("上传出错了：" + errObject.message);
-    });
+    
+    // 移除封面
+    $('#btn-remove-cover').click(function() {
+        var img = $(this).data("img");
+        
+        layer.confirm('您确定要移除封面吗？', {
+            btn: ['确定', '取消']
+        }, function(index){
+            layer.msg("移除封面成功", {
+                offset: 'c',
+                icon: 1
+            });
 
-    // 在实例对象上调用init()方法进行初始化
-    uploader.init();
+            setTimeout(function() {
+                var $img = $('#art-preview').find('img');
+                
+                $img.attr('src', img);
+                $img.attr('alt', "文章封面");
+                
+                $('#coverInput').val("");
+            }, 1500);
+        });
+    });
 
 })(jQuery);
 </script>

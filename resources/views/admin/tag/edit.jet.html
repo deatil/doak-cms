@@ -24,7 +24,10 @@
                 
                 <form class="profile-form">
                     <div class="mb-3">
-                        <label for="nameInput" class="form-label">标签名称</label>
+                        <label for="nameInput" class="form-label">
+                            标签名称
+                            <span class="text-danger">*</span>
+                        </label>
                         <input type="text" 
                             name="name" 
                             value="{{ data.Name }}" 
@@ -50,7 +53,10 @@
                     </div>
                     
                     <div class="mb-3">
-                        <label for="sortInput" class="form-label">标签排序</label>
+                        <label for="sortInput" class="form-label">
+                            标签排序
+                            <span class="text-danger">*</span>
+                        </label>
                         <input type="text" 
                             name="sort" 
                             value="{{ data.Sort }}" 
@@ -63,7 +69,10 @@
                     </div>
                     
                     <div class="mb-3">
-                        <label class="form-label">标签状态</label>
+                        <label class="form-label">
+                            标签状态
+                            <span class="text-danger">*</span>
+                        </label>
                         <div class="form-control">
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" 

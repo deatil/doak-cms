@@ -6,7 +6,12 @@ import (
     "github.com/deatil/doak-cms/app/auth"
 )
 
-// 基类
+/**
+ * 基类
+ *
+ * @create 2022-6-19
+ * @author deatil
+ */
 type Base struct{}
 
 // 主题

@@ -8,7 +8,12 @@ import (
     "github.com/deatil/doak-cms/app/model"
 )
 
-// 首页
+/**
+ * 首页
+ *
+ * @create 2022-6-19
+ * @author deatil
+ */
 type Index struct{
     Base
 }
@@ -26,10 +31,20 @@ func (this *Index) Index(ctx *fiber.Ctx) error {
     // 账号总数
     userTotal, _ := db.Engine().Count(new(model.User))
 
+    // 最新 10 条文章
+    artList := make([]model.Art, 0)
+    db.Engine().
+        Limit(10, 0).
+        Desc("add_time").
+        Desc("id").
+        Find(&artList)
+
     return this.View(ctx, "index/index", fiber.Map{
         "artTotal": artTotal,
         "cateTotal": cateTotal,
         "tagTotal": tagTotal,
         "userTotal": userTotal,
+
+        "artList": artList,
     })
 }

@@ -14,7 +14,12 @@ import (
     "github.com/deatil/doak-cms/app/model"
 )
 
-// 上传
+/**
+ * 上传
+ *
+ * @create 2022-6-19
+ * @author deatil
+ */
 type Upload struct{}
 
 // 图片

@@ -1,6 +1,6 @@
 {{extends "/admin/common/base_content"}}
 
-{{block title()}}添加分类 - Doak CMS{{end}}
+{{block title()}}添加单页 - Doak CMS{{end}}
 
 {{block body()}}
 
@@ -15,33 +15,33 @@
         <div class="col-sm-12 col-xl-12">
             <div class="bg-light rounded h-100 p-4">
                 <h6 class="mb-4">
-                    添加分类
+                    添加单页
                     
-                    <a href="/sys/cate" class="ms-1" title="返回列表">
+                    <a href="/sys/page" class="ms-1" title="返回列表">
                         <i class="fa fa-arrow-circle-left"></i>
                     </a>
                 </h6>
                 
                 <form class="profile-form">
                     <div class="mb-3">
-                        <label for="nameInput" class="form-label">
-                            分类名称
+                        <label for="titleInput" class="form-label">
+                            单页标题
                             <span class="text-danger">*</span>
                         </label>
                         <input type="text" 
-                            name="name" 
+                            name="title" 
                             value="" 
                             class="form-control" 
-                            id="nameInput" 
-                            aria-describedby="nameHelp">
-                        <div id="nameHelp" class="form-text">
-                            分类的名称
+                            id="titleInput" 
+                            aria-describedby="titleHelp">
+                        <div id="titleHelp" class="form-text">
+                            单页标题
                         </div>
                     </div>
                     
                     <div class="mb-3">
                         <label for="slugInput" class="form-label">
-                            分类标识
+                            单页标识
                             <span class="text-danger">*</span>
                         </label>
                         <input type="text" 
@@ -51,28 +51,12 @@
                             id="slugInput" 
                             aria-describedby="slugHelp">
                         <div id="slugHelp" class="form-text">
-                            分类的标识
+                            单页标识，包括大小写字母、数字下划线及中线及其组合
                         </div>
                     </div>
                     
                     <div class="mb-3">
-                        <label for="descTextarea" class="form-label">分类描述</label>
-                        <textarea class="form-control" 
-                            name="desc"
-                            placeholder="分类描述" 
-                            id="descTextarea" 
-                            style="height: 150px;"
-                            aria-describedby="descHelp"></textarea>
-                        <div id="descHelp" class="form-text">
-                            分类的描述
-                        </div>
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label class="form-label">
-                            分类状态
-                            <span class="text-danger">*</span>
-                        </label>
+                        <label class="form-label">单页状态</label>
                         <div class="form-control">
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input" 
@@ -95,7 +79,7 @@
                             </div>
                         </div>
                         <div class="form-text">
-                            分类是否开启或者关闭
+                            单页是否开启或者关闭
                         </div>
                     </div>
                     
@@ -115,23 +99,21 @@
 (function($) {
     "use strict";
     
-    $(".sidebar-cate-index").addClass("active");
+    $(".sidebar-page-index").addClass("active");
     
     // 保存
     $(".js-save-button").click(function(e) {
         e.stopPropagation;
         e.preventDefault;
 
-        var name = $("[name=name]").val();
         var slug = $("[name=slug]").val();
-        var desc = $("[name=desc]").val();
+        var title = $("[name=title]").val();
         var status = $("[name=status]:checked").val();
 
-        var url = "/sys/cate/add";
+        var url = "/sys/page/add";
         $.post(url, {
-            name: name,
             slug: slug,
-            desc: desc,
+            title: title,
             status: status,
         }, function(data) {
             if (data.code == 0) {

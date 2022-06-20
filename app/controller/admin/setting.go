@@ -11,7 +11,12 @@ import (
     "github.com/deatil/doak-cms/app/model"
 )
 
-// 设置
+/**
+ * 网站设置
+ *
+ * @create 2022-6-19
+ * @author deatil
+ */
 type Setting struct{
     Base
 }

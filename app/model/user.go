@@ -6,6 +6,7 @@ type User struct {
     Username string `xorm:"varchar(50)"`
     Password string `xorm:"char(32)"`
     Nickname string `xorm:"varchar(100)"`
+    Avatar   string `xorm:"char(32)"`
     Sign     string `xorm:"varchar(200)"`
     Status   int    `xorm:"tinyint(1)"`
     AddTime  int64  `xorm:"created"`

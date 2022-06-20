@@ -6,6 +6,8 @@ import (
     "github.com/gofiber/template/jet"
     "github.com/smallnest/rpcx/server"
 
+    "github.com/deatil/doak-cms/pkg/utils"
+
     "github.com/deatil/doak-cms/app/url"
     "github.com/deatil/doak-cms/app/router"
     "github.com/deatil/doak-cms/bootstrap"
@@ -17,6 +19,12 @@ func main() {
         func(engine *jet.Engine) {
             // 添加额外方法
             engine.AddFunc("createTime", carbon.CreateFromTimestamp)
+            engine.AddFunc("formatSize", utils.FormatSize)
+
+            engine.AddFunc("assets", url.Assets)
+            engine.AddFunc("adminUrl", url.AdminUrl)
+            engine.AddFunc("avatarUrl", url.AvatarUrl)
+
             engine.AddFunc("cateUrl", url.CateUrl)
             engine.AddFunc("artUrl", url.ArtUrl)
             engine.AddFunc("pageUrl", url.PageUrl)

@@ -9,6 +9,13 @@ import (
     "github.com/deatil/doak-cms/app/model"
 )
 
+// 资源
+func Assets(path string) string {
+    return fmt.Sprintf("/static/%s", path)
+}
+
+// =======================
+
 // 管理页面链接
 func AdminUrl(path string) string {
     return fmt.Sprintf("/sys/%s", path)
@@ -51,6 +58,8 @@ func AttachPath(path string) string {
     return filename
 }
 
+// =======================
+
 // 附件链接
 func AttachUrlWithId(id string) string {
     cfg := config.Section("upload")
@@ -85,4 +94,15 @@ func AttachPathWithId(id string) string {
     filename := fmt.Sprintf(cfg.Key("dir").String() + "/%s", path)
 
     return filename
+}
+
+// 头像链接
+func AvatarUrl(id string) string {
+    if id == "" {
+        return Assets("admin/image/avatar-default.jpg")
+    }
+
+    avatar := AttachUrlWithId(id)
+
+    return avatar
 }

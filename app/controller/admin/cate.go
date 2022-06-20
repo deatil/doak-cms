@@ -15,7 +15,12 @@ import (
     "github.com/deatil/doak-cms/app/response"
 )
 
-// 分类
+/**
+ * 分类
+ *
+ * @create 2022-6-19
+ * @author deatil
+ */
 type Cate struct{
     Base
 }

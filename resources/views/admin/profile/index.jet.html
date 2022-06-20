@@ -8,6 +8,9 @@
 .form-text {
     color: #b7bbbf;
 }
+.avatar-thumbnail img {
+    width: 150px;
+}
 </style>
 
 <div class="container-fluid pt-4 px-4">
@@ -40,6 +43,25 @@
                             aria-describedby="nicknameHelp">
                         <div id="nicknameHelp" class="form-text">
                             管理员账号的昵称
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">头像</label>
+                        <input type="text" 
+                            name="avatar" 
+                            value="{{ user.Avatar }}" 
+                            class="form-control d-none" 
+                            id="avatarInput">
+                        <div class="avatar-thumbnail">
+                            <div class="mb-2" id="avatar-preview">
+                                <img src="{{ avatarUrl(user.Avatar) }}" class="img-thumbnail" alt="文章封面">
+                            </div>
+                            
+                            <span id="btn-upload-avatar"></button>
+                        </div>
+                        <div class="form-text">
+                            管理员账号的头像
                         </div>
                     </div>
                     
@@ -81,11 +103,41 @@
 {{end}}
 
 {{block script_after()}}
+<link href="/static/admin/huploadify/Huploadify.css" rel="stylesheet">
+<script src="/static/admin/huploadify/jquery.Huploadify.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
 <script type="3029259e35d7bc1c98cd40a8-text/javascript">
 (function($) {
     "use strict";
     
     $(".sidebar-doak-index").addClass("active");
+    
+    // 上传头像
+    $('#btn-upload-avatar').Huploadify({
+        auto: true,
+        fileTypeExts: '*.png;*.jpg;*.JPG;*.bmp;*.gif',// 不限制上传文件请修改成'*.*'
+        multi: true,
+        fileSizeLimit: 1*1024*1024, // 大小限制
+        uploader : '/sys/upload/image', // 文件上传目标地址
+        buttonText : '选择文件',
+        fileObjName : 'file',
+        btnClass: 'btn btn-primary btn-sm',
+        showUploadedPercent: false,
+        onUploadSuccess : function(file, data) {
+            data = $.parseJSON(data);
+            if (data.code == 0) {
+                var id = data.data.id;
+                var url = data.data.url;
+                var $img = $('#avatar-preview').find('img');
+                
+                $img.attr('src', url);
+                $img.attr('alt', file.name);
+                
+                $('#avatarInput').val(id);
+            } else {
+                layer.msg("上传失败：" + data.message);
+            }
+        }
+    });
     
     // 保存
     $(".js-save-button").click(function(e) {
@@ -94,12 +146,14 @@
 
         var nickname = $("#inputNickname").val();
         var password = $("#inputPassword").val();
+        var avatar = $("#avatarInput").val();
         var sign = $("#signTextarea").val();
 
         var url = "/sys/profile/save";
         $.post(url, {
             nickname: nickname,
             password: password,
+            avatar: avatar,
             sign: sign,
         }, function(data) {
             if (data.code == 0) {

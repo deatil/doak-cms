@@ -32,6 +32,32 @@ func Uniqueid() string {
     return MD5(string(b))
 }
 
+// 格式化数据大小
+func FormatSize(size int64) string {
+    units := []string{" B", " KB", " MB", " GB", " TB", " PB"}
+
+    s := float64(size)
+
+    i := 0
+    for ; s >= 1024 && i < 5; i++ {
+        s /= 1024
+    }
+
+    return fmt.Sprintf("%.2f%s", s, units[i])
+}
+
+// 文件是否存在
+func FileExists(path string) bool {
+    _, err := os.Stat(path)
+
+    return err == nil || os.IsExist(err)
+}
+
+// 文件删除
+func FileDelete(path string) error {
+    return os.Remove(path)
+}
+
 // 大文件 Md5
 func FileMD5(filename string) (string, error) {
     if info, err := os.Stat(filename); err != nil {
