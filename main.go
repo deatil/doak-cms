@@ -1,14 +1,11 @@
 package main
 
 import (
-    "github.com/uniplaces/carbon"
     "github.com/gofiber/fiber/v2"
     "github.com/gofiber/template/jet"
     "github.com/smallnest/rpcx/server"
 
-    "github.com/deatil/doak-cms/pkg/utils"
-
-    "github.com/deatil/doak-cms/app/url"
+    "github.com/deatil/doak-cms/app/view"
     "github.com/deatil/doak-cms/app/router"
     "github.com/deatil/doak-cms/bootstrap"
 )
@@ -17,21 +14,8 @@ func main() {
     // http 服务
     go bootstrap.HttpServer(
         func(engine *jet.Engine) {
-            // 添加额外方法
-            engine.AddFunc("createTime", carbon.CreateFromTimestamp)
-            engine.AddFunc("formatSize", utils.FormatSize)
-
-            engine.AddFunc("assets", url.Assets)
-            engine.AddFunc("adminUrl", url.AdminUrl)
-            engine.AddFunc("avatarUrl", url.AvatarUrl)
-
-            engine.AddFunc("cateUrl", url.CateUrl)
-            engine.AddFunc("artUrl", url.ArtUrl)
-            engine.AddFunc("pageUrl", url.PageUrl)
-            engine.AddFunc("attachUrl", url.AttachUrl)
-            engine.AddFunc("attachPath", url.AttachPath)
-            engine.AddFunc("attachUrlWithId", url.AttachUrlWithId)
-            engine.AddFunc("attachPathWithId", url.AttachPathWithId)
+            // 添加方法
+            view.SetViewFuncs(engine)
         },
         func(app *fiber.App) {
             // 添加路由

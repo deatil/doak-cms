@@ -1,1 +1,114 @@
-分类
+<!DOCTYPE html>
+<html lang="zh-CN" class="ua-windows_nt ua-windows_nt-6 ua-windows_nt-6-1 ua-chrome ua-chrome-86 ua-chrome-86-0 ua-chrome-86-0-4240 ua-chrome-86-0-4240-198 ua-desktop ua-desktop-windows ua-webkit ua-webkit-537 ua-webkit-537-36 js"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href='{{ assets("cms/doak/app.css") }}' type="text/css" media="all">
+    <link rel="stylesheet" href='{{ assets("cms/doak/nprogress.min.css") }}' type="text/css" media="all">
+    <link rel="stylesheet" href='{{ assets("cms/doak/iconfont.css") }}' type="text/css" media="all">
+    <script type="text/javascript" src='{{ assets("cms/doak/jquery.min.js") }}'></script>
+    <script src='{{ assets("cms/doak/nprogress.min.js") }}'></script>
+    <title>{{ cate.Name }} - {{ getSetting("website_name") }}</title>
+</head>
+
+<body>
+<script>NProgress.start();</script>
+
+<header>
+    <div class="header-container">
+        <a href="/">
+            <h1>{{ getSetting("website_name") }}</h1>
+        </a>
+        <nav>
+            <ul>
+                <li>
+                    <a href="/">首页</a>
+                </li>
+                <li>
+                    <a href="/c/rmbg">娱乐八卦</a>
+                </li>
+                <li>
+                    <a href="/p/aboutme">关于</a>
+                </li>
+            </ul>
+        </nav>
+
+    </div>
+</header>
+
+<div class="header-banner">
+    <section class="hero">
+        <div class="inner"></div>
+    </section>
+    <figure class="top-image" style='background-image: url({{ assets("cms/doak/img/bg.jpg") }});'></figure>
+
+    <canvas id="wave-canvas" width="1351" height="550"></canvas>
+</div>
+
+<div class="wrapper">
+    <div class="article-container">
+        {{ range index, value := arts }} 
+        <div class="item">
+            <div class="time-image">
+                <div class="datetime">
+                    {{ createTime(value.AddTime, "Asia/Shanghai").Format("02") }}
+                    <span>{{ createTime(value.AddTime, "Asia/Shanghai").Format("2006年 - 01月") }}</span>
+                </div>
+                <div class="preview">
+                    <a href="{{ artUrl(value.Uuid) }}">
+                        <img src="{{ attachUrlWithId(value.Cover) }}" alt="{{ value.Title }}">
+                    </a>
+                </div>
+            </div>
+            <div class="content">
+                <h2 class="title">
+                    <a href="{{ artUrl(value.Uuid) }}">{{ value.Title }}</a>
+                </h2>
+                <div class="meta">
+                    <span class="category">
+                        <a href='{{ cateUrl(value.CateSlug) }}' title="{{ value.CateName }}" target="_blank">
+                            {{ value.CateName }}
+                        </a>
+                    </span>
+                    <span class="from pipe">
+                        {{ value.From }}
+                    </span>
+                    <span class="dateline pipe">
+                        {{ createTime(value.AddTime, "Asia/Shanghai").Format("2006年01月02日 15:04") }}
+                    </span>
+                    <span class="viewcount pipe">
+                        {{ value.Views }} 次浏览
+                    </span>
+                </div>
+                <div class="summary">
+                    {{ value.Description }}
+                </div>
+            </div>
+        </div>
+        {{ end }}
+        
+        <div class="page">
+            {{ pageHtml|raw }}
+        </div>
+        
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="wrap">
+        <div class="split__title">
+            © 2022 &nbsp; <a href="https://github.com/deatil/doak-cms" target="_blank">Doak CMS</a> All Rights Reserved.
+            <span class="icp"><a href="https://beian.miit.gov.cn/" target="_blank">ICP备123456号-1</a></span>
+        </div>
+    </div>
+</footer>
+
+<div id="backtop" class="show"></div>
+<script type="text/javascript" src='{{ assets("cms/doak/script.js") }}'></script>
+<script>
+$(document).ready(
+    function () {
+        NProgress.done();
+    }
+);
+</script>
+</body>
+</html>

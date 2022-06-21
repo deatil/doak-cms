@@ -6,7 +6,7 @@
     <link rel="stylesheet" href='{{ assets("cms/doak/iconfont.css") }}' type="text/css" media="all">
     <script type="text/javascript" src='{{ assets("cms/doak/jquery.min.js") }}'></script>
     <script src='{{ assets("cms/doak/nprogress.min.js") }}'></script>
-    <title>{{ data.Title }} - {{ getSetting("website_name") }}</title>
+    <title>{{ data.Title }}</title>
     <link rel="stylesheet" href='{{ assets("cms/doak/atom-one-dark.min.css") }}'>
     <link rel="stylesheet" href='{{ assets("cms/doak/viewer.css") }}' crossorigin="anonymous">
 </head>
@@ -48,27 +48,10 @@
 <div class="wrapper">
     <article>
         <h1 class="title">{{ data.Title }}</h1>
-        <div class="meta">
-            <span class="category">
-                <a href='{{ cateUrl(cate.Slug) }}' title="{{ cate.Name }}" target="_blank">
-                    {{ cate.Name }}
-                </a>
-            </span>
-            <span class="from pipe">
-                {{ data.From }}
-            </span>
-            <span class="dateline pipe">
-                {{ createTime(data.AddTime, "Asia/Shanghai").Format("2006年01月02日 15:04") }}
-            </span>
-            <span class="viewcount pipe">
-                {{ data.Views }} 次浏览
-            </span>
-        </div>
         <div class="body">
             {{ data.Content | raw }}
         </div>
     </article>
-
 </div>
 
 <footer class="footer">

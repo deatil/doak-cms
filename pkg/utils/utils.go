@@ -95,3 +95,29 @@ func FileMD5WithStream(openfile File) (string, error) {
     checksum := fmt.Sprintf("%x", hash.Sum(nil))
     return checksum, nil
 }
+
+// 列出文件
+func ListFiles(directory string) []string {
+    if !FileExists(directory) {
+        return []string{}
+    }
+
+    fs, err := os.ReadDir(directory)
+    if err != nil {
+        return []string{}
+    }
+
+    sz := len(fs)
+    if sz == 0 {
+        return []string{}
+    }
+
+    ret := make([]string, 0, sz)
+    for i := 0; i < sz; i++ {
+        if !fs[i].IsDir() {
+            ret = append(ret, fs[i].Name())
+        }
+    }
+
+    return ret
+}

@@ -100,6 +100,28 @@
                     </div>
                     
                     <div class="mb-3">
+                        <label for="tplSelect" 
+                            class="form-label"
+                        >
+                            单页模板
+                            <span class="text-danger">*</span>
+                        </label>
+                        <select class="form-select" 
+                            name="tpl"
+                            id="tplSelect"
+                            aria-label="tplHelp"
+                        >
+                            <option value="">请选择一个模板</option>
+                            {{ range index, value := tpls }} 
+                                <option value="{{ value }}" {{if data.Tpl == value}}selected=""{{end}}>{{ value }}</option>
+                            {{ end }}
+                        </select>
+                        <div id="tplHelp" class="form-text">
+                            选择文章对应的分类
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
                         <label class="form-label">
                             单页状态
                             <span class="text-danger">*</span>
@@ -147,8 +169,8 @@
 {{end}}
 
 {{block script_after()}}
-<link href="/static/admin/wangeditor/style.css" rel="stylesheet">
-<script src="/static/admin/wangeditor/index.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
+<link href="/static/admin/libs/wangeditor/style.css" rel="stylesheet">
+<script src="/static/admin/libs/wangeditor/index.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
 <script type="3029259e35d7bc1c98cd40a8-text/javascript">
 (function($) {
     "use strict";
@@ -165,6 +187,7 @@
         var content = $("[name=content]").val();
         var keywords = $("[name=keywords]").val();
         var description = $("[name=description]").val();
+        var tpl = $("[name=tpl]").val();
         var status = $("[name=status]:checked").val();
 
         var url = "/sys/page/{{id}}/edit";
@@ -174,6 +197,7 @@
             content: content,
             keywords: keywords,
             description: description,
+            tpl: tpl,
             status: status,
         }, function(data) {
             if (data.code == 0) {

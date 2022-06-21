@@ -22,11 +22,13 @@ type Art struct {
 
 // 文章带分类
 type ArtCate struct {
-    Art  string `xorm:"extends""`
-    User string `xorm:"extends""`
+    Art  `xorm:"extends""`
+    Cate `xorm:"extends""`
 }
 
-// 表名
-func (ArtCate) TableName() string {
-    return "art_cate"
+// 文章带分类
+type ArtCatename struct {
+    Art
+    CateName string
+    CateSlug string
 }

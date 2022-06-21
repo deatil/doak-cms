@@ -14,6 +14,8 @@
                 <i class="fa fa-table me-2"></i>
                 文章管理
             </a>
+            
+            {{if isAdmin}}
             <a href="/sys/cate" class="nav-item nav-link sidebar-cate-index">
                 <i class="fa fa-th me-2"></i>
                 分类管理
@@ -34,6 +36,7 @@
                 <i class="fa fa-file me-2"></i>
                 附件管理
             </a>
+            {{end}}
         
         </div>
     </nav>

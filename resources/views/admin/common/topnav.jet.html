@@ -30,10 +30,12 @@
                     <i class="fa fa-user me-1"></i>
                     我的信息
                 </a>
+                {{if isAdmin}}
                 <a href="/sys/setting" class="dropdown-item">
                     <i class="fa fa-cog me-1"></i>
                     网站设置
                 </a>
+                {{end}}
                 <a href="javascript:;" class="dropdown-item js-logout-btn">
                     <i class="fa fa-sign-out-alt me-1"></i>
                     退出

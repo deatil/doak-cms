@@ -4,6 +4,7 @@ import (
     "net/url"
 
     "github.com/spf13/cast"
+    "github.com/uniplaces/carbon"
     "github.com/gofiber/fiber/v2"
 
     "github.com/deatil/doak-cms/pkg/db"
@@ -13,6 +14,7 @@ import (
     "github.com/deatil/doak-cms/pkg/utils"
     "github.com/deatil/doak-cms/pkg/validate"
 
+    "github.com/deatil/doak-cms/app/auth"
     "github.com/deatil/doak-cms/app/model"
     "github.com/deatil/doak-cms/app/response"
     appAuth "github.com/deatil/doak-cms/app/auth"
@@ -63,6 +65,11 @@ func (this *Art) Index(ctx *fiber.Ctx) error {
         modeldb = modeldb.Where("status = ?", status)
     }
 
+    // 非管理员
+    if !auth.IsAdmin(ctx) {
+        modeldb = modeldb.Where("user_id = ?", auth.GetUserId(ctx))
+    }
+
     err := modeldb.Find(&arts)
     if err != nil {
         log.Log().Error(err.Error())
@@ -76,6 +83,11 @@ func (this *Art) Index(ctx *fiber.Ctx) error {
     }
     if status != "" {
         countdb = countdb.Where("status = ?", status)
+    }
+
+    // 非管理员
+    if !auth.IsAdmin(ctx) {
+        countdb = countdb.Where("user_id = ?", auth.GetUserId(ctx))
     }
 
     total, _ := countdb.Count(new(model.Art))
@@ -169,6 +181,7 @@ func (this *Art) AddSave(ctx *fiber.Ctx) error {
 
     // 当前账号
     userId := appAuth.GetUserInfo(ctx).Id
+    nickname := appAuth.GetUserInfo(ctx).Nickname
 
     _, err := db.Engine().Insert(&model.Art{
         Uuid: utils.Uniqueid(),
@@ -176,6 +189,7 @@ func (this *Art) AddSave(ctx *fiber.Ctx) error {
         UserId: userId,
         Title: title,
         Content: "",
+        From: nickname,
         IsTop: 0,
         Status: newStatus,
         AddIp: ctx.IP(),
@@ -201,6 +215,11 @@ func (this *Art) Edit(ctx *fiber.Ctx) error {
         Get(&data)
     if err != nil || data.Id == 0 {
         return response.AdminErrorRender(ctx, "数据不存在")
+    }
+
+    // 非管理员
+    if !auth.IsAdmin(ctx) && data.UserId != auth.GetUserId(ctx) {
+        return response.AdminErrorRender(ctx, "你不能修改该文章")
     }
 
     // 分类列表
@@ -235,6 +254,7 @@ func (this *Art) EditSave(ctx *fiber.Ctx) error {
     content := cast.ToString(ctx.FormValue("content"))
     tags := cast.ToString(ctx.FormValue("tags"))
     from := cast.ToString(ctx.FormValue("from"))
+    addTime := cast.ToString(ctx.FormValue("add_time"))
     isTop := cast.ToString(ctx.FormValue("is_top"))
     status := cast.ToString(ctx.FormValue("status"))
 
@@ -244,18 +264,21 @@ func (this *Art) EditSave(ctx *fiber.Ctx) error {
             "cate_id": cateId,
             "title": title,
             "content": content,
+            "add_time": addTime,
             "status": status,
         },
         map[string]string{
             "cate_id": "required",
             "title": "required",
             "content": "required",
+            "add_time": "required",
             "status": "required|in:y,n",
         },
         map[string]string{
             "cate_id.required": "文章分类不能为空",
             "title.required": "文章标题不能为空",
             "content.required": "文章内容不能为空",
+            "add_time.required": "文章添加时间不能为空",
             "status.required": "文章状态不能为空",
             "status.in": "文章状态信息错误",
         },
@@ -279,6 +302,23 @@ func (this *Art) EditSave(ctx *fiber.Ctx) error {
         newStatus = 1
     }
 
+    datatime, _ := carbon.CreateFromFormat(carbon.DefaultFormat, addTime, "Asia/Shanghai")
+    addTimeTimestamp := datatime.Timestamp()
+
+    // 文章信息
+    var data model.Art
+    _, err1 := db.Engine().
+        Where("id = ?", id).
+        Get(&data)
+    if err1 != nil || data.Id == 0 {
+        return http.Error(ctx, 1, "文章不存在")
+    }
+
+    // 非管理员
+    if !auth.IsAdmin(ctx) && data.UserId != auth.GetUserId(ctx) {
+        return http.Error(ctx, 1, "你不能修改该文章")
+    }
+
     _, err := db.Engine().
         Table(new(model.Art)).
         Where("id = ?", id).
@@ -291,6 +331,7 @@ func (this *Art) EditSave(ctx *fiber.Ctx) error {
             "content": content,
             "tags": tags,
             "from": from,
+            "add_time": addTimeTimestamp,
             "is_top": newIsTop,
             "status": newStatus,
         })
@@ -308,6 +349,20 @@ func (this *Art) Delete(ctx *fiber.Ctx) error {
     id := cast.ToInt64(ctx.Params("id"))
     if id == 0 {
         return http.Error(ctx, 1, "删除失败")
+    }
+
+    // 文章信息
+    var data model.Art
+    _, err1 := db.Engine().
+        Where("id = ?", id).
+        Get(&data)
+    if err1 != nil || data.Id == 0 {
+        return http.Error(ctx, 1, "文章不存在")
+    }
+
+    // 非管理员
+    if !auth.IsAdmin(ctx) && data.UserId != auth.GetUserId(ctx) {
+        return http.Error(ctx, 1, "你不能修改该文章")
     }
 
     _, err := db.Engine().

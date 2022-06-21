@@ -148,6 +148,7 @@ func (this *Page) AddSave(ctx *fiber.Ctx) error {
         Slug: slug,
         Title: title,
         Content: "",
+        Tpl: "page",
         Status: newStatus,
         AddIp: ctx.IP(),
     })
@@ -174,9 +175,13 @@ func (this *Page) Edit(ctx *fiber.Ctx) error {
         return response.AdminErrorRender(ctx, "数据不存在")
     }
 
+    // 模板列表
+    tpls := this.ListTplFiles()
+
     return this.View(ctx, "page/edit", fiber.Map{
         "id": id,
         "data": data,
+        "tpls": tpls,
     })
 }
 
@@ -192,6 +197,7 @@ func (this *Page) EditSave(ctx *fiber.Ctx) error {
     keywords := cast.ToString(ctx.FormValue("keywords"))
     description := cast.ToString(ctx.FormValue("description"))
     content := cast.ToString(ctx.FormValue("content"))
+    tpl := cast.ToString(ctx.FormValue("tpl", ""))
     status := cast.ToString(ctx.FormValue("status"))
 
     // 验证
@@ -237,6 +243,7 @@ func (this *Page) EditSave(ctx *fiber.Ctx) error {
             "keywords": keywords,
             "description": description,
             "content": content,
+            "tpl": tpl,
             "status": newStatus,
         })
     if err != nil {

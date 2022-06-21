@@ -25,11 +25,21 @@ func AdminUrl(path string) string {
 
 // 分类链接
 func CateUrl(path string) string {
+    if path == "" {
+        path = "/c"
+        return path
+    }
+
     return fmt.Sprintf("/c/%s", path)
 }
 
 // 文章链接
 func ArtUrl(path string) string {
+    if path == "" {
+        path = "/a"
+        return path
+    }
+
     return fmt.Sprintf("/a/%s", path)
 }
 

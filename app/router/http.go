@@ -34,7 +34,7 @@ func HttpCms(app *fiber.App) {
     app.Get("/", indexController.Index)
 
     cateController := new(cms.Cate)
-    app.Get("/c/:slug", cateController.Index)
+    app.Get("/c/:slug?", cateController.Index)
 
     viewController := new(cms.View)
     app.Get("/a/:id", viewController.Index)
@@ -57,24 +57,15 @@ func HttpAdmin(app *fiber.App) {
     sys.Get("/", indexController.Index)
     sys.Get("/logout", authController.Logout)
 
-    // 设置
-    settingController := new(admin.Setting)
-    sys.Get("/setting", settingController.Index)
-    sys.Post("/setting/save", settingController.Save)
-
     // 信息设置
     profileController := new(admin.Profile)
     sys.Get("/profile", profileController.Index)
     sys.Post("/profile/save", profileController.Save)
 
-    // 分类
-    cateController := new(admin.Cate)
-    sys.Get("/cate", cateController.Index)
-    sys.Get("/cate/add", cateController.Add)
-    sys.Post("/cate/add", cateController.AddSave)
-    sys.Get("/cate/:id/edit", cateController.Edit)
-    sys.Post("/cate/:id/edit", cateController.EditSave)
-    sys.Post("/cate/:id/delete", cateController.Delete)
+    // 上传
+    uploadController := new(admin.Upload)
+    sys.Post("/upload/file", uploadController.File)
+    sys.Post("/upload/image", uploadController.Image)
 
     // 文章
     artController := new(admin.Art)
@@ -85,41 +76,53 @@ func HttpAdmin(app *fiber.App) {
     sys.Post("/art/:id/edit", artController.EditSave)
     sys.Post("/art/:id/delete", artController.Delete)
 
+    // admin 检测
+    sysAdmin := sys.Use(middleware.NewAdminCheck())
+
+    // 设置
+    settingController := new(admin.Setting)
+    sysAdmin.Get("/setting", settingController.Index)
+    sysAdmin.Post("/setting/save", settingController.Save)
+
+    // 分类
+    cateController := new(admin.Cate)
+    sysAdmin.Get("/cate", cateController.Index)
+    sysAdmin.Get("/cate/add", cateController.Add)
+    sysAdmin.Post("/cate/add", cateController.AddSave)
+    sysAdmin.Get("/cate/:id/edit", cateController.Edit)
+    sysAdmin.Post("/cate/:id/edit", cateController.EditSave)
+    sysAdmin.Post("/cate/:id/delete", cateController.Delete)
+
     // 单页
     pageController := new(admin.Page)
-    sys.Get("/page", pageController.Index)
-    sys.Get("/page/add", pageController.Add)
-    sys.Post("/page/add", pageController.AddSave)
-    sys.Get("/page/:id/edit", pageController.Edit)
-    sys.Post("/page/:id/edit", pageController.EditSave)
-    sys.Post("/page/:id/delete", pageController.Delete)
+    sysAdmin.Get("/page", pageController.Index)
+    sysAdmin.Get("/page/add", pageController.Add)
+    sysAdmin.Post("/page/add", pageController.AddSave)
+    sysAdmin.Get("/page/:id/edit", pageController.Edit)
+    sysAdmin.Post("/page/:id/edit", pageController.EditSave)
+    sysAdmin.Post("/page/:id/delete", pageController.Delete)
 
     // 标签
     tagController := new(admin.Tag)
-    sys.Get("/tag", tagController.Index)
-    sys.Get("/tag/:id/edit", tagController.Edit)
-    sys.Post("/tag/:id/edit", tagController.EditSave)
-    sys.Post("/tag/:id/delete", tagController.Delete)
+    sysAdmin.Get("/tag", tagController.Index)
+    sysAdmin.Get("/tag/:id/edit", tagController.Edit)
+    sysAdmin.Post("/tag/:id/edit", tagController.EditSave)
+    sysAdmin.Post("/tag/:id/delete", tagController.Delete)
 
     // 账号
     userController := new(admin.User)
-    sys.Get("/user", userController.Index)
-    sys.Get("/user/add", userController.Add)
-    sys.Post("/user/add", userController.AddSave)
-    sys.Get("/user/:id/edit", userController.Edit)
-    sys.Post("/user/:id/edit", userController.EditSave)
-    sys.Post("/user/:id/delete", userController.Delete)
+    sysAdmin.Get("/user", userController.Index)
+    sysAdmin.Get("/user/add", userController.Add)
+    sysAdmin.Post("/user/add", userController.AddSave)
+    sysAdmin.Get("/user/:id/edit", userController.Edit)
+    sysAdmin.Post("/user/:id/edit", userController.EditSave)
+    sysAdmin.Post("/user/:id/delete", userController.Delete)
 
     // 附件
     attachController := new(admin.Attach)
-    sys.Get("/attach", attachController.Index)
-    sys.Post("/attach/delete/:id", attachController.Delete)
-    sys.Get("/attach/download/:id", attachController.Download)
-
-    // 上传
-    uploadController := new(admin.Upload)
-    sys.Post("/upload/file", uploadController.File)
-    sys.Post("/upload/image", uploadController.Image)
+    sysAdmin.Get("/attach", attachController.Index)
+    sysAdmin.Post("/attach/delete/:id", attachController.Delete)
+    sysAdmin.Get("/attach/download/:id", attachController.Download)
 
 }
 
