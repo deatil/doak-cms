@@ -1,6 +1,7 @@
 package cms
 
 import (
+    "strings"
     "github.com/spf13/cast"
     "github.com/gofiber/fiber/v2"
 
@@ -35,6 +36,9 @@ func (this *View) Index(ctx *fiber.Ctx) error {
         return response.CmsErrorRender(ctx, "数据不存在")
     }
 
+    // 标签
+    tags := strings.Split(data.Tags, ",")
+
     // 分类信息
     var cate model.Cate
     db.Engine().
@@ -53,5 +57,6 @@ func (this *View) Index(ctx *fiber.Ctx) error {
         "id": id,
         "cate": cate,
         "data": data,
+        "tags": tags,
     })
 }

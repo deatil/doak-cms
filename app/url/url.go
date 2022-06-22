@@ -43,9 +43,14 @@ func ArtUrl(path string) string {
     return fmt.Sprintf("/a/%s", path)
 }
 
+// 标签链接
+func TagUrl(path string) string {
+    return fmt.Sprintf("/t/%s", path)
+}
+
 // 单页链接
 func PageUrl(path string) string {
-    return fmt.Sprintf("/%s", path)
+    return fmt.Sprintf("/p/%s", path)
 }
 
 // =======================

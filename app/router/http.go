@@ -39,6 +39,9 @@ func HttpCms(app *fiber.App) {
     viewController := new(cms.View)
     app.Get("/a/:id", viewController.Index)
 
+    tagController := new(cms.Tag)
+    app.Get("/t/:tag", tagController.Index)
+
     pageController := new(cms.Page)
     app.Get("/p/:name", pageController.Index)
 }

@@ -29,6 +29,7 @@ func SetViewFuncs(engine *jet.Engine) {
     // cms 链接
     engine.AddFunc("cateUrl", url.CateUrl)
     engine.AddFunc("artUrl", url.ArtUrl)
+    engine.AddFunc("tagUrl", url.TagUrl)
     engine.AddFunc("pageUrl", url.PageUrl)
 
     // 查询数据

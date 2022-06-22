@@ -312,6 +312,12 @@ header .header-container .header_sliding_sidebar_control {
 .wrapper article .meta span a {
   color: #718096;
 }
+.wrapper article .meta span.tags .tag-item {
+  border-radius: 5px;
+  border: 1px solid #cecbd2;
+  padding: 1px 3px;
+  margin-right: 3px;
+}
 .wrapper article .body {
   margin-top: 30px;
   color: #3c3c3c;

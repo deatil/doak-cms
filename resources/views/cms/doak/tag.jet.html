@@ -6,9 +6,7 @@
     <link rel="stylesheet" href='{{ assets("cms/doak/iconfont.css") }}' type="text/css" media="all">
     <script type="text/javascript" src='{{ assets("cms/doak/jquery.min.js") }}'></script>
     <script src='{{ assets("cms/doak/nprogress.min.js") }}'></script>
-    <title>{{ data.Title }} - {{ getSetting("website_name") }}</title>
-    <link rel="stylesheet" href='{{ assets("cms/doak/atom-one-dark.min.css") }}'>
-    <link rel="stylesheet" href='{{ assets("cms/doak/viewer.css") }}' crossorigin="anonymous">
+    <title>标签:{{ tag }} - {{ getSetting("website_name") }}</title>
 </head>
 
 <body>
@@ -46,37 +44,52 @@
 </div>
 
 <div class="wrapper">
-    <article>
-        <h1 class="title">{{ data.Title }}</h1>
-        <div class="meta">
-            <span class="category">
-                <a href='{{ cateUrl(cate.Slug) }}' title="{{ cate.Name }}" target="_blank">
-                    {{ cate.Name }}
-                </a>
-            </span>
-            <span class="from pipe">
-                {{ data.From }}
-            </span>
-            <span class="dateline pipe">
-                {{ createTime(data.AddTime, "Asia/Shanghai").Format("2006年01月02日 15:04") }}
-            </span>
-            <span class="viewcount pipe">
-                {{ data.Views }} 次浏览
-            </span>
-            <span class="tags pipe">
-                {{ range ti, tv := tags }} 
-                    <a href='{{ tagUrl(tv) }}' 
-                        target="_blank" 
-                        title="{{ tv }}"
-                        class="tag-item">{{ tv }}</a>
-                {{ end }}
-            </span>
+    <div class="article-container">
+        {{ range index, value := arts }} 
+        <div class="item">
+            <div class="time-image">
+                <div class="datetime">
+                    {{ createTime(value.AddTime, "Asia/Shanghai").Format("02") }}
+                    <span>{{ createTime(value.AddTime, "Asia/Shanghai").Format("2006年 - 01月") }}</span>
+                </div>
+                <div class="preview">
+                    <a href="{{ artUrl(value.Uuid) }}">
+                        <img src="{{ attachUrlWithId(value.Cover) }}" alt="{{ value.Title }}">
+                    </a>
+                </div>
+            </div>
+            <div class="content">
+                <h2 class="title">
+                    <a href="{{ artUrl(value.Uuid) }}">{{ value.Title }}</a>
+                </h2>
+                <div class="meta">
+                    <span class="category">
+                        <a href='{{ cateUrl(value.CateSlug) }}' title="{{ value.CateName }}" target="_blank">
+                            {{ value.CateName }}
+                        </a>
+                    </span>
+                    <span class="from pipe">
+                        {{ value.From }}
+                    </span>
+                    <span class="dateline pipe">
+                        {{ createTime(value.AddTime, "Asia/Shanghai").Format("2006年01月02日 15:04") }}
+                    </span>
+                    <span class="viewcount pipe">
+                        {{ value.Views }} 次浏览
+                    </span>
+                </div>
+                <div class="summary">
+                    {{ value.Description }}
+                </div>
+            </div>
         </div>
-        <div class="body">
-            {{ data.Content | raw }}
+        {{ end }}
+        
+        <div class="page">
+            {{ pageHtml|raw }}
         </div>
-    </article>
-
+        
+    </div>
 </div>
 
 <footer class="footer">
@@ -97,28 +110,5 @@ $(document).ready(
     }
 );
 </script>
-
-<script src='{{ assets("cms/doak/highlight.min.js") }}'></script>
-<script>hljs.highlightAll();</script>
-<script src='{{ assets("cms/doak/viewer.js") }}' crossorigin="anonymous"></script>
-<script src='{{ assets("cms/doak/jquery-viewer.js") }}'></script>
-<script>
-$(function () {
-    var $images = $('article .body img[src^="/upload"]');
-    $images.viewer({
-        navbar: false,
-        title: false,
-        toolbar: false,
-        tooltip: false,
-        loop: false,
-        keyboard: false,
-        rotatable: false,
-        scalable: false,
-        slideOnTouch: false,
-        className: 'abcccc'
-    });
-});
-</script>
-
 </body>
 </html>
