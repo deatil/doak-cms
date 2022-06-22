@@ -42,9 +42,6 @@ func (this *Page) Index(ctx *fiber.Ctx) error {
     // 搜索关键字
     keywords := cast.ToString(ctx.Query("keywords", ""))
 
-    // 分类
-    cateid := cast.ToInt(ctx.Query("cateid"))
-
     // 状态
     status := cast.ToString(ctx.Query("status", ""))
 
@@ -55,9 +52,6 @@ func (this *Page) Index(ctx *fiber.Ctx) error {
         Where("title like ?", "%" + keywords + "%").
         Desc("add_time").
         Desc("id")
-    if cateid != 0 {
-        modeldb = modeldb.Where("cate_id = ?", cateid)
-    }
     if status != "" {
         modeldb = modeldb.Where("status = ?", status)
     }
@@ -70,9 +64,6 @@ func (this *Page) Index(ctx *fiber.Ctx) error {
     // 总数
     countdb := db.Engine().
         Where("title like ?", "%" + keywords + "%")
-    if cateid != 0 {
-        countdb = countdb.Where("cate_id = ?", cateid)
-    }
     if status != "" {
         countdb = countdb.Where("status = ?", status)
     }
@@ -140,6 +131,15 @@ func (this *Page) AddSave(ctx *fiber.Ctx) error {
         newStatus = 1
     }
 
+    // 单页信息
+    var data model.Page
+    has, _ := db.Engine().
+        Where("slug = ?", slug).
+        Get(&data)
+    if has {
+        return http.Error(ctx, 1, "添加失败, 单页标识[" + slug + "]已经存在")
+    }
+
     // 当前账号
     userId := appAuth.GetUserInfo(ctx).Id
 
@@ -166,7 +166,7 @@ func (this *Page) Edit(ctx *fiber.Ctx) error {
         return response.AdminErrorRender(ctx, "数据不存在")
     }
 
-    // 分类信息
+    // 单页信息
     var data model.Page
     _, err := db.Engine().
         Where("id = ?", id).
@@ -234,6 +234,24 @@ func (this *Page) EditSave(ctx *fiber.Ctx) error {
         newStatus = 1
     }
 
+    // 单页信息
+    var data model.Page
+    has, _ := db.Engine().
+        Where("id = ?", id).
+        Get(&data)
+    if !has {
+        return http.Error(ctx, 1, "单页不存在")
+    }
+
+    // 判断是否存在
+    var slugData model.Page
+    db.Engine().
+        Where("slug = ?", slug).
+        Get(&slugData)
+    if slugData.Id > 0 && slugData.Id != id {
+        return http.Error(ctx, 1, "编辑失败, 单页标识[" + slug + "]已经存在")
+    }
+
     _, err := db.Engine().
         Table(new(model.Page)).
         Where("id = ?", id).
@@ -258,6 +276,15 @@ func (this *Page) Delete(ctx *fiber.Ctx) error {
     id := cast.ToInt64(ctx.Params("id"))
     if id == 0 {
         return http.Error(ctx, 1, "删除失败")
+    }
+
+    // 单页信息
+    var data model.Page
+    has, _ := db.Engine().
+        Where("id = ?", id).
+        Get(&data)
+    if !has {
+        return http.Error(ctx, 1, "单页不存在")
     }
 
     _, err := db.Engine().

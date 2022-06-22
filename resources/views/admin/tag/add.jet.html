@@ -1,0 +1,118 @@
+{{extends "/admin/common/base_content"}}
+
+{{block title()}}添加标签 - Doak CMS{{end}}
+
+{{block body()}}
+
+<style>
+.form-text {
+    color: #b7bbbf;
+}
+</style>
+
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-sm-12 col-xl-12">
+            <div class="bg-light rounded h-100 p-4">
+                <h6 class="mb-4">
+                    添加标签
+                    
+                    <a href="/sys/tag" class="ms-1" title="返回列表">
+                        <i class="fa fa-arrow-circle-left"></i>
+                    </a>
+                </h6>
+                
+                <form class="profile-form">
+                    <div class="mb-3">
+                        <label for="nameInput" class="form-label">
+                            标签名称
+                            <span class="text-danger">*</span>
+                        </label>
+                        <input type="text" 
+                            name="name" 
+                            value="" 
+                            class="form-control" 
+                            id="nameInput" 
+                            aria-describedby="nameHelp">
+                        <div id="nameHelp" class="form-text">
+                            标签的名称
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">
+                            标签状态
+                            <span class="text-danger">*</span>
+                        </label>
+                        <div class="form-control">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" 
+                                    type="radio" 
+                                    name="status" 
+                                    checked=""
+                                    id="inlineRadioStatus1" 
+                                    value="y">
+                                <label class="form-check-label" 
+                                    for="inlineRadioStatus1">启用</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" 
+                                    type="radio" 
+                                    name="status" 
+                                    id="inlineRadioStatus2" 
+                                    value="n">
+                                <label class="form-check-label" 
+                                    for="inlineRadioStatus2">禁用</label>
+                            </div>
+                        </div>
+                        <div class="form-text">
+                            标签是否开启或者关闭
+                        </div>
+                    </div>
+                    
+                    <button type="button" 
+                        class="btn btn-primary js-save-button">确认</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{{end}}
+
+{{block script_after()}}
+<script type="3029259e35d7bc1c98cd40a8-text/javascript">
+(function($) {
+    "use strict";
+    
+    $(".sidebar-tag-index").addClass("active");
+    
+    // 保存
+    $(".js-save-button").click(function(e) {
+        e.stopPropagation;
+        e.preventDefault;
+
+        var name = $("[name=name]").val();
+        var status = $("[name=status]:checked").val();
+
+        var url = "/sys/tag/add";
+        $.post(url, {
+            name: name,
+            status: status,
+        }, function(data) {
+            if (data.code == 0) {
+                layer.msg("添加成功");
+                
+                setTimeout(function() {
+                    window.location.reload();
+                }, 1500);
+            } else {
+                layer.msg(data.message);
+            }
+        });
+    });
+
+})(jQuery);
+</script>
+{{end}}

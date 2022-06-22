@@ -48,14 +48,14 @@ func (this *Art) Index(ctx *fiber.Ctx) error {
     // 分类
     cateid := cast.ToInt64(ctx.Query("cateid"))
 
-    // 状态
-    status := cast.ToString(ctx.Query("status", ""))
-
     // 开始时间
     startTime := cast.ToString(ctx.Query("start_time", ""))
 
     // 结束时间
     endTime := cast.ToString(ctx.Query("end_time", ""))
+
+    // 状态
+    status := cast.ToString(ctx.Query("status", ""))
 
     // 列表
     arts := make([]model.Art, 0)
@@ -65,9 +65,6 @@ func (this *Art) Index(ctx *fiber.Ctx) error {
 
     if cateid != 0 {
         modeldb = modeldb.Where("cate_id = ?", cateid)
-    }
-    if status != "" {
-        modeldb = modeldb.Where("status = ?", status)
     }
 
     if startTime != "" {
@@ -79,6 +76,10 @@ func (this *Art) Index(ctx *fiber.Ctx) error {
         endTimeObj, _ := carbon.CreateFromFormat(carbon.DefaultFormat, endTime, "Asia/Shanghai")
 
         modeldb = modeldb.Where("add_time <= ?", endTimeObj.Timestamp())
+    }
+
+    if status != "" {
+        modeldb = modeldb.Where("status = ?", status)
     }
 
     // 非管理员
@@ -232,10 +233,10 @@ func (this *Art) Edit(ctx *fiber.Ctx) error {
 
     // 文章信息
     var data model.Art
-    _, err := db.Engine().
+    has, _ := db.Engine().
         Where("id = ?", id).
         Get(&data)
-    if err != nil || data.Id == 0 {
+    if !has {
         return response.AdminErrorRender(ctx, "数据不存在")
     }
 
@@ -329,10 +330,10 @@ func (this *Art) EditSave(ctx *fiber.Ctx) error {
 
     // 文章信息
     var data model.Art
-    _, err1 := db.Engine().
+    has, _ := db.Engine().
         Where("id = ?", id).
         Get(&data)
-    if err1 != nil || data.Id == 0 {
+    if !has {
         return http.Error(ctx, 1, "文章不存在")
     }
 
@@ -375,10 +376,10 @@ func (this *Art) Delete(ctx *fiber.Ctx) error {
 
     // 文章信息
     var data model.Art
-    _, err1 := db.Engine().
+    has, _ := db.Engine().
         Where("id = ?", id).
         Get(&data)
-    if err1 != nil || data.Id == 0 {
+    if !has {
         return http.Error(ctx, 1, "文章不存在")
     }
 

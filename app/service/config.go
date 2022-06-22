@@ -45,12 +45,12 @@ func (this *Config) List(ctx context.Context, args *rpc.Args, reply *rpc.Reply) 
     }
 
     // 列表
-    cates := make([]model.Config, 0)
+    list := make([]model.Config, 0)
     err := db.Engine().
         Limit(limit, start).
         Where(where).
         OrderBy(orderby).
-        Find(&cates)
+        Find(&list)
 
     // 总数
     total, _ := db.Engine().
@@ -64,7 +64,7 @@ func (this *Config) List(ctx context.Context, args *rpc.Args, reply *rpc.Reply) 
 
     reply.Body = map[string]any{
         "total": total,
-        "list": cates,
+        "list": list,
         "error": errData,
     }
 
@@ -85,7 +85,7 @@ func (this *Config) Info(ctx context.Context, args *rpc.Args, reply *rpc.Reply) 
         return nil
     }
 
-    // 分类信息
+    // 信息
     var data model.Config
     _, err := db.Engine().
         Where(where).

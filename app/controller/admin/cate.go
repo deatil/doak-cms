@@ -123,10 +123,10 @@ func (this *Cate) AddSave(ctx *fiber.Ctx) error {
 
     // 分类信息
     var data model.Cate
-    db.Engine().
+    has, _ := db.Engine().
         Where("slug = ?", slug).
         Get(&data)
-    if data.Id > 0 {
+    if has {
         return http.Error(ctx, 1, "添加失败, [" + slug + "] 标识已经存在")
     }
 
@@ -160,10 +160,10 @@ func (this *Cate) Edit(ctx *fiber.Ctx) error {
 
     // 分类信息
     var data model.Cate
-    _, err := db.Engine().
+    has, _ := db.Engine().
         Where("id = ?", id).
         Get(&data)
-    if err != nil || data.Id == 0 {
+    if !has {
         return response.AdminErrorRender(ctx, "数据不存在")
     }
 
@@ -231,18 +231,27 @@ func (this *Cate) EditSave(ctx *fiber.Ctx) error {
         return http.Error(ctx, 1, "父级ID错误")
     }
 
-    // 分类信息
-    var data model.Cate
-    db.Engine().
-        Where("slug = ?", slug).
-        Get(&data)
-    if data.Id > 0 && data.Id != id {
-        return http.Error(ctx, 1, "编辑失败, [" + slug + "] 标识已经存在")
-    }
-
     newStatus := 0
     if status == "y" {
         newStatus = 1
+    }
+
+    // 分类信息
+    var data model.Cate
+    has, _ := db.Engine().
+        Where("id = ?", id).
+        Get(&data)
+    if !has {
+        return http.Error(ctx, 1, "分类不存在")
+    }
+
+    // 判断是否重复
+    var slugData model.Cate
+    db.Engine().
+        Where("slug = ?", slug).
+        Get(&slugData)
+    if slugData.Id > 0 && slugData.Id != id {
+        return http.Error(ctx, 1, "编辑失败, 分类标识[" + slug + "]已经存在")
     }
 
     _, err := db.Engine().
@@ -272,10 +281,19 @@ func (this *Cate) Delete(ctx *fiber.Ctx) error {
 
     // 分类信息
     var data model.Cate
+    has, _ := db.Engine().
+        Where("id = ?", id).
+        Get(&data)
+    if !has {
+        return http.Error(ctx, 1, "分类不存在")
+    }
+
+    // 分类信息
+    var pidData model.Cate
     db.Engine().
         Where("pid = ?", id).
-        Get(&data)
-    if data.Id > 0 {
+        Get(&pidData)
+    if pidData.Id > 0 {
         return http.Error(ctx, 1, "当前分类有子级，不能被删除")
     }
 

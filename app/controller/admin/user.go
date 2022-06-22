@@ -118,10 +118,10 @@ func (this *User) AddSave(ctx *fiber.Ctx) error {
 
     // 账号信息
     var data model.User
-    db.Engine().
+    has, _ := db.Engine().
         Where("username = ?", username).
         Get(&data)
-    if data.Id > 0 {
+    if has {
         return http.Error(ctx, 1, "添加失败, 账号[" + username + "]已经存在")
     }
 
@@ -209,10 +209,19 @@ func (this *User) EditSave(ctx *fiber.Ctx) error {
 
     // 账号信息
     var data model.User
+    has, _ := db.Engine().
+        Where("id = ?", id).
+        Get(&data)
+    if !has {
+        return http.Error(ctx, 1, "账号不存在")
+    }
+
+    // 账号信息
+    var usernameData model.User
     db.Engine().
         Where("username = ?", username).
-        Get(&data)
-    if data.Id > 0 && data.Id != id {
+        Get(&usernameData)
+    if usernameData.Id > 0 && usernameData.Id != id {
         return http.Error(ctx, 1, "编辑失败, 账号[" + username + "]已经存在")
     }
 
@@ -248,6 +257,15 @@ func (this *User) Delete(ctx *fiber.Ctx) error {
     id := cast.ToInt64(ctx.Params("id"))
     if id == 0 {
         return http.Error(ctx, 1, "删除失败")
+    }
+
+    // 账号信息
+    var data model.User
+    has, _ := db.Engine().
+        Where("id = ?", id).
+        Get(&data)
+    if !has {
+        return http.Error(ctx, 1, "账号不存在")
     }
 
     _, err := db.Engine().

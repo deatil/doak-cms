@@ -105,6 +105,8 @@ func HttpAdmin(app *fiber.App) {
     // 标签
     tagController := new(admin.Tag)
     sysAdmin.Get("/tag", tagController.Index)
+    sysAdmin.Get("/tag/add", tagController.Add)
+    sysAdmin.Post("/tag/add", tagController.AddSave)
     sysAdmin.Get("/tag/:id/edit", tagController.Edit)
     sysAdmin.Post("/tag/:id/edit", tagController.EditSave)
     sysAdmin.Post("/tag/:id/delete", tagController.Delete)

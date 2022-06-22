@@ -22,15 +22,49 @@ import (
 func HttpServer(jetFunc func(*jet.Engine), appFunc func(*fiber.App)) {
     cfg := config.Section("app")
 
+    debug := cfg.Key("debug").MustBool(false)
+
     // 设置模板驱动
     jetEngine := view.JetEngine("view")
     jetFunc(jetEngine)
 
     app := fiber.New(fiber.Config{
         Views: jetEngine,
-    })
+        // 默认的错误处理程序
+        // fiber.DefaultErrorHandler
+        // 覆盖默认的错误处理程序
+        ErrorHandler: func(ctx *fiber.Ctx, err error) error {
+            // 状态代码默认为500
+            code := fiber.StatusInternalServerError
 
-    debug := cfg.Key("debug").MustBool(false)
+            // 如果是fiber.*Error，则检索自定义状态代码。
+            if e, ok := err.(*fiber.Error); ok {
+                code = e.Code
+            }
+
+            // 调试的时候
+            if debug {
+                // 设置 Content-Type: text/plain; charset=utf-8
+                ctx.Set(fiber.HeaderContentType, fiber.MIMETextPlainCharsetUTF8)
+
+                // 返回带有错误信息的状态码
+                return ctx.Status(code).SendString(err.Error())
+            }
+
+            errorHtml := cfg.Key("error-html").String()
+
+            // 发送自定义错误页面
+            err = ctx.Status(code).SendFile(errorHtml)
+            if err != nil {
+                // 万一SendFile失败
+               return ctx.Status(fiber.StatusInternalServerError).
+                        SendString("Internal Server Error")
+            }
+
+             // 从处理程序返回
+             return nil
+        },
+    })
 
     // 中间件
     if debug {

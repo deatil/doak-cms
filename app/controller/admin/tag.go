@@ -83,6 +83,66 @@ func (this *Tag) Index(ctx *fiber.Ctx) error {
     })
 }
 
+// 添加
+func (this *Tag) Add(ctx *fiber.Ctx) error {
+    return this.View(ctx, "tag/add", fiber.Map{})
+}
+
+// 添加保存
+func (this *Tag) AddSave(ctx *fiber.Ctx) error {
+    name := cast.ToString(ctx.FormValue("name"))
+    status := cast.ToString(ctx.FormValue("status"))
+
+    // 验证
+    errs := validate.Validate(
+        map[string]any{
+            "name": name,
+            "status": status,
+        },
+        map[string]string{
+            "name": "required|minLen:1",
+            "status": "required|in:y,n",
+        },
+        map[string]string{
+            "name.required": "分类名称不能为空",
+            "name.minLen": "分类名称不能少于1位",
+            "status.required": "分类状态不能为空",
+            "status.in": "分类状态信息错误",
+        },
+    )
+
+    if (errs != nil) {
+        return http.Error(ctx, 1, errs.One())
+    }
+
+    // 分类信息
+    var data model.Tag
+    has, _ := db.Engine().
+        Where("name = ?", name).
+        Get(&data)
+    if has {
+        return http.Error(ctx, 1, "添加失败, 标签[" + name + "]已经存在")
+    }
+
+    newStatus := 0
+    if status == "y" {
+        newStatus = 1
+    }
+
+    _, err := db.Engine().Insert(&model.Tag{
+        Name: name,
+        Desc: "",
+        Sort: 100,
+        Status: newStatus,
+        AddIp: ctx.IP(),
+    })
+    if err != nil {
+        return http.Error(ctx, 1, "添加失败")
+    }
+
+    return http.Success(ctx, "添加成功", "")
+}
+
 // 编辑
 func (this *Tag) Edit(ctx *fiber.Ctx) error {
     id := cast.ToInt64(ctx.Params("id"))
@@ -144,10 +204,19 @@ func (this *Tag) EditSave(ctx *fiber.Ctx) error {
 
     // 标签信息
     var data model.Tag
+    has, _ := db.Engine().
+        Where("id = ?", id).
+        Get(&data)
+    if !has {
+        return http.Error(ctx, 1, "标签不存在")
+    }
+
+    // 判断是否存在
+    var nameData model.Tag
     db.Engine().
         Where("name = ?", name).
-        Get(&data)
-    if data.Id > 0 && data.Id != id {
+        Get(&nameData)
+    if nameData.Id > 0 && nameData.Id != id {
         return http.Error(ctx, 1, "编辑失败, 标签[" + name + "]已经存在")
     }
 
@@ -177,6 +246,15 @@ func (this *Tag) Delete(ctx *fiber.Ctx) error {
     id := cast.ToInt64(ctx.Params("id"))
     if id == 0 {
         return http.Error(ctx, 1, "删除失败")
+    }
+
+    // 标签信息
+    var data model.Tag
+    has, _ := db.Engine().
+        Where("id = ?", id).
+        Get(&data)
+    if !has {
+        return http.Error(ctx, 1, "标签不存在")
     }
 
     _, err := db.Engine().

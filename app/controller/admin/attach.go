@@ -89,19 +89,19 @@ func (this *Attach) Delete(ctx *fiber.Ctx) error {
         return http.Error(ctx, 1, "删除失败")
     }
 
-    // 标签信息
+    // 附件信息
     var data model.Attach
-    _, err := db.Engine().
+    has, _ := db.Engine().
         Where("id = ?", id).
         Get(&data)
-    if err != nil {
+    if !has {
         return http.Error(ctx, 1, "附件不存在")
     }
 
-    _, err2 := db.Engine().
+    _, err := db.Engine().
         Where("id = ?", id).
         Delete(new(model.Attach))
-    if err2 != nil {
+    if err != nil {
         return http.Error(ctx, 1, "删除失败")
     }
 
@@ -118,24 +118,21 @@ func (this *Attach) Delete(ctx *fiber.Ctx) error {
 func (this *Attach) Download(ctx *fiber.Ctx) error {
     id := cast.ToString(ctx.Params("id"))
     if id == "" {
-        ctx.SendStatus(404)
-        return nil
+        return ctx.SendString("附件不存在")
     }
 
-    // 标签信息
+    // 附件信息
     var data model.Attach
     _, err := db.Engine().
         Where("id = ?", id).
         Get(&data)
-    if err != nil {
-        ctx.SendStatus(404)
-        return nil
+    if err != nil || data.Id == "" {
+        return ctx.SendString("附件不存在")
     }
 
     newPath := url.AttachPath(data.Path)
     if !utils.FileExists(newPath) {
-        ctx.SendStatus(404)
-        return nil
+        return ctx.SendString("附件不存在")
     }
 
     return ctx.Download(newPath, data.Name);
