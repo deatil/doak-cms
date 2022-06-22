@@ -41,6 +41,32 @@
                         
                         <div class="col-auto">
                             <div class="input-group my-1">
+                                <span class="input-group-text" id="input-start_time">开始时间</span>
+                                <input type="text" 
+                                    name="start_time"
+                                    value="{{ start_time }}"
+                                    class="form-control format-datetime" 
+                                    placeholder="" 
+                                    aria-label="start_time" 
+                                    aria-describedby="input-start_time">
+                            </div>
+                        </div>
+                        
+                        <div class="col-auto">
+                            <div class="input-group my-1">
+                                <span class="input-group-text" id="input-end_time">结束时间</span>
+                                <input type="text" 
+                                    name="end_time"
+                                    value="{{ end_time }}"
+                                    class="form-control format-datetime" 
+                                    placeholder="" 
+                                    aria-label="end_time" 
+                                    aria-describedby="input-end_time">
+                            </div>
+                        </div>
+                        
+                        <div class="col-auto">
+                            <div class="input-group my-1">
                                 <span class="input-group-text" id="input-cateid">分类</span>
                                 <select name="cateid"
                                     class="form-select" 
@@ -196,11 +222,18 @@
 {{end}}
 
 {{block script_after()}}
+<script src="/static/admin/libs/laydate/laydate.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
 <script type="3029259e35d7bc1c98cd40a8-text/javascript">
 (function($) {
     "use strict";
     
     $(".sidebar-art-index").addClass("active");
+    
+    // 时间
+    laydate.render({
+        elem: '.format-datetime',
+        type: 'datetime',
+    });
     
     // 删除
     $('.js-delete-btn').click(function() {

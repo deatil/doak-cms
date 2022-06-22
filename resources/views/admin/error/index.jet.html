@@ -10,8 +10,16 @@
             <h1 class="display-1 fw-bold">Error</h1>
             <h1 class="mb-4">Page Is Error</h1>
             <p class="mb-4">{{ Msg }}</p>
+            {{if Url != ""}}
+                <p class="mb-4 jump">
+                    页面将在 <b id="wait">{{ Wait }}</b> 秒后自动跳转
+                </p>
+            {{end}}
             <a class="btn btn-primary rounded-pill py-3 px-5" href="/sys">返回首页</a>
-            <a class="btn btn-success rounded-pill py-3 px-5" href="javascript:history.back();">返回上一页</a>
+            
+            {{if Url != ""}}
+                <a class="btn btn-success rounded-pill py-3 px-5" id="href" href="{{ Url|raw }}">立即跳转</a>
+            {{end}}
         </div>
     </div>
 </div>
@@ -29,4 +37,21 @@
 
 <script src="/static/admin/js/main.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
 <script src="/static/admin/js/rocket-loader.min.js" data-cf-settings="3029259e35d7bc1c98cd40a8-|49" defer=""></script>
+
+{{if Url != ""}}
+<script type="3029259e35d7bc1c98cd40a8-text/javascript">
+;(function(){
+    var wait = document.getElementById('wait'),
+        href = document.getElementById('href').href;
+    var interval = setInterval(function(){
+        var time = --wait.innerHTML;
+        if(time <= 0) {
+            location.href = href;
+            clearInterval(interval);
+        };
+    }, 1000);
+})();
+</script>
+{{end}}
+
 {{end}}

@@ -49,12 +49,12 @@ func (this *Upload) Image(ctx *fiber.Ctx) error {
 
     // 打开临时文件
     attachFileopen, err := file.Open()
+    defer attachFileopen.Close()
     if err != nil {
         return http.Error(ctx, 1, "上传失败")
     }
 
     filemd5, _ = utils.FileMD5WithStream(attachFileopen)
-    attachFileopen.Close()
 
     // 已存在信息返回
     var data model.Attach
@@ -128,12 +128,12 @@ func (this *Upload) File(ctx *fiber.Ctx) error {
 
     // 打开临时文件
     attachFileopen, err := file.Open()
+    defer attachFileopen.Close()
     if err != nil {
         return http.Error(ctx, 1, "上传失败")
     }
 
     filemd5, _ = utils.FileMD5WithStream(attachFileopen)
-    attachFileopen.Close()
 
     // 已存在信息返回
     var data model.Attach

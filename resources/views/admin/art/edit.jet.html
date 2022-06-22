@@ -403,7 +403,6 @@
             btn: ['确定', '取消']
         }, function(index){
             layer.msg("移除封面成功", {
-                offset: 'c',
                 icon: 1
             });
 
@@ -414,7 +413,7 @@
                 $img.attr('alt', "文章封面");
                 
                 $('#coverInput').val("");
-            }, 1500);
+            }, 500);
         });
     });
 

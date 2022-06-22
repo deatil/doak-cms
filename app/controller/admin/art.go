@@ -39,7 +39,7 @@ func (this *Art) Index(ctx *fiber.Ctx) error {
     }
 
     // 每页数量
-    listRows := 5
+    listRows := 10
     start := (currentPage - 1) * listRows
 
     // 搜索关键字
@@ -51,13 +51,18 @@ func (this *Art) Index(ctx *fiber.Ctx) error {
     // 状态
     status := cast.ToString(ctx.Query("status", ""))
 
+    // 开始时间
+    startTime := cast.ToString(ctx.Query("start_time", ""))
+
+    // 结束时间
+    endTime := cast.ToString(ctx.Query("end_time", ""))
+
     // 列表
     arts := make([]model.Art, 0)
     modeldb := db.Engine().
         Limit(listRows, start).
-        Where("title like ?", "%" + keywords + "%").
-        Desc("add_time").
-        Desc("id")
+        Where("title like ?", "%" + keywords + "%")
+
     if cateid != 0 {
         modeldb = modeldb.Where("cate_id = ?", cateid)
     }
@@ -65,12 +70,26 @@ func (this *Art) Index(ctx *fiber.Ctx) error {
         modeldb = modeldb.Where("status = ?", status)
     }
 
+    if startTime != "" {
+        startTimeObj, _ := carbon.CreateFromFormat(carbon.DefaultFormat, startTime, "Asia/Shanghai")
+
+        modeldb = modeldb.Where("add_time >= ?", startTimeObj.Timestamp())
+    }
+    if endTime != "" {
+        endTimeObj, _ := carbon.CreateFromFormat(carbon.DefaultFormat, endTime, "Asia/Shanghai")
+
+        modeldb = modeldb.Where("add_time <= ?", endTimeObj.Timestamp())
+    }
+
     // 非管理员
     if !auth.IsAdmin(ctx) {
         modeldb = modeldb.Where("user_id = ?", auth.GetUserId(ctx))
     }
 
-    err := modeldb.Find(&arts)
+    err := modeldb.
+        Desc("add_time").
+        Desc("id").
+        Find(&arts)
     if err != nil {
         log.Log().Error(err.Error())
     }
@@ -117,6 +136,9 @@ func (this *Art) Index(ctx *fiber.Ctx) error {
         "keywords": keywords,
         "status": status,
         "cateid": cateid,
+
+        "start_time": startTime,
+        "end_time": endTime,
 
         "cates": newCates,
 

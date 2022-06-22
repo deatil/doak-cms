@@ -1,6 +1,7 @@
 package response
 
 import (
+    "github.com/spf13/cast"
     "github.com/gofiber/fiber/v2"
 
     "github.com/deatil/doak-cms/pkg/config"
@@ -19,9 +20,21 @@ func CmsTheme(tpl string) string {
 }
 
 // 管理端错误显示
-func AdminErrorRender(ctx *fiber.Ctx, msg string) error {
+func AdminErrorRender(ctx *fiber.Ctx, msg string, extra ...any) error {
+    url := ""
+    if len(extra) > 0 {
+        url = cast.ToString(extra[0])
+    }
+
+    wait := 5
+    if len(extra) > 1 {
+        wait = cast.ToInt(extra[1])
+    }
+
     ctx.Render("admin/error/index", fiber.Map{
         "Msg": msg,
+        "Url": url,
+        "Wait": wait,
     })
 
     return nil

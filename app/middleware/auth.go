@@ -9,6 +9,7 @@ import (
     "github.com/deatil/doak-cms/pkg/cookie"
     "github.com/deatil/doak-cms/pkg/session"
 
+    "github.com/deatil/doak-cms/app/url"
     "github.com/deatil/doak-cms/app/model"
     "github.com/deatil/doak-cms/app/response"
 )
@@ -22,7 +23,7 @@ func NewAuth() fiber.Handler {
 
             userid = cookie.Get(ctx, cookieKey)
             if userid == "" {
-                return response.AdminErrorRender(ctx, "请先登录")
+                return response.AdminErrorRender(ctx, "请先登录", url.AdminUrl("login"))
             }
         }
 
