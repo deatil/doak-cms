@@ -37,7 +37,10 @@ func (this *View) Index(ctx *fiber.Ctx) error {
     }
 
     // 标签
-    tags := strings.Split(data.Tags, ",")
+    var tags []string
+    if data.Tags != "" {
+        tags = strings.Split(data.Tags, ",")
+    }
 
     // 分类信息
     var cate model.Cate

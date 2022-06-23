@@ -63,6 +63,8 @@
             <span class="viewcount pipe">
                 {{ data.Views }} 次浏览
             </span>
+            
+            {{if len(tags) > 0}}
             <span class="tags pipe">
                 {{ range ti, tv := tags }} 
                     <a href='{{ tagUrl(tv) }}' 
@@ -71,6 +73,7 @@
                         class="tag-item">{{ tv }}</a>
                 {{ end }}
             </span>
+            {{ end }}
         </div>
         <div class="body">
             {{ data.Content | raw }}

@@ -61,7 +61,7 @@ func (this *Art) Index(ctx *fiber.Ctx) error {
     arts := make([]model.Art, 0)
     modeldb := db.Engine().
         Limit(listRows, start).
-        Where("title like ?", "%" + keywords + "%")
+        Where("title like ? or uuid like ?", "%" + keywords + "%", "%" + keywords + "%")
 
     if cateid != 0 {
         modeldb = modeldb.Where("cate_id = ?", cateid)
@@ -97,7 +97,7 @@ func (this *Art) Index(ctx *fiber.Ctx) error {
 
     // 总数
     countdb := db.Engine().
-        Where("title like ?", "%" + keywords + "%")
+        Where("title like ? or uuid like ?", "%" + keywords + "%", "%" + keywords + "%")
     if cateid != 0 {
         countdb = countdb.Where("cate_id = ?", cateid)
     }

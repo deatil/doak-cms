@@ -49,43 +49,24 @@ func (this *Cate) Index(ctx *fiber.Ctx) error {
     }
 
     // 文章列表
-    arts := make([]model.Art, 0)
+    arts := make([]model.ArtCate, 0)
     db.Engine().
+        Table(new(model.Art)).Alias("a").
+        Join("LEFT", []any{new(model.Cate), "c"}, "c.id = a.cate_id").
         Limit(listRows, start).
-        Where("cate_id = ?", cate.Id).
-        Where("status = ?", 1).
-        Desc("is_top").
-        Desc("add_time").
+        Where("a.cate_id = ?", cate.Id).
+        Where("a.status = ?", 1).
+        Desc("a.is_top").
+        Desc("a.add_time").
         Find(&arts)
-
-    // 分类列表
-    cates := make([]model.Cate, 0)
-    db.Engine().
-        Desc("sort").
-        Asc("id").
-        Find(&cates)
-
-    newCates := make(map[int64]model.Cate)
-    if len(cates) > 0 {
-        for _, cv := range cates {
-            newCates[cv.Id] = cv
-        }
-    }
 
     newArts := make([]model.ArtCatename, 0)
     if len(arts) > 0 {
-        for _, v := range arts {
-            cateName := ""
-            cateSlug := ""
-            if newCate, ok := newCates[v.CateId]; ok {
-                cateName = newCate.Name
-                cateSlug = newCate.Slug
-            }
-
+        for _, a := range arts {
             newArts = append(newArts, model.ArtCatename{
-                Art: v,
-                CateName: cateName,
-                CateSlug: cateSlug,
+                Art: a.Art,
+                CateName: a.Cate.Name,
+                CateSlug: a.Cate.Slug,
             })
         }
     }

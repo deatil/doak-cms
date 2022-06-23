@@ -147,13 +147,21 @@
                                         {{ value.Id }}
                                     </th>
                                     <td>
-                                        {{ value.Title }}
-                                        
-                                        {{if value.Cover != ""}}
-                                            <span class="text-primary" style="font-size: 10px;" title="封面">
-                                                <i class="fa fa-file-image"></i>
+                                        <div class="art-item">
+                                            <span class="badge bg-secondary" title="文章UUID">
+                                                {{ value.Uuid }}
                                             </span>
-                                        {{end}}
+                                        </div>
+
+                                        <div class="art-item mt-1">
+                                            {{ value.Title }}
+                                            
+                                            {{if value.Cover != ""}}
+                                                <span class="text-primary" style="font-size: 10px;" title="封面">
+                                                    <i class="fa fa-file-image"></i>
+                                                </span>
+                                            {{end}}
+                                        </div>
                                     </td>
                                     <td width="115" class="text-center">
                                         {{if isset(cates[value.CateId])}}
