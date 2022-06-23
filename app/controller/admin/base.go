@@ -28,8 +28,7 @@ func (this *Base) Theme(tpl string) string {
 // 视图
 func (this *Base) View(ctx *fiber.Ctx, tpl string, data fiber.Map) error {
     // 登录数据
-    user := auth.GetUserInfo(ctx)
-    data["user"] = user
+    data["user"] = auth.GetUserInfo(ctx)
 
     // 管理员
     data["isAdmin"] = auth.IsAdmin(ctx)
