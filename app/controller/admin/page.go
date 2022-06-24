@@ -123,7 +123,7 @@ func (this *Page) AddSave(ctx *fiber.Ctx) error {
     )
 
     if (errs != nil) {
-        return http.Error(ctx, 1, errs.One())
+        return http.Error(ctx, errs.One())
     }
 
     newStatus := 0
@@ -137,7 +137,7 @@ func (this *Page) AddSave(ctx *fiber.Ctx) error {
         Where("slug = ?", slug).
         Get(&data)
     if has {
-        return http.Error(ctx, 1, "添加失败, 单页标识[" + slug + "]已经存在")
+        return http.Error(ctx, "添加失败, 单页标识[" + slug + "]已经存在")
     }
 
     // 当前账号
@@ -153,7 +153,7 @@ func (this *Page) AddSave(ctx *fiber.Ctx) error {
         AddIp: ctx.IP(),
     })
     if err != nil {
-        return http.Error(ctx, 1, "添加失败")
+        return http.Error(ctx, "添加失败")
     }
 
     return http.Success(ctx, "添加成功", "")
@@ -189,7 +189,7 @@ func (this *Page) Edit(ctx *fiber.Ctx) error {
 func (this *Page) EditSave(ctx *fiber.Ctx) error {
     id := cast.ToInt64(ctx.Params("id"))
     if id == 0 {
-        return http.Error(ctx, 1, "编辑失败")
+        return http.Error(ctx, "编辑失败")
     }
 
     slug := cast.ToString(ctx.FormValue("slug"))
@@ -226,7 +226,7 @@ func (this *Page) EditSave(ctx *fiber.Ctx) error {
     )
 
     if (errs != nil) {
-        return http.Error(ctx, 1, errs.One())
+        return http.Error(ctx, errs.One())
     }
 
     newStatus := 0
@@ -240,7 +240,7 @@ func (this *Page) EditSave(ctx *fiber.Ctx) error {
         Where("id = ?", id).
         Get(&data)
     if !has {
-        return http.Error(ctx, 1, "单页不存在")
+        return http.Error(ctx, "单页不存在")
     }
 
     // 判断是否存在
@@ -249,7 +249,7 @@ func (this *Page) EditSave(ctx *fiber.Ctx) error {
         Where("slug = ?", slug).
         Get(&slugData)
     if slugData.Id > 0 && slugData.Id != id {
-        return http.Error(ctx, 1, "编辑失败, 单页标识[" + slug + "]已经存在")
+        return http.Error(ctx, "编辑失败, 单页标识[" + slug + "]已经存在")
     }
 
     _, err := db.Engine().
@@ -265,7 +265,7 @@ func (this *Page) EditSave(ctx *fiber.Ctx) error {
             "status": newStatus,
         })
     if err != nil {
-        return http.Error(ctx, 1, "编辑失败")
+        return http.Error(ctx, "编辑失败")
     }
 
     return http.Success(ctx, "编辑成功", "")
@@ -275,7 +275,7 @@ func (this *Page) EditSave(ctx *fiber.Ctx) error {
 func (this *Page) Delete(ctx *fiber.Ctx) error {
     id := cast.ToInt64(ctx.Params("id"))
     if id == 0 {
-        return http.Error(ctx, 1, "删除失败")
+        return http.Error(ctx, "删除失败")
     }
 
     // 单页信息
@@ -284,14 +284,14 @@ func (this *Page) Delete(ctx *fiber.Ctx) error {
         Where("id = ?", id).
         Get(&data)
     if !has {
-        return http.Error(ctx, 1, "单页不存在")
+        return http.Error(ctx, "单页不存在")
     }
 
     _, err := db.Engine().
         Where("id = ?", id).
         Delete(new(model.Page))
     if err != nil {
-        return http.Error(ctx, 1, "删除失败")
+        return http.Error(ctx, "删除失败")
     }
 
     return http.Success(ctx, "删除成功", "")

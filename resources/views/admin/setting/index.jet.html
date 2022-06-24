@@ -168,6 +168,8 @@
             } else {
                 layer.msg(data.message);
             }
+        }).fail(function (xhr, status, info) {
+            layer.msg("请求失败");
         });
     });
 

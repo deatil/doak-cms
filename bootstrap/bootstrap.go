@@ -5,6 +5,8 @@ import (
     golog "log"
 
     "github.com/gofiber/fiber/v2"
+    "github.com/gofiber/fiber/v2/utils"
+    "github.com/gofiber/fiber/v2/middleware/csrf"
     "github.com/gofiber/fiber/v2/middleware/logger"
     "github.com/gofiber/fiber/v2/middleware/recover"
     "github.com/gofiber/fiber/v2/middleware/encryptcookie"
@@ -28,6 +30,7 @@ func HttpServer(jetFunc func(*jet.Engine), appFunc func(*fiber.App)) {
     jetEngine := view.JetEngine("view")
     jetFunc(jetEngine)
 
+    // 启动 app
     app := fiber.New(fiber.Config{
         Views: jetEngine,
         // 默认的错误处理程序
@@ -68,11 +71,13 @@ func HttpServer(jetFunc func(*jet.Engine), appFunc func(*fiber.App)) {
 
     // 中间件
     if debug {
+        location := config.Section("time").Key("loc").MustString("")
+
         // 日志
         app.Use(logger.New(logger.Config{
             Format:     "[${time}] ${status} - ${latency} ${method} ${path}\n",
             TimeFormat: "2006-01-02 15:04:05",
-            TimeZone:   "Asia/Chongqing",
+            TimeZone:   location,
         }))
     }
 
@@ -85,6 +90,15 @@ func HttpServer(jetFunc func(*jet.Engine), appFunc func(*fiber.App)) {
     // 生成密钥 encryptcookie.GenerateKey()
     app.Use(encryptcookie.New(encryptcookie.Config{
         Key: config.Section("cookie").Key("encrypt-key").MustString(""),
+    }))
+
+    // 跨站请求伪造 CSRF
+    app.Use(csrf.New(csrf.Config{
+        KeyLookup:      "cookie:doakcsrf",
+        CookieName:     "doakcsrf",
+        CookieSameSite: "Strict",
+        Expiration:     1 * time.Hour,
+        KeyGenerator:   utils.UUID,
     }))
 
     // 添加路由

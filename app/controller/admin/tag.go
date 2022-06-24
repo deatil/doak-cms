@@ -112,7 +112,7 @@ func (this *Tag) AddSave(ctx *fiber.Ctx) error {
     )
 
     if (errs != nil) {
-        return http.Error(ctx, 1, errs.One())
+        return http.Error(ctx, errs.One())
     }
 
     // 分类信息
@@ -121,7 +121,7 @@ func (this *Tag) AddSave(ctx *fiber.Ctx) error {
         Where("name = ?", name).
         Get(&data)
     if has {
-        return http.Error(ctx, 1, "添加失败, 标签[" + name + "]已经存在")
+        return http.Error(ctx, "添加失败, 标签[" + name + "]已经存在")
     }
 
     newStatus := 0
@@ -137,7 +137,7 @@ func (this *Tag) AddSave(ctx *fiber.Ctx) error {
         AddIp: ctx.IP(),
     })
     if err != nil {
-        return http.Error(ctx, 1, "添加失败")
+        return http.Error(ctx, "添加失败")
     }
 
     return http.Success(ctx, "添加成功", "")
@@ -169,7 +169,7 @@ func (this *Tag) Edit(ctx *fiber.Ctx) error {
 func (this *Tag) EditSave(ctx *fiber.Ctx) error {
     id := cast.ToInt64(ctx.Params("id"))
     if id == 0 {
-        return http.Error(ctx, 1, "编辑失败")
+        return http.Error(ctx, "编辑失败")
     }
 
     name := cast.ToString(ctx.FormValue("name"))
@@ -199,7 +199,7 @@ func (this *Tag) EditSave(ctx *fiber.Ctx) error {
     )
 
     if (errs != nil) {
-        return http.Error(ctx, 1, errs.One())
+        return http.Error(ctx, errs.One())
     }
 
     // 标签信息
@@ -208,7 +208,7 @@ func (this *Tag) EditSave(ctx *fiber.Ctx) error {
         Where("id = ?", id).
         Get(&data)
     if !has {
-        return http.Error(ctx, 1, "标签不存在")
+        return http.Error(ctx, "标签不存在")
     }
 
     // 判断是否存在
@@ -217,7 +217,7 @@ func (this *Tag) EditSave(ctx *fiber.Ctx) error {
         Where("name = ?", name).
         Get(&nameData)
     if nameData.Id > 0 && nameData.Id != id {
-        return http.Error(ctx, 1, "编辑失败, 标签[" + name + "]已经存在")
+        return http.Error(ctx, "编辑失败, 标签[" + name + "]已经存在")
     }
 
     newStatus := 0
@@ -235,7 +235,7 @@ func (this *Tag) EditSave(ctx *fiber.Ctx) error {
             "status": newStatus,
         })
     if err != nil {
-        return http.Error(ctx, 1, "编辑失败")
+        return http.Error(ctx, "编辑失败")
     }
 
     return http.Success(ctx, "编辑成功", "")
@@ -245,7 +245,7 @@ func (this *Tag) EditSave(ctx *fiber.Ctx) error {
 func (this *Tag) Delete(ctx *fiber.Ctx) error {
     id := cast.ToInt64(ctx.Params("id"))
     if id == 0 {
-        return http.Error(ctx, 1, "删除失败")
+        return http.Error(ctx, "删除失败")
     }
 
     // 标签信息
@@ -254,14 +254,14 @@ func (this *Tag) Delete(ctx *fiber.Ctx) error {
         Where("id = ?", id).
         Get(&data)
     if !has {
-        return http.Error(ctx, 1, "标签不存在")
+        return http.Error(ctx, "标签不存在")
     }
 
     _, err := db.Engine().
         Where("id = ?", id).
         Delete(new(model.Tag))
     if err != nil {
-        return http.Error(ctx, 1, "删除失败")
+        return http.Error(ctx, "删除失败")
     }
 
     return http.Success(ctx, "删除成功", "")

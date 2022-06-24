@@ -49,8 +49,8 @@
         <div class="item">
             <div class="time-image">
                 <div class="datetime">
-                    {{ createTime(value.AddTime, "Asia/Shanghai").Format("02") }}
-                    <span>{{ createTime(value.AddTime, "Asia/Shanghai").Format("2006年 - 01月") }}</span>
+                    {{ createTime(value.AddTime).Format("02") }}
+                    <span>{{ createTime(value.AddTime).Format("2006年 - 01月") }}</span>
                 </div>
                 <div class="preview">
                     <a href="{{ artUrl(value.Uuid) }}">
@@ -72,7 +72,7 @@
                         {{ value.From }}
                     </span>
                     <span class="dateline pipe">
-                        {{ createTime(value.AddTime, "Asia/Shanghai").Format("2006年01月02日 15:04") }}
+                        {{ createTime(value.AddTime).Format("2006年01月02日 15:04") }}
                     </span>
                     <span class="viewcount pipe">
                         {{ value.Views }} 次浏览

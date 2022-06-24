@@ -89,7 +89,7 @@ func (this *Auth) LoginCheck(ctx *fiber.Ctx) error {
     )
 
     if (errs != nil) {
-        return http.Error(ctx, 1, errs.One())
+        return http.Error(ctx, errs.One())
     }
 
     // 验证码ID
@@ -97,24 +97,24 @@ func (this *Auth) LoginCheck(ctx *fiber.Ctx) error {
 
     // 验证码验证
     if ok := captcha.VerifyString(captchaid.(string), captchaData); !ok {
-        return http.Error(ctx, 1, "验证码错误")
+        return http.Error(ctx, "验证码错误")
     }
 
     // 账号信息
     var user model.User
     _, err2 := db.Engine().Where("username = ?", username).Get(&user)
     if err2 != nil {
-        return http.Error(ctx, 1, "账号不存在或者被禁用")
+        return http.Error(ctx, "账号不存在或者被禁用")
     }
 
     // 密码验证
     if !auth.Check(password, user.Password) {
-        return http.Error(ctx, 1, "账号或者密码错误")
+        return http.Error(ctx, "账号或者密码错误")
     }
 
     // 存储登录信息
     if err := session.Set(ctx, "userid", user.Id); err != nil {
-        return http.Error(ctx, 1, "登录失败")
+        return http.Error(ctx, "登录失败")
     }
 
     if rememberme == "1" {

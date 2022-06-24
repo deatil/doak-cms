@@ -86,7 +86,7 @@
                         <tr>
                             <td width="50" class="text-center">{{ index+1 }}</td>
                             <td>{{ value.Title }}</td>
-                            <td width="165">{{ createTime(value.AddTime, "Asia/Shanghai").DateTimeString() }}</td>
+                            <td width="165">{{ createTime(value.AddTime).DateTimeString() }}</td>
                             <td width="85" class="text-center">
                                 <a class="btn btn-sm btn-primary" href="/sys/art/{{ value.Id }}/edit">
                                     编辑

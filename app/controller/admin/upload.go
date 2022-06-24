@@ -29,19 +29,19 @@ func (this *Upload) Image(ctx *fiber.Ctx) error {
     // 接收上传的文件
     file, err := ctx.FormFile("file")
     if err != nil {
-        return http.Error(ctx, 1, "上传失败")
+        return http.Error(ctx, "上传失败")
     }
 
     filsnames := strings.Split(file.Filename, ".")
     if len(filsnames) != 2 {
-        return http.Error(ctx, 1, "上传失败")
+        return http.Error(ctx, "上传失败")
     }
 
     // 验证后缀
     fileext := filsnames[1]
     matchExt := cfg.Key("image-ext").String()
     if match, _ := regexp.MatchString("(?i)^(" + matchExt + ")$", fileext); !match {
-        return http.Error(ctx, 1, "上传的图片格式错误")
+        return http.Error(ctx, "上传的图片格式错误")
     }
 
     // 文件 md5
@@ -51,7 +51,7 @@ func (this *Upload) Image(ctx *fiber.Ctx) error {
     attachFileopen, err := file.Open()
     defer attachFileopen.Close()
     if err != nil {
-        return http.Error(ctx, 1, "上传失败")
+        return http.Error(ctx, "上传失败")
     }
 
     filemd5, _ = utils.FileMD5WithStream(attachFileopen)
@@ -76,7 +76,7 @@ func (this *Upload) Image(ctx *fiber.Ctx) error {
 
     // 保存文件到磁盘
     if err = ctx.SaveFile(file, filename); err != nil {
-        return http.Error(ctx, 1, "上传失败")
+        return http.Error(ctx, "上传失败")
     }
 
     insertData := &model.Attach{
@@ -91,7 +91,7 @@ func (this *Upload) Image(ctx *fiber.Ctx) error {
     }
     _, err = db.Engine().Insert(insertData)
     if err != nil {
-        return http.Error(ctx, 1, "添加失败")
+        return http.Error(ctx, "添加失败")
     }
 
     fileurl := fmt.Sprintf(cfg.Key("url").String() + "/%s", filepath)
@@ -108,19 +108,19 @@ func (this *Upload) File(ctx *fiber.Ctx) error {
     // 接收上传的文件
     file, err := ctx.FormFile("file")
     if err != nil {
-        return http.Error(ctx, 1, "上传失败")
+        return http.Error(ctx, "上传失败")
     }
 
     filsnames := strings.Split(file.Filename, ".")
     if len(filsnames) != 2 {
-        return http.Error(ctx, 1, "上传失败")
+        return http.Error(ctx, "上传失败")
     }
 
     // 验证后缀
     fileext := filsnames[1]
     matchExt := cfg.Key("file-ext").String()
     if match, _ := regexp.MatchString("(?i)^(" + matchExt + ")$", fileext); !match {
-        return http.Error(ctx, 1, "上传的文件格式错误")
+        return http.Error(ctx, "上传的文件格式错误")
     }
 
     // 文件 md5
@@ -130,7 +130,7 @@ func (this *Upload) File(ctx *fiber.Ctx) error {
     attachFileopen, err := file.Open()
     defer attachFileopen.Close()
     if err != nil {
-        return http.Error(ctx, 1, "上传失败")
+        return http.Error(ctx, "上传失败")
     }
 
     filemd5, _ = utils.FileMD5WithStream(attachFileopen)
@@ -155,7 +155,7 @@ func (this *Upload) File(ctx *fiber.Ctx) error {
 
     // 保存文件到磁盘
     if err = ctx.SaveFile(file, filename); err != nil {
-        return http.Error(ctx, 1, "上传失败")
+        return http.Error(ctx, "上传失败")
     }
 
     insertData := &model.Attach{
@@ -170,7 +170,7 @@ func (this *Upload) File(ctx *fiber.Ctx) error {
     }
     _, err = db.Engine().Insert(insertData)
     if err != nil {
-        return http.Error(ctx, 1, "添加失败")
+        return http.Error(ctx, "添加失败")
     }
 
     fileurl := fmt.Sprintf(cfg.Key("url").String() + "/%s", filepath)

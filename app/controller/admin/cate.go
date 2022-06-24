@@ -119,7 +119,7 @@ func (this *Cate) AddSave(ctx *fiber.Ctx) error {
     )
 
     if (errs != nil) {
-        return http.Error(ctx, 1, errs.One())
+        return http.Error(ctx, errs.One())
     }
 
     // 分类信息
@@ -128,7 +128,7 @@ func (this *Cate) AddSave(ctx *fiber.Ctx) error {
         Where("slug = ?", slug).
         Get(&data)
     if has {
-        return http.Error(ctx, 1, "添加失败, [" + slug + "] 标识已经存在")
+        return http.Error(ctx, "添加失败, [" + slug + "] 标识已经存在")
     }
 
     newStatus := 0
@@ -146,7 +146,7 @@ func (this *Cate) AddSave(ctx *fiber.Ctx) error {
         AddIp: ctx.IP(),
     })
     if err != nil {
-        return http.Error(ctx, 1, "添加失败")
+        return http.Error(ctx, "添加失败")
     }
 
     return http.Success(ctx, "添加成功", "")
@@ -189,7 +189,7 @@ func (this *Cate) Edit(ctx *fiber.Ctx) error {
 func (this *Cate) EditSave(ctx *fiber.Ctx) error {
     id := cast.ToInt64(ctx.Params("id"))
     if id == 0 {
-        return http.Error(ctx, 1, "编辑失败")
+        return http.Error(ctx, "编辑失败")
     }
 
     pid := cast.ToInt64(ctx.FormValue("pid"))
@@ -226,11 +226,11 @@ func (this *Cate) EditSave(ctx *fiber.Ctx) error {
     )
 
     if (errs != nil) {
-        return http.Error(ctx, 1, errs.One())
+        return http.Error(ctx, errs.One())
     }
 
     if pid < 0 {
-        return http.Error(ctx, 1, "父级ID错误")
+        return http.Error(ctx, "父级ID错误")
     }
 
     newStatus := 0
@@ -244,7 +244,7 @@ func (this *Cate) EditSave(ctx *fiber.Ctx) error {
         Where("id = ?", id).
         Get(&data)
     if !has {
-        return http.Error(ctx, 1, "分类不存在")
+        return http.Error(ctx, "分类不存在")
     }
 
     // 判断是否重复
@@ -253,7 +253,7 @@ func (this *Cate) EditSave(ctx *fiber.Ctx) error {
         Where("slug = ?", slug).
         Get(&slugData)
     if slugData.Id > 0 && slugData.Id != id {
-        return http.Error(ctx, 1, "编辑失败, 分类标识[" + slug + "]已经存在")
+        return http.Error(ctx, "编辑失败, 分类标识[" + slug + "]已经存在")
     }
 
     _, err := db.Engine().
@@ -268,7 +268,7 @@ func (this *Cate) EditSave(ctx *fiber.Ctx) error {
             "status": newStatus,
         })
     if err != nil {
-        return http.Error(ctx, 1, "编辑失败")
+        return http.Error(ctx, "编辑失败")
     }
 
     return http.Success(ctx, "编辑成功", "")
@@ -278,7 +278,7 @@ func (this *Cate) EditSave(ctx *fiber.Ctx) error {
 func (this *Cate) Delete(ctx *fiber.Ctx) error {
     id := cast.ToInt64(ctx.Params("id"))
     if id == 0 {
-        return http.Error(ctx, 1, "删除失败")
+        return http.Error(ctx, "删除失败")
     }
 
     // 分类信息
@@ -287,7 +287,7 @@ func (this *Cate) Delete(ctx *fiber.Ctx) error {
         Where("id = ?", id).
         Get(&data)
     if !has {
-        return http.Error(ctx, 1, "分类不存在")
+        return http.Error(ctx, "分类不存在")
     }
 
     // 分类信息
@@ -296,14 +296,14 @@ func (this *Cate) Delete(ctx *fiber.Ctx) error {
         Where("pid = ?", id).
         Get(&pidData)
     if pidData.Id > 0 {
-        return http.Error(ctx, 1, "当前分类有子级，不能被删除")
+        return http.Error(ctx, "当前分类有子级，不能被删除")
     }
 
     _, err := db.Engine().
         Where("id = ?", id).
         Delete(new(model.Cate))
     if err != nil {
-        return http.Error(ctx, 1, "删除失败")
+        return http.Error(ctx, "删除失败")
     }
 
     return http.Success(ctx, "删除成功", "")

@@ -113,7 +113,7 @@ func (this *User) AddSave(ctx *fiber.Ctx) error {
     )
 
     if (errs != nil) {
-        return http.Error(ctx, 1, errs.One())
+        return http.Error(ctx, errs.One())
     }
 
     // 账号信息
@@ -122,7 +122,7 @@ func (this *User) AddSave(ctx *fiber.Ctx) error {
         Where("username = ?", username).
         Get(&data)
     if has {
-        return http.Error(ctx, 1, "添加失败, 账号[" + username + "]已经存在")
+        return http.Error(ctx, "添加失败, 账号[" + username + "]已经存在")
     }
 
     _, err := db.Engine().Insert(&model.User{
@@ -134,7 +134,7 @@ func (this *User) AddSave(ctx *fiber.Ctx) error {
         AddIp: ctx.IP(),
     })
     if err != nil {
-        return http.Error(ctx, 1, "添加失败")
+        return http.Error(ctx, "添加失败")
     }
 
     return http.Success(ctx, "添加成功", "")
@@ -166,13 +166,13 @@ func (this *User) Edit(ctx *fiber.Ctx) error {
 func (this *User) EditSave(ctx *fiber.Ctx) error {
     id := cast.ToInt64(ctx.Params("id"))
     if id == 0 {
-        return http.Error(ctx, 1, "编辑失败")
+        return http.Error(ctx, "编辑失败")
     }
 
     // 当前账号
     userId := appAuth.GetUserInfo(ctx).Id
     if id == userId {
-        return http.Error(ctx, 1, "你不能编辑自己的账号")
+        return http.Error(ctx, "你不能编辑自己的账号")
     }
 
     username := cast.ToString(ctx.FormValue("username"))
@@ -204,7 +204,7 @@ func (this *User) EditSave(ctx *fiber.Ctx) error {
     )
 
     if (errs != nil) {
-        return http.Error(ctx, 1, errs.One())
+        return http.Error(ctx, errs.One())
     }
 
     // 账号信息
@@ -213,7 +213,7 @@ func (this *User) EditSave(ctx *fiber.Ctx) error {
         Where("id = ?", id).
         Get(&data)
     if !has {
-        return http.Error(ctx, 1, "账号不存在")
+        return http.Error(ctx, "账号不存在")
     }
 
     // 账号信息
@@ -222,7 +222,7 @@ func (this *User) EditSave(ctx *fiber.Ctx) error {
         Where("username = ?", username).
         Get(&usernameData)
     if usernameData.Id > 0 && usernameData.Id != id {
-        return http.Error(ctx, 1, "编辑失败, 账号[" + username + "]已经存在")
+        return http.Error(ctx, "编辑失败, 账号[" + username + "]已经存在")
     }
 
     newStatus := 0
@@ -246,7 +246,7 @@ func (this *User) EditSave(ctx *fiber.Ctx) error {
         Where("id = ?", id).
         Update(updateData)
     if err != nil {
-        return http.Error(ctx, 1, "编辑失败")
+        return http.Error(ctx, "编辑失败")
     }
 
     return http.Success(ctx, "编辑成功", "")
@@ -256,7 +256,7 @@ func (this *User) EditSave(ctx *fiber.Ctx) error {
 func (this *User) Delete(ctx *fiber.Ctx) error {
     id := cast.ToInt64(ctx.Params("id"))
     if id == 0 {
-        return http.Error(ctx, 1, "删除失败")
+        return http.Error(ctx, "删除失败")
     }
 
     // 账号信息
@@ -265,14 +265,14 @@ func (this *User) Delete(ctx *fiber.Ctx) error {
         Where("id = ?", id).
         Get(&data)
     if !has {
-        return http.Error(ctx, 1, "账号不存在")
+        return http.Error(ctx, "账号不存在")
     }
 
     _, err := db.Engine().
         Where("id = ?", id).
         Delete(new(model.User))
     if err != nil {
-        return http.Error(ctx, 1, "删除失败")
+        return http.Error(ctx, "删除失败")
     }
 
     return http.Success(ctx, "删除成功", "")

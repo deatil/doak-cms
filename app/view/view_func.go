@@ -1,9 +1,9 @@
 package view
 
 import (
-    "github.com/uniplaces/carbon"
     "github.com/gofiber/template/jet"
 
+    "github.com/deatil/doak-cms/pkg/time"
     "github.com/deatil/doak-cms/pkg/utils"
 
     "github.com/deatil/doak-cms/app/url"
@@ -13,7 +13,9 @@ import (
 // 设置模板方法
 func SetViewFuncs(engine *jet.Engine) {
     // 常用方法
-    engine.AddFunc("createTime", carbon.CreateFromTimestamp)
+    engine.AddFunc("createTime", time.CreateFromTimestamp)
+    engine.AddFunc("formatTime", time.CreateFromFormat)
+    engine.AddFunc("nowTime", time.Now)
     engine.AddFunc("formatSize", utils.FormatSize)
 
     engine.AddFunc("adminUrl", url.AdminUrl)

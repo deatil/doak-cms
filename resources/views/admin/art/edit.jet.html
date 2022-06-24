@@ -188,7 +188,7 @@
                         </label>
                         <input type="text" 
                             name="add_time" 
-                            value='{{ createTime(data.AddTime, "Asia/Shanghai").DateTimeString() }}' 
+                            value='{{ createTime(data.AddTime).DateTimeString() }}' 
                             class="form-control" 
                             id="add_timeInput" 
                             aria-describedby="add_timeHelp">
@@ -356,6 +356,8 @@
             } else {
                 layer.msg(data.message);
             }
+        }).fail(function (xhr, status, info) {
+            layer.msg("请求失败");
         });
     });
 

@@ -64,7 +64,7 @@ func (this *Setting) Save(ctx *fiber.Ctx) error {
     )
 
     if (errs != nil) {
-        return http.Error(ctx, 1, errs.One())
+        return http.Error(ctx, errs.One())
     }
 
     // 需要更新的数据

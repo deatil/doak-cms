@@ -50,7 +50,7 @@ func (this *Profile) Save(ctx *fiber.Ctx) error {
     )
 
     if (errs != nil) {
-        return http.Error(ctx, 1, errs.One())
+        return http.Error(ctx, errs.One())
     }
 
     // 需要更新的数据
@@ -74,7 +74,7 @@ func (this *Profile) Save(ctx *fiber.Ctx) error {
         Where("id = ?", id).
         Update(updateData)
     if err != nil {
-        return http.Error(ctx, 1, "保存失败")
+        return http.Error(ctx, "保存失败")
     }
 
     return http.Success(ctx, "保存成功", "")

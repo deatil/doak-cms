@@ -25,6 +25,6 @@ func Success(ctx *fiber.Ctx, msg string, data any) error {
 }
 
 // 错误
-func Error(ctx *fiber.Ctx, code int, msg string) error {
-    return Response(ctx, code, msg, "")
+func Error(ctx *fiber.Ctx, msg string) error {
+    return Response(ctx, 1, msg, "")
 }
