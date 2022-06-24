@@ -110,6 +110,7 @@ func HttpServer(jetFunc func(*jet.Engine), appFunc func(*fiber.App)) {
 }
 
 // rpc 部分
+// 当前项目使用的是 json-rpc 模式
 func RpcServer(rpcFunc func(*server.Server)) {
     s := server.NewServer()
 

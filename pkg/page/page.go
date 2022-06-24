@@ -4,8 +4,8 @@ import (
     "fmt"
     "sort"
     "math"
-    "net/url"
     "strconv"
+    "net/url"
 )
 
 // 构造函数
@@ -60,10 +60,6 @@ func (this *Pagination) Paginate(
         page = 1
     } else {
         page, _ = strconv.Atoi(pageStr)
-    }
-
-    if page < 1 {
-        page = 1
     }
 
     if page < 1 {
