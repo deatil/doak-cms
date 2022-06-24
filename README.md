@@ -1,11 +1,11 @@
-## doak-cms 管理系统
+## doak-cms 文章管理系统
 
 doak-cms 是使用 gofiber 和 Xorm 的 go 文章管理系统
 
 
 ### 项目介绍
 
-*  通用的文章管理系统
+*  使用 go 开发的通用文章管理系统
 *  使用 Fiber、Xorm 及 Rpcx 等开发
 *  不使用 rpc 可将 `main.go` 里 rpc 部分注释掉
 

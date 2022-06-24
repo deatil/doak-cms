@@ -9,6 +9,8 @@ import (
     "crypto/md5"
     "crypto/rand"
     "encoding/hex"
+
+    "github.com/deatil/doak-cms/pkg/time"
 )
 
 type File interface {
@@ -29,7 +31,9 @@ func Uniqueid() string {
         return ""
     }
 
-    return MD5(string(b))
+    data := string(b) + time.Now().DateTimeString()
+
+    return MD5(data)
 }
 
 // 格式化数据大小

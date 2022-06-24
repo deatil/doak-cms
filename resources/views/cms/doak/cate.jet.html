@@ -62,7 +62,12 @@
             </div>
             <div class="content">
                 <h2 class="title">
-                    <a href="{{ artUrl(value.Uuid) }}">{{ value.Title }}</a>
+                    <a href="{{ artUrl(value.Uuid) }}">
+                        {{if value.IsTop == 1}}
+                            [置顶]
+                        {{end}}
+                        {{ value.Title }}
+                    </a>
                 </h2>
                 <div class="meta">
                     <span class="category">
