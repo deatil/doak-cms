@@ -17,7 +17,7 @@
                 <h6 class="mb-4">
                     编辑标签
                     
-                    <a href="/sys/tag" class="ms-1" title="返回列表">
+                    <a href='{{ adminUrl("tag") }}' class="ms-1" title="返回列表">
                         <i class="fa fa-arrow-circle-left"></i>
                     </a>
                 </h6>
@@ -134,7 +134,7 @@
         var sort = $("[name=sort]").val();
         var status = $("[name=status]:checked").val();
 
-        var url = "/sys/tag/{{id}}/edit";
+        var url = '{{ adminUrl("tag/"+id+"/edit") }}';
         $.post(url, {
             pid: pid,
             name: name,

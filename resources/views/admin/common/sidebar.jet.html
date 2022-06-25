@@ -5,34 +5,34 @@
         </a>
         
         <div class="navbar-nav w-100">
-            <a href="/sys" class="nav-item nav-link sidebar-doak-index">
+            <a href='{{ adminUrl("") }}' class="nav-item nav-link sidebar-doak-index">
                 <i class="fa fa-tachometer-alt me-2"></i>
                 控制台
             </a>
             
-            <a href="/sys/art" class="nav-item nav-link sidebar-art-index">
+            <a href='{{ adminUrl("art") }}' class="nav-item nav-link sidebar-art-index">
                 <i class="fa fa-table me-2"></i>
                 文章管理
             </a>
             
             {{if isAdmin}}
-            <a href="/sys/cate" class="nav-item nav-link sidebar-cate-index">
+            <a href='{{ adminUrl("cate") }}' class="nav-item nav-link sidebar-cate-index">
                 <i class="fa fa-th me-2"></i>
                 分类管理
             </a>
-            <a href="/sys/tag" class="nav-item nav-link sidebar-tag-index">
+            <a href='{{ adminUrl("tag") }}' class="nav-item nav-link sidebar-tag-index">
                 <i class="fa fa-tags me-2"></i>
                 标签管理
             </a>
-            <a href="/sys/page" class="nav-item nav-link sidebar-page-index">
+            <a href='{{ adminUrl("page") }}' class="nav-item nav-link sidebar-page-index">
                 <i class="fa fa-pager me-2"></i>
                 单页管理
             </a>
-            <a href="/sys/user" class="nav-item nav-link sidebar-user-index">
+            <a href='{{ adminUrl("user") }}' class="nav-item nav-link sidebar-user-index">
                 <i class="fa fa-user me-2"></i>
                 账号管理
             </a>
-            <a href="/sys/attach" class="nav-item nav-link sidebar-attach-index">
+            <a href='{{ adminUrl("attach") }}' class="nav-item nav-link sidebar-attach-index">
                 <i class="fa fa-file me-2"></i>
                 附件管理
             </a>

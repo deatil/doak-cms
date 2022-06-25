@@ -8,6 +8,7 @@ import (
 
     "github.com/deatil/doak-cms/pkg/db"
     "github.com/deatil/doak-cms/pkg/page"
+    "github.com/deatil/doak-cms/pkg/validate"
 
     "github.com/deatil/doak-cms/app/model"
     "github.com/deatil/doak-cms/app/response"
@@ -23,9 +24,26 @@ type Cate struct{
     Base
 }
 
+// 详情
 func (this *Cate) Index(ctx *fiber.Ctx) error {
     slug := cast.ToString(ctx.Params("slug"))
-    if slug == "" {
+
+    // 验证
+    errs := validate.Validate(
+        map[string]any{
+            "slug": slug,
+        },
+        map[string]string{
+            "slug": "required|minLen:3|isAlphaDash",
+        },
+        map[string]string{
+            "slug.required": "分类标识不能为空",
+            "slug.minLen": "分类标识不能少于3位",
+            "slug.isAlphaDash": "分类标识错误",
+        },
+    )
+
+    if (errs != nil) {
         return response.CmsErrorRender(ctx, "分类错误")
     }
 

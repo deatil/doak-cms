@@ -17,7 +17,7 @@
                 <h6 class="mb-4">
                     添加单页
                     
-                    <a href="/sys/page" class="ms-1" title="返回列表">
+                    <a href='{{ adminUrl("page") }}' class="ms-1" title="返回列表">
                         <i class="fa fa-arrow-circle-left"></i>
                     </a>
                 </h6>
@@ -110,7 +110,7 @@
         var title = $("[name=title]").val();
         var status = $("[name=status]:checked").val();
 
-        var url = "/sys/page/add";
+        var url = '{{ adminUrl("page/add") }}';
         $.post(url, {
             slug: slug,
             title: title,

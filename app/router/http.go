@@ -3,6 +3,8 @@ package router
 import (
     "github.com/gofiber/fiber/v2"
 
+    "github.com/deatil/doak-cms/pkg/config"
+
     "github.com/deatil/doak-cms/app/middleware"
     "github.com/deatil/doak-cms/app/controller/cms"
     "github.com/deatil/doak-cms/app/controller/admin"
@@ -40,7 +42,7 @@ func HttpCms(app *fiber.App) {
     app.Get("/a/:id", viewController.Index)
 
     tagController := new(cms.Tag)
-    app.Get("/t/:tag", tagController.Index)
+    app.Get("/tag/:tag", tagController.Index)
 
     pageController := new(cms.Page)
     app.Get("/p/:name", pageController.Index)
@@ -48,44 +50,51 @@ func HttpCms(app *fiber.App) {
 
 // 管理员
 func HttpAdmin(app *fiber.App) {
+    cfg := config.Section("app")
+    prefix := cfg.Key("router-prefix").String()
+
+    // 后台前缀
+    sys := app.Group("/" + prefix)
+
+    // 不需要授权路由
     authController := new(admin.Auth)
-    app.Get("/sys/captcha", authController.Captcha)
-    app.Get("/sys/login", authController.Login)
-    app.Post("/sys/login", authController.LoginCheck)
+    sys.Get("/captcha", authController.Captcha)
+    sys.Get("/login", authController.Login)
+    sys.Post("/login", authController.LoginCheck)
 
     // 权限验证
-    sys := app.Group("/sys", middleware.NewAuth())
+    sysAuth := sys.Use(middleware.NewAuth())
 
     indexController := new(admin.Index)
-    sys.Get("/", indexController.Index)
-    sys.Get("/logout", authController.Logout)
+    sysAuth.Get("/", indexController.Index)
+    sysAuth.Get("/logout", authController.Logout)
 
     // 信息设置
     profileController := new(admin.Profile)
-    sys.Get("/profile", profileController.Index)
-    sys.Post("/profile/save", profileController.Save)
+    sysAuth.Get("/profile", profileController.Index)
+    sysAuth.Post("/profile", profileController.Save)
 
     // 上传
     uploadController := new(admin.Upload)
-    sys.Post("/upload/file", uploadController.File)
-    sys.Post("/upload/image", uploadController.Image)
+    sysAuth.Post("/upload/file", uploadController.File)
+    sysAuth.Post("/upload/image", uploadController.Image)
 
     // 文章
     artController := new(admin.Art)
-    sys.Get("/art", artController.Index)
-    sys.Get("/art/add", artController.Add)
-    sys.Post("/art/add", artController.AddSave)
-    sys.Get("/art/:id/edit", artController.Edit)
-    sys.Post("/art/:id/edit", artController.EditSave)
-    sys.Post("/art/:id/delete", artController.Delete)
+    sysAuth.Get("/art", artController.Index)
+    sysAuth.Get("/art/add", artController.Add)
+    sysAuth.Post("/art/add", artController.AddSave)
+    sysAuth.Get("/art/:id/edit", artController.Edit)
+    sysAuth.Post("/art/:id/edit", artController.EditSave)
+    sysAuth.Post("/art/:id/delete", artController.Delete)
 
     // admin 检测
-    sysAdmin := sys.Use(middleware.NewAdminCheck())
+    sysAdmin := sysAuth.Use(middleware.NewAdminCheck())
 
     // 设置
     settingController := new(admin.Setting)
     sysAdmin.Get("/setting", settingController.Index)
-    sysAdmin.Post("/setting/save", settingController.Save)
+    sysAdmin.Post("/setting", settingController.Save)
 
     // 分类
     cateController := new(admin.Cate)

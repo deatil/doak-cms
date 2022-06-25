@@ -26,17 +26,20 @@
             </a>
             
             <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                <a href="/sys/profile" class="dropdown-item">
+                <a href='{{ adminUrl("profile") }}' class="dropdown-item">
                     <i class="fa fa-user me-1"></i>
                     我的信息
                 </a>
                 {{if isAdmin}}
-                <a href="/sys/setting" class="dropdown-item">
+                <a href='{{ adminUrl("setting") }}' class="dropdown-item">
                     <i class="fa fa-cog me-1"></i>
                     网站设置
                 </a>
                 {{end}}
-                <a href="javascript:;" class="dropdown-item js-logout-btn">
+                <a href="javascript:;" 
+                    class="dropdown-item js-logout-btn"
+                    data-url='{{ adminUrl("logout") }}'
+                >
                     <i class="fa fa-sign-out-alt me-1"></i>
                     退出
                 </a>

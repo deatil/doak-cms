@@ -18,8 +18,15 @@
                 
                 <form class="setting-form">
                     <div class="mb-3">
-                        <label for="inputWebsiteName" 
-                            class="form-label">网站名称</label>
+                        <label 
+                            for="inputWebsiteName" 
+                            class="form-label"
+                        >
+                            网站名称 
+                            <span class="text-success">
+                                [website_name]
+                            </span>
+                        </label>
                         <input type="text" 
                             name="website_name"
                             value="{{ settings.website_name }}" 
@@ -33,7 +40,13 @@
                     
                     <div class="mb-3">
                         <label for="inputWebsiteKeywords" 
-                            class="form-label">网站关键字</label>
+                            class="form-label"
+                        >
+                            网站关键字
+                            <span class="text-success">
+                                [website_keywords]
+                            </span>
+                        </label>
                         <input type="text" 
                             name="website_keywords" 
                             value="{{ settings.website_keywords }}" 
@@ -47,7 +60,13 @@
                     
                     <div class="mb-3">
                         <label for="websiteDescriptionTextarea" 
-                            class="form-label">网站描述</label>
+                            class="form-label"
+                        >
+                            网站描述
+                            <span class="text-success">
+                                [website_description]
+                            </span>
+                        </label>
                         <textarea class="form-control" 
                             name="website_description"
                             placeholder="网站描述" 
@@ -61,7 +80,13 @@
                     
                     <div class="mb-3">
                         <label for="inputWebsiteCopyright" 
-                            class="form-label">版权</label>
+                            class="form-label"
+                        >
+                            版权
+                            <span class="text-success">
+                                [website_copyright]
+                            </span>
+                        </label>
                         <input type="text" 
                             name="website_copyright" 
                             value="{{ settings.website_copyright }}" 
@@ -75,7 +100,13 @@
                     
                     <div class="mb-3">
                         <label for="inputWebsiteBeian" 
-                            class="form-label">网站备案</label>
+                            class="form-label"
+                        >
+                            网站备案
+                            <span class="text-success">
+                                [website_beian]
+                            </span>
+                        </label>
                         <input type="text" 
                             name="website_beian" 
                             value="{{ settings.website_beian }}" 
@@ -88,7 +119,12 @@
                     </div>
                     
                     <div class="mb-3">
-                        <label class="form-label">网站状态</label>
+                        <label class="form-label">
+                            网站状态
+                            <span class="text-success">
+                                [website_status]
+                            </span>
+                        </label>
                         <div class="form-control">
                             <div class="form-check form-check-inline">
                                 <input class="form-check-input website-status" 
@@ -150,7 +186,7 @@
         var website_beian = $("#inputWebsiteBeian").val();
         var website_status = $(".website-status:checked").val();
 
-        var url = "/sys/setting/save";
+        var url = '{{ adminUrl("setting") }}';
         $.post(url, {
             website_name: website_name,
             website_keywords: website_keywords,

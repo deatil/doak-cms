@@ -17,8 +17,16 @@ func Assets(path string) string {
 // =======================
 
 // 管理页面链接
-func AdminUrl(path string) string {
-    return fmt.Sprintf("/sys/%s", path)
+func AdminUrl(path ...string) string {
+    cfg := config.Section("app")
+    prefix := cfg.Key("router-prefix").String()
+
+    newPath := "/" + prefix
+    if len(path) > 0 {
+        return newPath + "/" + path[0]
+    }
+
+    return newPath
 }
 
 // =======================
@@ -45,7 +53,7 @@ func ArtUrl(path string) string {
 
 // 标签链接
 func TagUrl(path string) string {
-    return fmt.Sprintf("/t/%s", path)
+    return fmt.Sprintf("/tag/%s", path)
 }
 
 // 单页链接

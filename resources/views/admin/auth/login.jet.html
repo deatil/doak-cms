@@ -47,9 +47,9 @@
                 </div>
                 
                 <div class="form-floating mb-4 login-captcha">
-                    <img src="/sys/captcha" 
+                    <img src='{{ adminUrl("captcha") }}'
                         class="js-captcha-refresh"
-                        data-src="/sys/captcha"
+                        data-src='{{ adminUrl("captcha") }}'
                         alt="验证码" 
                         title="刷新验证码">
                 </div>
@@ -109,7 +109,7 @@
         var captcha = $("#floatingCaptcha").val();
         var rememberme = $("#rememberme").is(":checked") ? 1 : 0;
 
-        var url = "/sys/login";
+        var url = '{{ adminUrl("login") }}';
         $.post(url, {
             username: username,
             password: password,
@@ -120,7 +120,7 @@
                 layer.msg("登录成功");
                 
                 setTimeout(function() {
-                    window.location.href = "/sys";
+                    window.location.href = '{{ adminUrl("") }}';
                 }, 1500);
             } else {
                 layer.msg(data.message);

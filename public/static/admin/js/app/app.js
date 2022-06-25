@@ -6,7 +6,7 @@
         e.stopPropagation;
         e.preventDefault;
 
-        var url = "/sys/logout";
+        var url = $(this).data("url");
         layer.confirm('您确定要退出登陆吗？', { 
             icon: 3, 
             title: '提示信息' 

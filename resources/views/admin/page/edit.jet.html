@@ -17,7 +17,7 @@
                 <h6 class="mb-4">
                     编辑单页
                     
-                    <a href="/sys/page" class="ms-1" title="返回列表">
+                    <a href='{{ adminUrl("page") }}' class="ms-1" title="返回列表">
                         <i class="fa fa-arrow-circle-left"></i>
                     </a>
                 </h6>
@@ -190,7 +190,7 @@
         var tpl = $("[name=tpl]").val();
         var status = $("[name=status]:checked").val();
 
-        var url = "/sys/page/{{id}}/edit";
+        var url = '{{ adminUrl("page/"+id+"/edit") }}';
         $.post(url, {
             slug: slug,
             title: title,
@@ -233,7 +233,7 @@
         placeholder: '单页内容',
         MENU_CONF: {
           uploadImage: {
-            server: '/sys/upload/image', // 上传图片地址
+            server: '{{ adminUrl("upload/image") }}', // 上传图片地址
             timeout: 15 * 1000, // 5s
             fieldName: 'file',
             // meta: { token: 'xxx', a: 100 },

@@ -17,7 +17,7 @@
                 <h6 class="mb-4">
                     添加标签
                     
-                    <a href="/sys/tag" class="ms-1" title="返回列表">
+                    <a href='{{ adminUrl("tag") }}' class="ms-1" title="返回列表">
                         <i class="fa fa-arrow-circle-left"></i>
                     </a>
                 </h6>
@@ -96,7 +96,7 @@
         var name = $("[name=name]").val();
         var status = $("[name=status]:checked").val();
 
-        var url = "/sys/tag/add";
+        var url = '{{ adminUrl("tag/add") }}';
         $.post(url, {
             name: name,
             status: status,

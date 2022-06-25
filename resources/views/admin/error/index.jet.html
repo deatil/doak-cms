@@ -15,7 +15,7 @@
                     页面将在 <b id="wait">{{ Wait }}</b> 秒后自动跳转
                 </p>
             {{end}}
-            <a class="btn btn-primary rounded-pill py-3 px-5" href="/sys">返回首页</a>
+            <a class="btn btn-primary rounded-pill py-3 px-5" href='{{ adminUrl("") }}'>返回首页</a>
             
             {{if Url != ""}}
                 <a class="btn btn-success rounded-pill py-3 px-5" id="href" href="{{ Url|raw }}">立即跳转</a>

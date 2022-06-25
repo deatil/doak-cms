@@ -17,7 +17,7 @@
                 <h6 class="mb-4">
                     编辑分类
                     
-                    <a href="/sys/cate" class="ms-1" title="返回列表">
+                    <a href='{{ adminUrl("cate") }}' class="ms-1" title="返回列表">
                         <i class="fa fa-arrow-circle-left"></i>
                     </a>
                 </h6>
@@ -179,7 +179,7 @@
         var sort = $("[name=sort]").val();
         var status = $("[name=status]:checked").val();
 
-        var url = "/sys/cate/{{id}}/edit";
+        var url = '{{ adminUrl("cate/"+id+"/edit") }}';
         $.post(url, {
             pid: pid,
             name: name,

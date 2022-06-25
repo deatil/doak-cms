@@ -73,7 +73,7 @@
             <div class="bg-light rounded h-100 p-4">
                 <h6 class="mb-4">
                     分类管理
-                    <a href="/sys/cate/add" class="ms-1" title="添加分类">
+                    <a href='{{ adminUrl("cate/add") }}' class="ms-1" title="添加分类">
                         <i class="fa fa-plus-circle"></i>
                     </a>
                 </h6>
@@ -115,13 +115,13 @@
                                     </td>
                                     <td width="135" class="text-center">
                                         <a class="btn btn-primary btn-sm" 
-                                            href="/sys/cate/{{ value.Id }}/edit" >
+                                            href='{{ adminUrl("cate/"+value.Id+"/edit") }}' >
                                             编辑
                                         </a>
                                         
                                         <a href="javascript:;" 
                                             class="btn btn-danger btn-sm js-delete-btn"
-                                            data-url="/sys/cate/{{ value.Id }}/delete"
+                                            data-url='{{ adminUrl("cate/"+value.Id+"/delete") }}'
                                         >
                                             删除
                                         </a>

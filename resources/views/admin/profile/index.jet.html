@@ -117,7 +117,7 @@
         fileTypeExts: '*.png;*.jpg;*.JPG;*.bmp;*.gif',// 不限制上传文件请修改成'*.*'
         multi: true,
         fileSizeLimit: 1*1024*1024, // 大小限制
-        uploader : '/sys/upload/image', // 文件上传目标地址
+        uploader : '{{ adminUrl("upload/image") }}', // 文件上传目标地址
         buttonText : '选择文件',
         fileObjName : 'file',
         btnClass: 'btn btn-primary btn-sm',
@@ -149,7 +149,7 @@
         var avatar = $("#avatarInput").val();
         var sign = $("#signTextarea").val();
 
-        var url = "/sys/profile/save";
+        var url = '{{ adminUrl("profile") }}';
         $.post(url, {
             nickname: nickname,
             password: password,

@@ -15,6 +15,7 @@ import (
     "github.com/deatil/doak-cms/pkg/session"
     "github.com/deatil/doak-cms/pkg/validate"
 
+    "github.com/deatil/doak-cms/app/url"
     "github.com/deatil/doak-cms/app/model"
     "github.com/deatil/doak-cms/app/response"
 )
@@ -53,7 +54,7 @@ func (this *Auth) Captcha(ctx *fiber.Ctx) error {
 func (this *Auth) Login(ctx *fiber.Ctx) error {
     userid := session.Get(ctx, "userid")
     if userid != nil {
-        return ctx.Redirect("/sys")
+        return ctx.Redirect(url.AdminUrl(""))
     }
 
     return ctx.Render(this.Theme("auth/login"), nil)
@@ -146,5 +147,5 @@ func (this *Auth) Logout(ctx *fiber.Ctx) error {
     cookieKey := config.Section("cookie").Key("key").MustString("doak")
     cookie.Delete(ctx, cookieKey)
 
-    return ctx.Redirect("/sys/login")
+    return ctx.Redirect(url.AdminUrl("login"))
 }

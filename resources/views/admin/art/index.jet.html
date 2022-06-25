@@ -116,7 +116,7 @@
                 <h6 class="mb-4">
                     文章管理
                     
-                    <a href="/sys/art/add" 
+                    <a href='{{ adminUrl("art/add") }}'
                         class="ms-1" 
                         data-bs-toggle="tooltip" 
                         data-bs-placement="top"
@@ -191,13 +191,13 @@
                                     </td>
                                     <td width="135" class="text-center">
                                         <a class="btn btn-primary btn-sm" 
-                                            href="/sys/art/{{ value.Id }}/edit" >
+                                            href='{{ adminUrl("art/" + value.Id + "/edit") }}' >
                                             编辑
                                         </a>
                                         
                                         <a href="javascript:;" 
                                             class="btn btn-danger btn-sm js-delete-btn"
-                                            data-url="/sys/art/{{ value.Id }}/delete"
+                                            data-url='{{ adminUrl("art/" + value.Id + "/delete") }}'
                                         >
                                             删除
                                         </a>

@@ -17,7 +17,7 @@
                 <h6 class="mb-4">
                     添加文章
                     
-                    <a href="/sys/art" class="ms-1" title="返回列表">
+                    <a href='{{ adminUrl("art") }}' class="ms-1" title="返回列表">
                         <i class="fa fa-arrow-circle-left"></i>
                     </a>
                 </h6>
@@ -128,7 +128,7 @@
         var title = $("[name=title]").val();
         var status = $("[name=status]:checked").val();
 
-        var url = "/sys/art/add";
+        var url = '{{ adminUrl("art/add") }}';
         $.post(url, {
             cate_id: cate_id,
             title: title,

@@ -17,7 +17,7 @@
                 <h6 class="mb-4">
                     编辑账号
                     
-                    <a href="/sys/user" class="ms-1" title="返回列表">
+                    <a href='{{ adminUrl("user") }}' class="ms-1" title="返回列表">
                         <i class="fa fa-arrow-circle-left"></i>
                     </a>
                 </h6>
@@ -147,7 +147,7 @@
         var sign = $("[name=sign]").val();
         var status = $("[name=status]:checked").val();
 
-        var url = "/sys/user/{{id}}/edit";
+        var url = '{{ adminUrl("user/"+id+"/edit") }}';
         $.post(url, {
             username: username,
             nickname: nickname,

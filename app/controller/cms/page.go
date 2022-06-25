@@ -5,6 +5,7 @@ import (
     "github.com/gofiber/fiber/v2"
 
     "github.com/deatil/doak-cms/pkg/db"
+    "github.com/deatil/doak-cms/pkg/validate"
 
     "github.com/deatil/doak-cms/app/model"
     "github.com/deatil/doak-cms/app/response"
@@ -20,9 +21,26 @@ type Page struct{
     Base
 }
 
+// 详情
 func (this *Page) Index(ctx *fiber.Ctx) error {
     name := cast.ToString(ctx.Params("name"))
-    if name == "" {
+
+    // 验证
+    errs := validate.Validate(
+        map[string]any{
+            "name": name,
+        },
+        map[string]string{
+            "name": "required|minLen:3|isAlphaDash",
+        },
+        map[string]string{
+            "name.required": "分类标识不能为空",
+            "name.minLen": "分类标识不能少于3位",
+            "name.isAlphaDash": "分类标识错误",
+        },
+    )
+
+    if (errs != nil) {
         return response.CmsErrorRender(ctx, "页面不存在")
     }
 

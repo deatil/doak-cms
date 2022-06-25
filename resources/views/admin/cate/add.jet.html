@@ -17,7 +17,7 @@
                 <h6 class="mb-4">
                     添加分类
                     
-                    <a href="/sys/cate" class="ms-1" title="返回列表">
+                    <a href='{{ adminUrl("cate") }}' class="ms-1" title="返回列表">
                         <i class="fa fa-arrow-circle-left"></i>
                     </a>
                 </h6>
@@ -127,7 +127,7 @@
         var desc = $("[name=desc]").val();
         var status = $("[name=status]:checked").val();
 
-        var url = "/sys/cate/add";
+        var url = '{{ adminUrl("cate/add") }}';
         $.post(url, {
             name: name,
             slug: slug,
