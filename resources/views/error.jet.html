@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>访问错误 - Doak CMS</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="访问错误" name="keywords">
+    <meta content="访问错误" name="description">
+    
+    <style>
+    * {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        text-decoration: none;
+        box-sizing: border-box;
+    }
+    body {
+        font-family: ceym, Helvetica Neue, Helvetica, PingFang SC, Tahoma, Arial, sans-serif;
+        font-size: 14px;
+        background-color: #fff;
+        height: 100%;
+        width: 100%;
+    }
+    .error-container {
+        max-width: 850px;
+        padding: 30px;
+        margin-top: 50px;
+        margin-left: auto;
+        margin-right: auto;
+        background-color: #F3F6F9 !important;
+        border-radius: 5px !important;
+    }
+    .error-container .error-code {
+        font-size: 20px;
+        padding-bottom: 20px;
+    }
+    .error-container .error-msg {
+        font-size: 15px;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="error-container">
+        <div class="error-code">
+            访问错误（{{ code }}）
+        </div>
+        <div class="error-msg">
+            {{ message }}
+        </div>
+    </div>
+</body>
+</html>

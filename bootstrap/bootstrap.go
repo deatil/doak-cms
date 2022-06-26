@@ -45,21 +45,24 @@ func HttpServer(jetFunc func(*jet.Engine), appFunc func(*fiber.App)) {
                 code = e.Code
             }
 
+            // 默认错误信息
+            errorMsg := cfg.Key("error-msg").String()
+
             // 调试的时候
             if debug {
-                // 设置 Content-Type: text/plain; charset=utf-8
-                ctx.Set(fiber.HeaderContentType, fiber.MIMETextPlainCharsetUTF8)
-
-                // 返回带有错误信息的状态码
-                return ctx.Status(code).SendString(err.Error())
+                errorMsg = err.Error()
             }
 
+            // 页面地址
             errorHtml := cfg.Key("error-html").String()
 
             // 发送自定义错误页面
-            err = ctx.Status(code).SendFile(errorHtml)
+            err = ctx.Status(code).Render(errorHtml, fiber.Map{
+                "code": code,
+                "message": errorMsg,
+            })
             if err != nil {
-                // 万一SendFile失败
+                // 失败处理
                return ctx.Status(fiber.StatusInternalServerError).
                         SendString("Internal Server Error")
             }

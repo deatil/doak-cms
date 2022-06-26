@@ -77,7 +77,7 @@ git clone https://github.com/deatil/doak-cms.git
 go run main.go
 ```
 
-6. 后台登录账号及密码：`admin` / `123456`
+6. 后台登录账号及密码：`admin` / `123456`, 登录地址: `/sys`
 
 
 ### 特别鸣谢
@@ -89,7 +89,7 @@ go run main.go
  - xorm.io/xorm
 
  - github.com/smallnest/rpcx
- 
+
  - github.com/spf13/cast
 
 
