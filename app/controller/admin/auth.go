@@ -1,8 +1,6 @@
 package admin
 
 import (
-    "time"
-
     "github.com/spf13/cast"
     "github.com/dchest/captcha"
     "github.com/gofiber/fiber/v2"
@@ -10,14 +8,13 @@ import (
     "github.com/deatil/doak-cms/pkg/db"
     "github.com/deatil/doak-cms/pkg/auth"
     "github.com/deatil/doak-cms/pkg/http"
-    "github.com/deatil/doak-cms/pkg/config"
-    "github.com/deatil/doak-cms/pkg/cookie"
     "github.com/deatil/doak-cms/pkg/session"
     "github.com/deatil/doak-cms/pkg/validate"
 
     "github.com/deatil/doak-cms/app/url"
     "github.com/deatil/doak-cms/app/model"
     "github.com/deatil/doak-cms/app/response"
+    appAuth "github.com/deatil/doak-cms/app/auth"
 )
 
 /**
@@ -119,12 +116,8 @@ func (this *Auth) LoginCheck(ctx *fiber.Ctx) error {
     }
 
     if rememberme == "1" {
-        cookieCfg := config.Section("cookie")
-
-        cookieKey := cookieCfg.Key("key").MustString("doak")
-        cookieExp := cookieCfg.Key("exp").MustDuration()
-        cookiePath := cookieCfg.Key("path").MustString("/")
-        cookie.Set(ctx, cookieKey, cast.ToString(user.Id), cookiePath, time.Now().Add(cookieExp))
+        // 保存 cookie 登录
+        appAuth.SetCookie(ctx, cast.ToString(user.Id))
     }
 
     return http.Success(ctx, "登录成功", "")
@@ -144,8 +137,7 @@ func (this *Auth) Logout(ctx *fiber.Ctx) error {
     }
 
     // 删除 cookie 信息
-    cookieKey := config.Section("cookie").Key("key").MustString("doak")
-    cookie.Delete(ctx, cookieKey)
+    appAuth.DeleteCookie(ctx)
 
     return ctx.Redirect(url.AdminUrl("login"))
 }

@@ -1,9 +1,12 @@
 package auth
 
 import (
+    "time"
+
     "github.com/gofiber/fiber/v2"
 
     "github.com/deatil/doak-cms/pkg/config"
+    "github.com/deatil/doak-cms/pkg/cookie"
 
     "github.com/deatil/doak-cms/app/model"
 )
@@ -38,4 +41,25 @@ func IsAdmin(ctx *fiber.Ctx) bool {
     }
 
     return false
+}
+
+// =====================
+
+// 设置 Cookie
+func SetCookie(ctx *fiber.Ctx, data string) {
+    cookieCfg := config.Section("cookie")
+
+    cookieKey := cookieCfg.Key("key").MustString("doak")
+    cookiePath := cookieCfg.Key("path").MustString("/")
+    cookieExp := cookieCfg.Key("exp").MustDuration()
+    cookieTime := time.Now().Add(cookieExp)
+
+    cookie.Set(ctx, cookieKey, data, cookiePath, cookieTime)
+}
+
+// 删除 Cookie
+func DeleteCookie(ctx *fiber.Ctx) {
+    // 删除 cookie 信息
+    cookieKey := config.Section("cookie").Key("key").MustString("doak")
+    cookie.Delete(ctx, cookieKey)
 }
