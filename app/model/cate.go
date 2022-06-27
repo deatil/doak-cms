@@ -8,6 +8,8 @@ type Cate struct {
     Slug    string `xorm:"varchar(50)" json:"slug"`
     Desc    string `xorm:"varchar(200)" json:"desc"`
     Sort    int    `xorm:"int(5)" json:"sort"`
+    Tpl     string `xorm:"varchar(200)" json:"tpl"`
+    ViewTpl string `xorm:"varchar(200)" json:"view_tpl"`
     Status  int    `xorm:"tinyint(1)" json:"status"`
     AddTime int64  `xorm:"created" json:"add_time"`
     AddIp   string `xorm:"varchar(50)" json:"add_ip"`

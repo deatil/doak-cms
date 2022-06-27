@@ -136,12 +136,28 @@ func (this *Cate) AddSave(ctx *fiber.Ctx) error {
         newStatus = 1
     }
 
+    // 模板列表
+    tpls := this.ListTplFiles("cate")
+    tpl := "cate"
+    if len(tpls) > 0 {
+        tpl = tpls[0]
+    }
+
+    // 模板列表
+    viewTpls := this.ListTplFiles("view")
+    viewTpl := "view"
+    if len(tpls) > 0 {
+        viewTpl = viewTpls[0]
+    }
+
     _, err := db.Engine().Insert(&model.Cate{
         Pid: 0,
         Name: name,
         Slug: slug,
         Desc: desc,
         Sort: 100,
+        Tpl: tpl,
+        ViewTpl: viewTpl,
         Status: newStatus,
         AddIp: ctx.IP(),
     })
@@ -178,10 +194,16 @@ func (this *Cate) Edit(ctx *fiber.Ctx) error {
     // 转为树结构
     newCates := model.ToCateTree(cates, 0)
 
+    // 模板列表
+    tpls := this.ListTplFiles("cate")
+    viewTpls := this.ListTplFiles("view")
+
     return this.View(ctx, "cate/edit", fiber.Map{
         "id": id,
         "data": data,
         "cates": newCates,
+        "tpls": tpls,
+        "viewTpls": viewTpls,
     })
 }
 
@@ -197,6 +219,8 @@ func (this *Cate) EditSave(ctx *fiber.Ctx) error {
     slug := cast.ToString(ctx.FormValue("slug"))
     desc := cast.ToString(ctx.FormValue("desc"))
     sort := cast.ToInt(ctx.FormValue("sort"))
+    tpl := cast.ToString(ctx.FormValue("tpl", ""))
+    vtpl := cast.ToString(ctx.FormValue("vtpl", ""))
     status := cast.ToString(ctx.FormValue("status"))
 
     // 验证
@@ -205,12 +229,16 @@ func (this *Cate) EditSave(ctx *fiber.Ctx) error {
             "name": name,
             "slug": slug,
             "sort": sort,
+            "tpl": tpl,
+            "vtpl": vtpl,
             "status": status,
         },
         map[string]string{
             "name": "required|minLen:1",
             "slug": "required|minLen:3|isAlphaDash",
             "sort": "required",
+            "tpl": "required",
+            "vtpl": "required",
             "status": "required|in:y,n",
         },
         map[string]string{
@@ -220,6 +248,8 @@ func (this *Cate) EditSave(ctx *fiber.Ctx) error {
             "slug.minLen": "分类标识不能少于3位",
             "slug.isAlphaDash": "分类标识错误",
             "sort.required": "分类排序不能为空",
+            "tpl.required": "分类列表模板不能为空",
+            "vtpl.required": "文章详情模板不能为空",
             "status.required": "分类状态不能为空",
             "status.in": "分类状态信息错误",
         },
@@ -265,6 +295,8 @@ func (this *Cate) EditSave(ctx *fiber.Ctx) error {
             "slug": slug,
             "desc": desc,
             "sort": sort,
+            "tpl": tpl,
+            "view_tpl": vtpl,
             "status": newStatus,
         })
     if err != nil {

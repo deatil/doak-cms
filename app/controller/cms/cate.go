@@ -103,7 +103,13 @@ func (this *Cate) Index(ctx *fiber.Ctx) error {
         Paginate(listRows, int(total), urlPath, parameters).
         PageHtml
 
-    return this.View(ctx, "cate", fiber.Map{
+    // 模板
+    tpl := cate.Tpl
+    if tpl == "" {
+        return response.CmsErrorRender(ctx, "分类页面不存在")
+    }
+
+    return this.View(ctx, tpl, fiber.Map{
         "cate": cate,
         "arts": newArts,
         "total": total,

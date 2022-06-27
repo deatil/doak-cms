@@ -37,7 +37,7 @@ func (this *Base) View(ctx *fiber.Ctx, tpl string, data fiber.Map) error {
 }
 
 // 模板列表
-func (this *Base) ListTplFiles() []string {
+func (this *Base) ListTplFiles(prefix string) []string {
     cfg := config.Section("view")
 
     views := cfg.Key("views").String()
@@ -51,7 +51,7 @@ func (this *Base) ListTplFiles() []string {
     newFiles := make([]string, 0)
     if len(files) > 0 {
         for _, file := range files {
-            if strings.HasPrefix(file, "page") {
+            if strings.HasPrefix(file, prefix) {
                 file = strings.TrimSuffix(file, ext)
                 newFiles = append(newFiles, file)
             }

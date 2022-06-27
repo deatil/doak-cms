@@ -149,6 +149,50 @@
                         </div>
                     </div>
                     
+                    <div class="mb-3">
+                        <label for="tplSelect" 
+                            class="form-label"
+                        >
+                            分类列表模板
+                            <span class="text-danger">*</span>
+                        </label>
+                        <select class="form-select" 
+                            name="tpl"
+                            id="tplSelect"
+                            aria-label="tplHelp"
+                        >
+                            <option value="">请选择一个模板</option>
+                            {{ range index, value := tpls }} 
+                                <option value="{{ value }}" {{if data.Tpl == value}}selected=""{{end}}>{{ value }}</option>
+                            {{ end }}
+                        </select>
+                        <div id="tplHelp" class="form-text">
+                            选择分类对应的模板
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="vtplSelect" 
+                            class="form-label"
+                        >
+                            文章详情模板
+                            <span class="text-danger">*</span>
+                        </label>
+                        <select class="form-select" 
+                            name="vtpl"
+                            id="vtplSelect"
+                            aria-label="vtplHelp"
+                        >
+                            <option value="">请选择一个模板</option>
+                            {{ range vi, vv := viewTpls }} 
+                                <option value="{{ vv }}" {{if data.ViewTpl == vv}}selected=""{{end}}>{{ vv }}</option>
+                            {{ end }}
+                        </select>
+                        <div id="vtplHelp" class="form-text">
+                            选择文章详情对应的模板
+                        </div>
+                    </div>
+                    
                     <button type="button" 
                         class="btn btn-primary js-save-button">确认</button>
                 </form>
@@ -177,6 +221,8 @@
         var slug = $("[name=slug]").val();
         var desc = $("[name=desc]").val();
         var sort = $("[name=sort]").val();
+        var tpl = $("[name=tpl]").val();
+        var vtpl = $("[name=vtpl]").val();
         var status = $("[name=status]:checked").val();
 
         var url = '{{ adminUrl("cate/"+id+"/edit") }}';
@@ -186,6 +232,8 @@
             slug: slug,
             desc: desc,
             sort: sort,
+            tpl: tpl,
+            vtpl: vtpl,
             status: status,
         }, function(data) {
             if (data.code == 0) {

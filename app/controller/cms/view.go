@@ -42,11 +42,17 @@ func (this *View) Index(ctx *fiber.Ctx) error {
         tags = strings.Split(data.Tags, ",")
     }
 
+    // 显示模板
+    tpl := "view"
+
     // 分类信息
     var cate model.Cate
-    db.Engine().
+    cateHas, _ := db.Engine().
         Where("id = ?", data.CateId).
         Get(&cate)
+    if cateHas {
+        tpl = cate.ViewTpl
+    }
 
     // 添加浏览量
     db.Engine().
@@ -56,7 +62,7 @@ func (this *View) Index(ctx *fiber.Ctx) error {
             "views": data.Views + 1,
         })
 
-    return this.View(ctx, "view", fiber.Map{
+    return this.View(ctx, tpl, fiber.Map{
         "id": id,
         "cate": cate,
         "data": data,

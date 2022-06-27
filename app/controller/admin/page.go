@@ -143,12 +143,19 @@ func (this *Page) AddSave(ctx *fiber.Ctx) error {
     // 当前账号
     userId := appAuth.GetUserInfo(ctx).Id
 
+    // 模板列表
+    tpls := this.ListTplFiles("page")
+    tpl := "page"
+    if len(tpls) > 0 {
+        tpl = tpls[0]
+    }
+
     _, err := db.Engine().Insert(&model.Page{
         UserId: userId,
         Slug: slug,
         Title: title,
         Content: "",
-        Tpl: "page",
+        Tpl: tpl,
         Status: newStatus,
         AddIp: ctx.IP(),
     })
@@ -176,7 +183,7 @@ func (this *Page) Edit(ctx *fiber.Ctx) error {
     }
 
     // 模板列表
-    tpls := this.ListTplFiles()
+    tpls := this.ListTplFiles("page")
 
     return this.View(ctx, "page/edit", fiber.Map{
         "id": id,
@@ -206,12 +213,14 @@ func (this *Page) EditSave(ctx *fiber.Ctx) error {
             "slug": slug,
             "title": title,
             "content": content,
+            "tpl": tpl,
             "status": status,
         },
         map[string]string{
             "slug": "required|minLen:3|isAlphaDash",
             "title": "required",
             "content": "required",
+            "tpl": "required",
             "status": "required|in:y,n",
         },
         map[string]string{
@@ -220,6 +229,7 @@ func (this *Page) EditSave(ctx *fiber.Ctx) error {
             "slug.isAlphaDash": "单页标识错误",
             "title.required": "单页标题不能为空",
             "content.required": "单页内容不能为空",
+            "tpl.required": "单页模板不能为空",
             "status.required": "单页状态不能为空",
             "status.in": "单页状态信息错误",
         },
