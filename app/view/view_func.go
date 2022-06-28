@@ -23,6 +23,7 @@ func SetViewFuncs(engine *jet.Engine) {
 
     // 静态文件及附件
     engine.AddFunc("assets", url.Assets)
+    engine.AddFunc("adminAssets", url.AdminAssets)
     engine.AddFunc("attachUrl", url.AttachUrl)
     engine.AddFunc("attachPath", url.AttachPath)
     engine.AddFunc("attachUrlWithId", url.AttachUrlWithId)

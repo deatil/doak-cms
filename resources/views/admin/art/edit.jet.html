@@ -139,13 +139,13 @@
                                 </div>
                             {{else}}
                                 <div class="mb-2" id="art-preview">
-                                    <img src="/static/admin/image/nopic.png" class="img-thumbnail" alt="文章封面">
+                                    <img src='{{ adminAssets("image/nopic.png") }}' class="img-thumbnail" alt="文章封面">
                                 </div>
                             {{end}}
                             
                             <button type="button" 
                                 id="btn-remove-cover" 
-                                data-img="/static/admin/image/nopic.png"
+                                data-img='{{ adminAssets("image/nopic.png") }}'
                                 class="btn btn-danger btn-sm">移除封面</button>
                             <span id="btn-upload-cover"></button>
                         </div>
@@ -283,11 +283,11 @@
 {{end}}
 
 {{block script_after()}}
-<link href="/static/admin/libs/wangeditor/style.css" rel="stylesheet">
-<link href="/static/admin/libs/tagsinput/jquery.tagsinput.min.css" rel="stylesheet">
-<script src="/static/admin/libs/wangeditor/index.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
-<script src="/static/admin/libs/tagsinput/jquery.tagsinput.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
-<script src="/static/admin/libs/laydate/laydate.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
+<link href='{{ adminAssets("libs/wangeditor/style.css") }}' rel="stylesheet">
+<link href='{{ adminAssets("libs/tagsinput/jquery.tagsinput.min.css") }}' rel="stylesheet">
+<script src='{{ adminAssets("libs/wangeditor/index.js") }}' type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
+<script src='{{ adminAssets("libs/tagsinput/jquery.tagsinput.js") }}' type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
+<script src='{{ adminAssets("libs/laydate/laydate.js") }}' type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
 <script type="3029259e35d7bc1c98cd40a8-text/javascript">
 (function($) {
     "use strict";
@@ -363,8 +363,8 @@
 
 })(jQuery);
 </script>
-<link href="/static/admin/libs/huploadify/Huploadify.css" rel="stylesheet">
-<script src="/static/admin/libs/huploadify/jquery.Huploadify.js" type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
+<link href='{{ adminAssets("libs/huploadify/Huploadify.css") }}' rel="stylesheet">
+<script src='{{ adminAssets("libs/huploadify/jquery.Huploadify.js") }}' type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
 <script type="3029259e35d7bc1c98cd40a8-text/javascript">
 (function($) {
     "use strict";

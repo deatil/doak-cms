@@ -11,7 +11,18 @@ import (
 
 // 资源
 func Assets(path string) string {
-    return fmt.Sprintf("/static/%s", path)
+    cfg := config.Section("app")
+    assets := cfg.Key("assets").String()
+
+    return assets + path
+}
+
+// 后台资源
+func AdminAssets(path string) string {
+    cfg := config.Section("app")
+    assets := cfg.Key("admin-assets").String()
+
+    return assets + path
 }
 
 // =======================
