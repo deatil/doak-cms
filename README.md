@@ -6,7 +6,7 @@ doak-cms 是使用 gofiber 和 Xorm 的 go 文章管理系统
 ### 项目介绍
 
 *  使用 go 开发的通用文章管理系统
-*  使用 Fiber、Xorm 及 Rpcx 等开发
+*  核心使用 Fiber、Xorm 及 Rpcx 等开发
 *  不使用 rpc 可将 `main.go` 里 rpc 部分注释掉
 
 
@@ -67,7 +67,7 @@ git clone https://github.com/deatil/doak-cms.git
 
 3. 最后导入 sql 数据到数据库
 
-```go
+```
 /doc/doak_cms.sql
 ```
 

@@ -82,7 +82,7 @@ func getEncoderConfig(typ string) zapcore.EncoderConfig {
         StacktraceKey:  stacktraceKey,
         LineEnding:     zapcore.DefaultLineEnding,
         EncodeLevel:    zapcore.LowercaseLevelEncoder,
-        EncodeTime:     FormatTimeEncoder(typ),
+        EncodeTime:     formatTimeEncoder(typ),
         EncodeDuration: zapcore.SecondsDurationEncoder,
         EncodeCaller:   zapcore.FullCallerEncoder,
     }
@@ -116,7 +116,7 @@ func getEncoder(typ string) zapcore.Encoder {
 }
 
 // 自定义日志输出时间格式
-func FormatTimeEncoder(typ string) func(time.Time, zapcore.PrimitiveArrayEncoder) {
+func formatTimeEncoder(typ string) func(time.Time, zapcore.PrimitiveArrayEncoder) {
     return func(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
         // 前缀
         prefix := config.Section(typ).Key("prefix").String()

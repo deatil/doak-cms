@@ -19,32 +19,32 @@
             <div class="bg-light rounded h-100 p-4">
                 <h6 class="mb-4">
                     编辑文章
-                    
+
                     <a href='{{ adminUrl("art") }}' class="ms-1" title="返回列表">
                         <i class="fa fa-arrow-circle-left"></i>
                     </a>
                 </h6>
-                
+
                 <form class="profile-form" method="post">
                     <div class="mb-3">
-                        <label for="cateidSelect" 
+                        <label for="cateidSelect"
                             class="form-label"
                         >
                             所属分类
                             <span class="text-danger">*</span>
                         </label>
-                        <select class="form-select" 
+                        <select class="form-select"
                             name="cate_id"
                             id="cateidSelect"
                             aria-label="cateidHelp"
                         >
-                            {{ range index, value := cates }} 
+                            {{ range index, value := cates }}
                                 <option value="{{ value.Id }}" {{if data.CateId == value.Id}}selected=""{{end}}>{{ value.Name }}</option>
-                                
+
                                 {{if len(value.Children) > 0}}
                                     {{ range i2, v2 := value.Children }}
                                         <option value="{{ v2.Id }}" {{if data.CateId == v2.Id}}selected=""{{end}}>└{{ v2.Name }}</option>
-                                    
+
                                         {{if len(v2.Children) > 0}}
                                             {{ range i3, v3 := v2.Children }}
                                                 <option value="{{ v3.Id }}" {{if data.CateId == v3.Id}}selected=""{{end}}>└{{ v3.Name }}</option>
@@ -58,32 +58,32 @@
                             选择文章对应的分类
                         </div>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label for="titleInput" class="form-label">
                             标题
                             <span class="text-danger">*</span>
                         </label>
-                        <input type="text" 
-                            name="title" 
-                            value="{{ data.Title }}" 
-                            class="form-control" 
-                            id="titleInput" 
+                        <input type="text"
+                            name="title"
+                            value="{{ data.Title }}"
+                            class="form-control"
+                            id="titleInput"
                             aria-describedby="titleHelp">
                         <div id="titleHelp" class="form-text">
                             文章标题
                         </div>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label for="contentTextarea" class="form-label">
                             内容
                             <span class="text-danger">*</span>
                         </label>
-                        <textarea class="form-control d-none" 
+                        <textarea class="form-control d-none"
                             name="content"
-                            placeholder="文章内容" 
-                            id="contentTextarea" 
+                            placeholder="文章内容"
+                            id="contentTextarea"
                             style="height: 150px;"
                             aria-describedby="contentHelp">{{ data.Content | raw }}</textarea>
                         <div id="editor-toolbar" style="border: 1px solid #ced4da;border-radius: 5px 5px; 0 0"></div>
@@ -92,45 +92,45 @@
                             文章的内容
                         </div>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label for="descriptionTextarea" class="form-label">
                             描述
                         </label>
-                        <textarea class="form-control" 
+                        <textarea class="form-control"
                             name="desc"
-                            placeholder="文章描述" 
-                            id="descriptionTextarea" 
+                            placeholder="文章描述"
+                            id="descriptionTextarea"
                             style="height: 90px;"
                             aria-describedby="descriptionHelp">{{ data.Description }}</textarea>
                         <div id="descriptionHelp" class="form-text">
                             文章的描述
                         </div>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label for="keywordsInput" class="form-label">
                             关键字
                         </label>
-                        <input type="text" 
-                            name="keyword" 
-                            value="{{ data.Keywords }}" 
-                            class="form-control" 
-                            id="keywordsInput" 
+                        <input type="text"
+                            name="keyword"
+                            value="{{ data.Keywords }}"
+                            class="form-control"
+                            id="keywordsInput"
                             aria-describedby="keywordsHelp">
                         <div id="keywordsHelp" class="form-text">
                             文章的关键字
                         </div>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label class="form-label">
                             封面
                         </label>
-                        <input type="text" 
-                            name="cover" 
-                            value="{{ data.Cover }}" 
-                            class="form-control d-none" 
+                        <input type="text"
+                            name="cover"
+                            value="{{ data.Cover }}"
+                            class="form-control d-none"
                             id="coverInput">
                         <div class="art-thumbnail">
                             {{if data.Cover != ""}}
@@ -142,9 +142,9 @@
                                     <img src='{{ adminAssets("image/nopic.png") }}' class="img-thumbnail" alt="文章封面">
                                 </div>
                             {{end}}
-                            
-                            <button type="button" 
-                                id="btn-remove-cover" 
+
+                            <button type="button"
+                                id="btn-remove-cover"
                                 data-img='{{ adminAssets("image/nopic.png") }}'
                                 class="btn btn-danger btn-sm">移除封面</button>
                             <span id="btn-upload-cover"></button>
@@ -153,77 +153,77 @@
                             设置文章的封面
                         </div>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label for="tagsInput" class="form-label">
                             标签
                         </label>
-                        <input type="text" 
-                            name="tags" 
-                            value="{{ data.Tags }}" 
-                            class="form-control" 
-                            id="tagsInput" 
+                        <input type="text"
+                            name="tags"
+                            value="{{ data.Tags }}"
+                            class="form-control"
+                            id="tagsInput"
                             aria-describedby="tagsHelp">
                         <div id="tagsHelp" class="form-text">
                             文章的标签
                         </div>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label for="fromInput" class="form-label">文章来源</label>
-                        <input type="text" 
-                            name="from" 
-                            value="{{ data.From }}" 
-                            class="form-control" 
-                            id="fromInput" 
+                        <input type="text"
+                            name="from"
+                            value="{{ data.From }}"
+                            class="form-control"
+                            id="fromInput"
                             aria-describedby="fromHelp">
                         <div id="fromHelp" class="form-text">
                             文章的具体来源
                         </div>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label for="add_timeInput" class="form-label">
                             添加时间
                         </label>
-                        <input type="text" 
-                            name="add_time" 
-                            value='{{ createTime(data.AddTime).DateTimeString() }}' 
-                            class="form-control" 
-                            id="add_timeInput" 
+                        <input type="text"
+                            name="add_time"
+                            value='{{ createTime(data.AddTime).DateTimeString() }}'
+                            class="form-control"
+                            id="add_timeInput"
                             aria-describedby="add_timeHelp">
                         <div id="add_timeHelp" class="form-text">
                             文章的添加时间
                         </div>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label class="form-label">
                             置顶
                         </label>
                         <div class="form-control">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" 
-                                    type="radio" 
-                                    name="is_top" 
+                                <input class="form-check-input"
+                                    type="radio"
+                                    name="is_top"
                                     {{if data.IsTop == 1 }}
                                     checked=""
                                     {{end}}
-                                    id="istopRadioStatus1" 
+                                    id="istopRadioStatus1"
                                     value="y">
-                                <label class="form-check-label" 
+                                <label class="form-check-label"
                                     for="istopRadioStatus1">是</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" 
-                                    type="radio" 
-                                    name="is_top" 
+                                <input class="form-check-input"
+                                    type="radio"
+                                    name="is_top"
                                     {{if data.IsTop == 0 }}
                                     checked=""
                                     {{end}}
-                                    id="istopRadioStatus2" 
+                                    id="istopRadioStatus2"
                                     value="n">
-                                <label class="form-check-label" 
+                                <label class="form-check-label"
                                     for="istopRadioStatus2">否</label>
                             </div>
                         </div>
@@ -231,7 +231,7 @@
                             文章是否置顶处理
                         </div>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label class="form-label">
                             状态
@@ -239,27 +239,27 @@
                         </label>
                         <div class="form-control">
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" 
-                                    type="radio" 
-                                    name="status" 
+                                <input class="form-check-input"
+                                    type="radio"
+                                    name="status"
                                     {{if data.Status == 1 }}
                                     checked=""
                                     {{end}}
-                                    id="inlineRadioStatus1" 
+                                    id="inlineRadioStatus1"
                                     value="y">
-                                <label class="form-check-label" 
+                                <label class="form-check-label"
                                     for="inlineRadioStatus1">启用</label>
                             </div>
                             <div class="form-check form-check-inline">
-                                <input class="form-check-input" 
-                                    type="radio" 
-                                    name="status" 
+                                <input class="form-check-input"
+                                    type="radio"
+                                    name="status"
                                     {{if data.Status == 0 }}
                                     checked=""
                                     {{end}}
-                                    id="inlineRadioStatus2" 
+                                    id="inlineRadioStatus2"
                                     value="n">
-                                <label class="form-check-label" 
+                                <label class="form-check-label"
                                     for="inlineRadioStatus2">禁用</label>
                             </div>
                         </div>
@@ -267,8 +267,8 @@
                             文章是否开启或者关闭
                         </div>
                     </div>
-                    
-                    <button type="button" 
+
+                    <button type="button"
                         class="btn btn-primary js-save-button"
                     >
                         确认修改
@@ -291,9 +291,25 @@
 <script type="3029259e35d7bc1c98cd40a8-text/javascript">
 (function($) {
     "use strict";
-    
+
     $(".sidebar-art-index").addClass("active");
-    
+
+    // 关键字输入
+    $("#keywordsInput").tagsInput({
+        width: 'auto',
+        defaultText: '输入后空格确认',
+        minInputWidth: 110,
+        height: '38px',
+        placeholderColor: '#999',
+        onChange: function (row) {
+            if (typeof callback === 'function') {
+
+            } else {
+                $("tagsInput_addTag").focus();
+            }
+        }
+    });
+
     // 标签输入
     $("#tagsInput").tagsInput({
         width: 'auto',
@@ -309,13 +325,13 @@
             }
         }
     });
-    
+
     // 时间
     laydate.render({
         elem: '#add_timeInput',
         type: 'datetime',
     });
-    
+
     // 保存
     $(".js-save-button").click(function(e) {
         e.stopPropagation;
@@ -349,7 +365,7 @@
         }, function(data) {
             if (data.code == 0) {
                 layer.msg("编辑成功");
-                
+
                 setTimeout(function() {
                     window.location.reload();
                 }, 1500);
@@ -368,7 +384,7 @@
 <script type="3029259e35d7bc1c98cd40a8-text/javascript">
 (function($) {
     "use strict";
-    
+
     // 上传
     $('#btn-upload-cover').Huploadify({
         auto: true,
@@ -386,21 +402,21 @@
                 var id = data.data.id;
                 var url = data.data.url;
                 var $img = $('#art-preview').find('img');
-                
+
                 $img.attr('src', url);
                 $img.attr('alt', file.name);
-                
+
                 $('#coverInput').val(id);
             } else {
                 layer.msg("上传失败：" + data.message);
             }
         }
     });
-    
+
     // 移除封面
     $('#btn-remove-cover').click(function() {
         var img = $(this).data("img");
-        
+
         layer.confirm('您确定要移除封面吗？', {
             btn: ['确定', '取消']
         }, function(index){
@@ -410,10 +426,10 @@
 
             setTimeout(function() {
                 var $img = $('#art-preview').find('img');
-                
+
                 $img.attr('src', img);
                 $img.attr('alt', "文章封面");
-                
+
                 $('#coverInput').val("");
             }, 500);
         });
@@ -424,7 +440,7 @@
 <script type="3029259e35d7bc1c98cd40a8-text/javascript">
 (function($) {
     "use strict";
-    
+
     // 编辑器
     var E = window.wangEditor;
 
@@ -464,13 +480,13 @@
                 layer.msg(res.message);
                 return false;
               }
-              
+
               var url = res.data.url;
               if (!url) {
                 layer.msg("上传失败");
                 return false;
               }
-              
+
               var alt = url;
               var href = url;
 
@@ -485,7 +501,7 @@
         }
       }
     });
-    
+
     // 图片
     var IMAGE_SVG = '<svg viewBox="0 0 1024 1024"><path d="M959.877 128l0.123 0.123v767.775l-0.123 0.122H64.102l-0.122-0.122V128.123l0.122-0.123h895.775zM960 64H64C28.795 64 0 92.795 0 128v768c0 35.205 28.795 64 64 64h896c35.205 0 64-28.795 64-64V128c0-35.205-28.795-64-64-64zM832 288.01c0 53.023-42.988 96.01-96.01 96.01s-96.01-42.987-96.01-96.01S682.967 192 735.99 192 832 234.988 832 288.01zM896 832H128V704l224.01-384 256 320h64l224.01-192z"></path></svg>';
 
