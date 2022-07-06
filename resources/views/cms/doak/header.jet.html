@@ -1,0 +1,32 @@
+<script>NProgress.start();</script>
+
+<header>
+    <div class="header-container">
+        <a href="/">
+            <h1>{{ getSetting("website_name") }}</h1>
+        </a>
+        <nav>
+            <ul>
+                <li>
+                    <a href="/">首页</a>
+                </li>
+                <li>
+                    <a href="/c/rmbg">娱乐八卦</a>
+                </li>
+                <li>
+                    <a href="/p/aboutme">关于</a>
+                </li>
+            </ul>
+        </nav>
+
+    </div>
+</header>
+
+<div class="header-banner">
+    <section class="hero">
+        <div class="inner"></div>
+    </section>
+    <figure class="top-image" style='background-image: url({{ assets("cms/doak/img/bg.jpg") }});'></figure>
+
+    <canvas id="wave-canvas" width="1351" height="550"></canvas>
+</div>

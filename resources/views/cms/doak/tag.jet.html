@@ -3,47 +3,13 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
-    <link rel="stylesheet" href='{{ assets("cms/doak/app.css") }}' type="text/css" media="all">
-    <link rel="stylesheet" href='{{ assets("cms/doak/nprogress.min.css") }}' type="text/css" media="all">
-    <link rel="stylesheet" href='{{ assets("cms/doak/iconfont.css") }}' type="text/css" media="all">
-    <script type="text/javascript" src='{{ assets("cms/doak/jquery.min.js") }}'></script>
-    <script src='{{ assets("cms/doak/nprogress.min.js") }}'></script>
+    {{include "/cms/doak/head"}}
     <title>标签:{{ tag }} - {{ getSetting("website_name") }}</title>
 </head>
 
 <body>
-<script>NProgress.start();</script>
 
-<header>
-    <div class="header-container">
-        <a href="/">
-            <h1>{{ getSetting("website_name") }}</h1>
-        </a>
-        <nav>
-            <ul>
-                <li>
-                    <a href="/">首页</a>
-                </li>
-                <li>
-                    <a href="/c/rmbg">娱乐八卦</a>
-                </li>
-                <li>
-                    <a href="/p/aboutme">关于</a>
-                </li>
-            </ul>
-        </nav>
-
-    </div>
-</header>
-
-<div class="header-banner">
-    <section class="hero">
-        <div class="inner"></div>
-    </section>
-    <figure class="top-image" style='background-image: url({{ assets("cms/doak/img/bg.jpg") }});'></figure>
-
-    <canvas id="wave-canvas" width="1351" height="550"></canvas>
-</div>
+{{include "/cms/doak/header"}}
 
 <div class="wrapper">
     <div class="article-container">
@@ -94,23 +60,7 @@
     </div>
 </div>
 
-<footer class="footer">
-    <div class="wrap">
-        <div class="split__title">
-            © 2022 &nbsp; <a href="https://github.com/deatil/doak-cms" target="_blank">Doak CMS</a> All Rights Reserved.
-            <span class="icp"><a href="https://beian.miit.gov.cn/" target="_blank">{{ getSetting("website_beian") }}</a></span>
-        </div>
-    </div>
-</footer>
+{{include "/cms/doak/footer"}}
 
-<div id="backtop" class="show"></div>
-<script type="text/javascript" src='{{ assets("cms/doak/script.js") }}'></script>
-<script>
-$(document).ready(
-    function () {
-        NProgress.done();
-    }
-);
-</script>
 </body>
 </html>
