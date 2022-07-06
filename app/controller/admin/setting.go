@@ -6,6 +6,7 @@ import (
 
     "github.com/deatil/doak-cms/pkg/db"
     "github.com/deatil/doak-cms/pkg/http"
+    "github.com/deatil/doak-cms/pkg/redis"
     "github.com/deatil/doak-cms/pkg/validate"
 
     "github.com/deatil/doak-cms/app/model"
@@ -86,6 +87,9 @@ func (this *Setting) Save(ctx *fiber.Ctx) error {
                 "value": v,
             })
     }
+
+    // 清空缓存
+    redis.Storage().Delete("settings")
 
     return http.Success(ctx, "更新成功", "")
 }

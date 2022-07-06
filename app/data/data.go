@@ -2,21 +2,35 @@ package data
 
 import (
     "github.com/spf13/cast"
+    jsoniter "github.com/json-iterator/go"
 
     "github.com/deatil/doak-cms/pkg/db"
+    "github.com/deatil/doak-cms/pkg/redis"
+
     "github.com/deatil/doak-cms/app/model"
 )
 
 // 设置数据列表
 func GetSettings() map[string]string {
-    configs := make([]model.Config, 0)
-    db.Engine().Find(&configs)
-
     settings := make(map[string]string)
-    if len(configs) > 0 {
-        for _, v := range configs {
-            settings[v.Key] = v.Value
+
+    // 缓存获取数据
+    res, _ := redis.Storage().Get("settings")
+    if len(res) > 0 {
+        jsoniter.Unmarshal(res, &settings)
+    } else {
+        configs := make([]model.Config, 0)
+        db.Engine().Find(&configs)
+
+        if len(configs) > 0 {
+            for _, v := range configs {
+                settings[v.Key] = v.Value
+            }
         }
+
+        // 永久缓存
+        data, _ := jsoniter.Marshal(settings)
+        redis.Storage().Set("settings", data, 0)
     }
 
     return settings
