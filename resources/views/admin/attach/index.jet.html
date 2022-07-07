@@ -125,11 +125,12 @@
                                             <span class="badge bg-danger">禁用</span>
                                         {{end}}
                                     </td>
-                                    <td width="135" class="text-center">
+                                    <td width="155" class="text-center">
                                         <a class="btn btn-primary btn-sm js-download-btn" 
                                             href="javascript:;" 
                                             data-url='{{ adminUrl("attach/download/"+value.Id) }}'
                                         >
+                                            <i class="fa fa-download"></i>
                                             下载
                                         </a>
                                         
@@ -137,6 +138,7 @@
                                             class="btn btn-danger btn-sm js-delete-btn"
                                             data-url='{{ adminUrl("attach/delete/"+value.Id) }}'
                                         >
+                                            <i class="fa fa-times"></i>
                                             删除
                                         </a>
                                     </td>

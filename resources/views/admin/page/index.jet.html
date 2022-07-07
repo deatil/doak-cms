@@ -117,9 +117,11 @@
                                     <td width="165">
                                         {{ createTime(value.AddTime).DateTimeString() }}
                                     </td>
-                                    <td width="135" class="text-center">
+                                    <td width="155" class="text-center">
                                         <a class="btn btn-primary btn-sm" 
-                                            href='{{ adminUrl("page/"+value.Id+"/edit") }}'>
+                                            href='{{ adminUrl("page/"+value.Id+"/edit") }}'
+                                        >
+                                            <i class="fa fa-edit"></i>
                                             编辑
                                         </a>
                                         
@@ -127,6 +129,7 @@
                                             class="btn btn-danger btn-sm js-delete-btn"
                                             data-url='{{ adminUrl("page/"+value.Id+"/delete") }}'
                                         >
+                                            <i class="fa fa-times"></i>
                                             删除
                                         </a>
                                     </td>

@@ -36,7 +36,7 @@ func HttpCms(app *fiber.App) {
     app.Get("/", indexController.Index)
 
     cateController := new(cms.Cate)
-    app.Get("/c/:slug?", cateController.Index)
+    app.Get("/c/:slug", cateController.Index)
 
     viewController := new(cms.View)
     app.Get("/a/:id", viewController.Index)

@@ -23,6 +23,10 @@ type View struct{
 }
 
 func (this *View) Index(ctx *fiber.Ctx) error {
+    if siteOk, siteErr := this.SiteopenCheck(ctx); !siteOk {
+        return siteErr
+    }
+
     id := cast.ToString(ctx.Params("id"))
     if id == "" {
         return response.CmsErrorRender(ctx, "数据不存在")

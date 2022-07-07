@@ -27,3 +27,12 @@ func (this *Base) View(ctx *fiber.Ctx, tpl string, info fiber.Map) error {
 
     return ctx.Render(this.Theme(tpl), info)
 }
+
+// 检测网站是否关闭
+func (this *Base) SiteopenCheck(ctx *fiber.Ctx) (bool, error) {
+    if data.GetSetting("website_status") != "1" {
+        return false, response.CmsErrorRender(ctx, "网站当前关闭调整中...")
+    }
+
+    return true, nil
+}
