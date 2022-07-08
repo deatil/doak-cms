@@ -23,10 +23,6 @@ type Page struct{
 
 // 详情
 func (this *Page) Index(ctx *fiber.Ctx) error {
-    if siteOk, siteErr := this.SiteopenCheck(ctx); !siteOk {
-        return siteErr
-    }
-
     name := cast.ToString(ctx.Params("name"))
 
     // 验证

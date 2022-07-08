@@ -26,10 +26,6 @@ type Cate struct{
 
 // 详情
 func (this *Cate) Index(ctx *fiber.Ctx) error {
-    if siteOk, siteErr := this.SiteopenCheck(ctx); !siteOk {
-        return siteErr
-    }
-
     slug := cast.ToString(ctx.Params("slug"))
 
     // 验证

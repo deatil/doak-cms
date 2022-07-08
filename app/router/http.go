@@ -32,20 +32,23 @@ func HttpStatic(app *fiber.App) {
 
 // CMS
 func HttpCms(app *fiber.App) {
+    // 网站是否开启检测
+    siteopenCheck := middleware.NewSiteopenCheck()
+
     indexController := new(cms.Index)
-    app.Get("/", indexController.Index)
+    app.Get("/", siteopenCheck, indexController.Index)
 
     cateController := new(cms.Cate)
-    app.Get("/c/:slug", cateController.Index)
+    app.Get("/c/:slug", siteopenCheck, cateController.Index)
 
     viewController := new(cms.View)
-    app.Get("/a/:id", viewController.Index)
+    app.Get("/a/:id", siteopenCheck, viewController.Index)
 
     tagController := new(cms.Tag)
-    app.Get("/tag/:tag", tagController.Index)
+    app.Get("/tag/:tag", siteopenCheck, tagController.Index)
 
     pageController := new(cms.Page)
-    app.Get("/p/:name", pageController.Index)
+    app.Get("/p/:name", siteopenCheck, pageController.Index)
 }
 
 // 管理员

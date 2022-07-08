@@ -15,9 +15,5 @@ type Index struct{
 }
 
 func (this *Index) Index(ctx *fiber.Ctx) error {
-    if siteOk, siteErr := this.SiteopenCheck(ctx); !siteOk {
-        return siteErr
-    }
-
     return this.View(ctx, "index", fiber.Map{})
 }

@@ -24,10 +24,6 @@ type Tag struct{
 }
 
 func (this *Tag) Index(ctx *fiber.Ctx) error {
-    if siteOk, siteErr := this.SiteopenCheck(ctx); !siteOk {
-        return siteErr
-    }
-
     tagName := cast.ToString(ctx.Params("tag"))
     if tagName == "" {
         return response.CmsErrorRender(ctx, "标签错误")
