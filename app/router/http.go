@@ -76,6 +76,8 @@ func HttpAdmin(app *fiber.App) {
     profileController := new(admin.Profile)
     sysAuth.Get("/profile", profileController.Index)
     sysAuth.Post("/profile", profileController.Save)
+    sysAuth.Get("/profile/password", profileController.Password)
+    sysAuth.Post("/profile/password", profileController.PasswordSave)
 
     // 上传
     uploadController := new(admin.Upload)

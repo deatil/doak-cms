@@ -83,6 +83,21 @@
                         
                         <div class="col-auto">
                             <div class="input-group my-1">
+                                <span class="input-group-text" id="input-istop">置顶</span>
+                                <select name="istop"
+                                    class="form-select" 
+                                    aria-label="istop"
+                                    aria-describedby="input-istop"
+                                >
+                                    <option value="">全部</option>
+                                    <option value="1" {{if istop== "1"}}selected=""{{end}}>已置顶</option>
+                                    <option value="0" {{if istop== "0"}}selected=""{{end}}>未置顶</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="col-auto">
+                            <div class="input-group my-1">
                                 <span class="input-group-text" id="input-status">状态</span>
                                 <select name="status"
                                     class="form-select" 

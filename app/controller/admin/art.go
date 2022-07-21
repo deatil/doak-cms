@@ -54,6 +54,9 @@ func (this *Art) Index(ctx *fiber.Ctx) error {
     // 结束时间
     endTime := cast.ToString(ctx.Query("end_time", ""))
 
+    // 置顶
+    istop := cast.ToString(ctx.Query("istop", ""))
+
     // 状态
     status := cast.ToString(ctx.Query("status", ""))
 
@@ -78,6 +81,9 @@ func (this *Art) Index(ctx *fiber.Ctx) error {
         modeldb = modeldb.Where("add_time <= ?", endTimeObj.Timestamp())
     }
 
+    if istop != "" {
+        modeldb = modeldb.Where("is_top = ?", istop)
+    }
     if status != "" {
         modeldb = modeldb.Where("status = ?", status)
     }
@@ -113,6 +119,9 @@ func (this *Art) Index(ctx *fiber.Ctx) error {
         countdb = countdb.Where("add_time <= ?", endTimeObj.Timestamp())
     }
 
+    if istop != "" {
+        countdb = countdb.Where("is_top = ?", istop)
+    }
     if status != "" {
         countdb = countdb.Where("status = ?", status)
     }
@@ -147,8 +156,9 @@ func (this *Art) Index(ctx *fiber.Ctx) error {
 
     return this.View(ctx, "art/index", fiber.Map{
         "keywords": keywords,
-        "status": status,
         "cateid": cateid,
+        "istop": istop,
+        "status": status,
 
         "start_time": startTime,
         "end_time": endTime,

@@ -30,6 +30,10 @@
                     <i class="fa fa-user me-1"></i>
                     我的信息
                 </a>
+                <a href='{{ adminUrl("profile/password") }}' class="dropdown-item">
+                    <i class="fa fa-star me-1"></i>
+                    更改密码
+                </a>
                 {{if isAdmin}}
                 <a href='{{ adminUrl("setting") }}' class="dropdown-item">
                     <i class="fa fa-cog me-1"></i>

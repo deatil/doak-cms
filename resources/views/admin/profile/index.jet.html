@@ -66,19 +66,6 @@
                     </div>
                     
                     <div class="mb-3">
-                        <label for="inputPassword" class="form-label">账号密码</label>
-                        <input type="password" 
-                            name="password"
-                            class="form-control" 
-                            id="inputPassword"
-                            autocomplete="false"
-                            aria-describedby="passwordHelp">
-                        <div id="passwordHelp" class="form-text">
-                            管理员账号的密码，为空不修改密码
-                        </div>
-                    </div>
-                    
-                    <div class="mb-3">
                         <label for="signTextarea" class="form-label">签名</label>
                         <textarea class="form-control" 
                             name="sign"
@@ -145,14 +132,12 @@
         e.preventDefault;
 
         var nickname = $("#inputNickname").val();
-        var password = $("#inputPassword").val();
         var avatar = $("#avatarInput").val();
         var sign = $("#signTextarea").val();
 
         var url = '{{ adminUrl("profile") }}';
         $.post(url, {
             nickname: nickname,
-            password: password,
             avatar: avatar,
             sign: sign,
         }, function(data) {
