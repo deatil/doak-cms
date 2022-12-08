@@ -12,6 +12,7 @@ import (
     "github.com/gofiber/fiber/v2/middleware/encryptcookie"
     "github.com/gofiber/template/jet"
 
+    "github.com/json-iterator/go"
     "github.com/smallnest/rpcx/server"
     "github.com/rpcxio/rpcx-etcd/serverplugin"
 
@@ -30,9 +31,19 @@ func HttpServer(jetFunc func(*jet.Engine), appFunc func(*fiber.App)) {
     jetEngine := view.JetEngine("view")
     jetFunc(jetEngine)
 
+    // json 处理
+    json := jsoniter.ConfigCompatibleWithStandardLibrary
+
     // 启动 app
     app := fiber.New(fiber.Config{
+        // app 名称
+        AppName: "doak-cms",
+        // 视图
         Views: jetEngine,
+        // json 编码
+        JSONEncoder: json.Marshal,
+        // json 解析
+        JSONDecoder: json.Unmarshal,
         // 默认的错误处理程序
         // fiber.DefaultErrorHandler
         // 覆盖默认的错误处理程序
