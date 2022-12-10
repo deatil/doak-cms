@@ -26,6 +26,7 @@ func HttpServer(jetFunc func(*jet.Engine), appFunc func(*fiber.App)) {
     cfg := config.Section("app")
 
     debug := cfg.Key("debug").MustBool(false)
+    appName := cfg.Key("app-name").MustString("doak-cms")
 
     // 设置模板驱动
     jetEngine := view.JetEngine("view")
@@ -37,7 +38,7 @@ func HttpServer(jetFunc func(*jet.Engine), appFunc func(*fiber.App)) {
     // 启动 app
     app := fiber.New(fiber.Config{
         // app 名称
-        AppName: "doak-cms",
+        AppName: appName,
         // 视图
         Views: jetEngine,
         // json 编码
