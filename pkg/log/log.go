@@ -11,6 +11,17 @@ import (
     "github.com/deatil/doak-cms/pkg/config"
 )
 
+var levelStrings = map[string]zapcore.Level{
+    "debug":   zapcore.DebugLevel,
+    "info":    zapcore.InfoLevel,
+    "warn":    zapcore.WarnLevel,
+    "warning": zapcore.WarnLevel,
+    "error":   zapcore.ErrorLevel,
+    "dpanic":  zapcore.DPanicLevel,
+    "panic":   zapcore.PanicLevel,
+    "fatal":   zapcore.FatalLevel,
+}
+
 var log *zap.Logger
 var once sync.Once
 
@@ -47,9 +58,11 @@ func Manager(typ string) *zap.Logger {
         Compress:   compress,   // 是否压缩处理
     })
 
-    //日志级别
-    highPriority := zap.LevelEnablerFunc(func(lev zapcore.Level) bool{  //error级别
-        return lev >= zap.InfoLevel
+    // 存储日志级别
+    highPriority := zap.LevelEnablerFunc(func(lev zapcore.Level) bool {  //error级别
+        level := cfg.Key("log-level").String()
+
+        return lev >= getLoggerLevel(level)
     })
 
     // 第三个及之后的参数为写入文件的日志级别,ErrorLevel模式只记录error级别的日志
@@ -63,6 +76,15 @@ func Manager(typ string) *zap.Logger {
     logger := zap.New(fileCore, zap.AddCaller())
 
     return logger
+}
+
+// 获取日志等级
+func getLoggerLevel(name string) zapcore.Level {
+    if level, ok := levelStrings[name]; ok {
+        return level
+    }
+
+    return zapcore.ErrorLevel
 }
 
 // 获取 zapcore.EncoderConfig

@@ -93,6 +93,9 @@ func (this *Auth) LoginCheck(ctx *fiber.Ctx) error {
     // 验证码ID
     captchaid := session.Get(ctx, "captchaid")
 
+    // 清除数据
+    session.Delete(ctx, "captchaid")
+
     // 验证码验证
     if ok := captcha.VerifyString(captchaid.(string), captchaData); !ok {
         return http.Error(ctx, "验证码错误")
