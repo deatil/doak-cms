@@ -65,14 +65,25 @@ func HttpServer(jetFunc func(*jet.Engine), appFunc func(*fiber.App)) {
                 errorMsg = err.Error()
             }
 
-            // 页面地址
-            errorHtml := cfg.Key("error-html").String()
+            method := ctx.Method()
 
-            // 发送自定义错误页面
-            err = ctx.Status(code).Render(errorHtml, fiber.Map{
-                "code": code,
-                "message": errorMsg,
-            })
+            if method == "POST" || method == "DELETE" {
+                // 发送自定义错误 JSON
+                err = ctx.Status(code).JSON(fiber.Map{
+                    "code":    code,
+                    "message": errorMsg,
+                })
+            } else {
+                // 页面地址
+                errorHtml := cfg.Key("error-html").String()
+
+                // 发送自定义错误页面
+                err = ctx.Status(code).Render(errorHtml, fiber.Map{
+                    "code":    code,
+                    "message": errorMsg,
+                })
+            }
+
             if err != nil {
                 // 失败处理
                return ctx.Status(fiber.StatusInternalServerError).
