@@ -19,7 +19,15 @@ import (
     "github.com/deatil/doak-cms/pkg/log"
     "github.com/deatil/doak-cms/pkg/view"
     "github.com/deatil/doak-cms/pkg/config"
+    cms_utils "github.com/deatil/doak-cms/pkg/utils"
 )
+
+// 检测运行时目录
+func checkRuntimeDir(dir string) {
+    if !cms_utils.FileExists(dir) {
+        cms_utils.MkDir(dir)
+    }
+}
 
 // http 服务
 func HttpServer(jetFunc func(*jet.Engine), appFunc func(*fiber.App)) {
@@ -27,9 +35,14 @@ func HttpServer(jetFunc func(*jet.Engine), appFunc func(*fiber.App)) {
 
     debug := cfg.Key("debug").MustBool(false)
     appName := cfg.Key("app-name").MustString("doak-cms")
+    runtimeLogDir := cfg.Key("runtime-log-dir").MustString("./runtime/log")
+
+    // 检测运行时目录
+    checkRuntimeDir(runtimeLogDir)
 
     // 设置模板驱动
     jetEngine := view.JetEngine("view")
+    jetEngine.Debug(debug)
     jetFunc(jetEngine)
 
     // json 处理

@@ -6,6 +6,7 @@ import (
     "fmt"
     "bufio"
     "errors"
+    "net/http"
     "crypto/md5"
     "crypto/rand"
     "encoding/hex"
@@ -60,6 +61,11 @@ func FileExists(path string) bool {
 // 文件删除
 func FileDelete(path string) error {
     return os.Remove(path)
+}
+
+// 创建文件夹
+func MkDir(directory string) error {
+    return os.MkdirAll(directory, 0666)
 }
 
 // 大文件 Md5
@@ -118,6 +124,28 @@ func ListFiles(directory string) []string {
 
     ret := make([]string, 0, sz)
     for i := 0; i < sz; i++ {
+        if !fs[i].IsDir() {
+            ret = append(ret, fs[i].Name())
+        }
+    }
+
+    return ret
+}
+
+// 列出文件
+func ListEmbedFiles(f http.File) []string {
+    fs, err := f.Readdir(-1)
+    if err != nil {
+        return []string{}
+    }
+
+    sz := len(fs)
+    if sz == 0 {
+        return []string{}
+    }
+
+    ret := make([]string, 0, sz)
+    for i, n := 0, sz; i < n; i++ {
         if !fs[i].IsDir() {
             ret = append(ret, fs[i].Name())
         }

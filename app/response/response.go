@@ -37,7 +37,10 @@ func CmsTheme(tpl string) string {
 
     theme := cfg.Key("theme").MustString("doak")
 
-    view := "cms/" + theme + "/" + tpl
+    view := "cms/" + theme
+    if tpl != "" {
+         view = view + "/" + tpl
+    }
 
     return view
 }
