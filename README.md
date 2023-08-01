@@ -7,6 +7,7 @@ doak-cms 是使用 gofiber 和 Xorm 的 go 文章管理系统
 
 *  使用 go 开发的通用文章管理系统
 *  核心使用 Fiber、Xorm 及 Rpcx 等开发
+*  默认打包配置文件，模板文件及静态文件，一个文件即可部署
 *  不使用 rpc 可将 `main.go` 里 rpc 部分注释掉
 
 
