@@ -66,11 +66,10 @@ func (this *Cate) Index(ctx *fiber.Ctx) error {
     total, _ := countdb.Count(new(model.Cate))
 
     // url 链接信息
-    urlPath := string(ctx.Request().URI().Path())
-    urlQuery := ctx.Request().URI().QueryArgs().String()
-    parameters, _ := url.ParseQuery(urlQuery)
+    uri := ctx.Request().URI()
+    parameters, _ := url.ParseQuery(uri.QueryArgs().String())
     pageHtml := page.New().
-        Paginate(listRows, int(total), urlPath, parameters).
+        Paginate(listRows, int(total), string(uri.Path()), parameters).
         PageHtml
 
     return this.View(ctx, "cate/index", fiber.Map{

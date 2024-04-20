@@ -26,248 +26,290 @@
                 </h6>
 
                 <form class="profile-form" method="post">
-                    <div class="mb-3">
-                        <label for="cateidSelect"
-                            class="form-label"
+                    <nav>
+                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                            <button class="nav-link active" 
+                                id="nav-main-tab" 
+                                data-bs-toggle="tab" 
+                                data-bs-target="#nav-main" 
+                                type="button" role="tab" a
+                                ria-controls="nav-main" 
+                                aria-selected="true">文章详情</button>
+                            <button class="nav-link" 
+                                id="nav-setting-tab" 
+                                data-bs-toggle="tab" 
+                                data-bs-target="#nav-setting" 
+                                type="button" role="tab" 
+                                aria-controls="nav-setting" 
+                                aria-selected="false">文章设置</button>
+                        </div>
+                    </nav>
+                    
+                    <div class="tab-content pt-3" id="nav-tabContent">
+                        <div class="tab-pane fade active show" 
+                            id="nav-main" 
+                            role="tabpanel" 
+                            aria-labelledby="nav-main-tab"
                         >
-                            所属分类
-                            <span class="text-danger">*</span>
-                        </label>
-                        <select class="form-select"
-                            name="cate_id"
-                            id="cateidSelect"
-                            aria-label="cateidHelp"
-                        >
-                            {{ range index, value := cates }}
-                                <option value="{{ value.Id }}" {{if data.CateId == value.Id}}selected=""{{end}}>{{ value.Name }}</option>
+                        
+                            <div class="mb-3">
+                                <label for="cateidSelect"
+                                    class="form-label"
+                                >
+                                    所属分类
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <select class="form-select"
+                                    name="cate_id"
+                                    id="cateidSelect"
+                                    aria-label="cateidHelp"
+                                >
+                                    {{ range index, value := cates }}
+                                        <option value="{{ value.Id }}" {{if data.CateId == value.Id}}selected=""{{end}}>{{ value.Name }}</option>
 
-                                {{if len(value.Children) > 0}}
-                                    {{ range i2, v2 := value.Children }}
-                                        <option value="{{ v2.Id }}" {{if data.CateId == v2.Id}}selected=""{{end}}>└{{ v2.Name }}</option>
+                                        {{if len(value.Children) > 0}}
+                                            {{ range i2, v2 := value.Children }}
+                                                <option value="{{ v2.Id }}" {{if data.CateId == v2.Id}}selected=""{{end}}>└{{ v2.Name }}</option>
 
-                                        {{if len(v2.Children) > 0}}
-                                            {{ range i3, v3 := v2.Children }}
-                                                <option value="{{ v3.Id }}" {{if data.CateId == v3.Id}}selected=""{{end}}>└{{ v3.Name }}</option>
+                                                {{if len(v2.Children) > 0}}
+                                                    {{ range i3, v3 := v2.Children }}
+                                                        <option value="{{ v3.Id }}" {{if data.CateId == v3.Id}}selected=""{{end}}>└{{ v3.Name }}</option>
+                                                    {{end}}
+                                                {{end}}
                                             {{end}}
                                         {{end}}
-                                    {{end}}
-                                {{end}}
-                            {{ end }}
-                        </select>
-                        <div id="cateidHelp" class="form-text">
-                            选择文章对应的分类
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="titleInput" class="form-label">
-                            标题
-                            <span class="text-danger">*</span>
-                        </label>
-                        <input type="text"
-                            name="title"
-                            value="{{ data.Title }}"
-                            class="form-control"
-                            id="titleInput"
-                            aria-describedby="titleHelp">
-                        <div id="titleHelp" class="form-text">
-                            文章标题
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="contentTextarea" class="form-label">
-                            内容
-                            <span class="text-danger">*</span>
-                        </label>
-                        <textarea class="form-control d-none"
-                            name="content"
-                            placeholder="文章内容"
-                            id="contentTextarea"
-                            style="height: 150px;"
-                            aria-describedby="contentHelp">{{ data.Content | raw }}</textarea>
-                        <div id="editor-toolbar" style="border: 1px solid #ced4da;border-radius: 5px 5px; 0 0"></div>
-                        <div id="editor-text-area" style="height: 350px;border: 1px solid #ced4da;border-radius: 0 0 5px 5px;"></div>
-                        <div id="contentHelp" class="form-text">
-                            文章的内容
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="descriptionTextarea" class="form-label">
-                            描述
-                        </label>
-                        <textarea class="form-control"
-                            name="desc"
-                            placeholder="文章描述"
-                            id="descriptionTextarea"
-                            style="height: 90px;"
-                            aria-describedby="descriptionHelp">{{ data.Description }}</textarea>
-                        <div id="descriptionHelp" class="form-text">
-                            文章的描述
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="keywordsInput" class="form-label">
-                            关键字
-                        </label>
-                        <input type="text"
-                            name="keyword"
-                            value="{{ data.Keywords }}"
-                            class="form-control"
-                            id="keywordsInput"
-                            aria-describedby="keywordsHelp">
-                        <div id="keywordsHelp" class="form-text">
-                            文章的关键字
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">
-                            封面
-                        </label>
-                        <input type="text"
-                            name="cover"
-                            value="{{ data.Cover }}"
-                            class="form-control d-none"
-                            id="coverInput">
-                        <div class="art-thumbnail">
-                            {{if data.Cover != ""}}
-                                <div class="mb-2" id="art-preview">
-                                    <img src="{{ attachUrlWithId(data.Cover) }}" class="img-thumbnail" alt="文章封面">
+                                    {{ end }}
+                                </select>
+                                <div id="cateidHelp" class="form-text">
+                                    选择文章对应的分类
                                 </div>
-                            {{else}}
-                                <div class="mb-2" id="art-preview">
-                                    <img src='{{ adminAssets("image/nopic.png") }}' class="img-thumbnail" alt="文章封面">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="titleInput" class="form-label">
+                                    标题
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input type="text"
+                                    name="title"
+                                    value="{{ data.Title }}"
+                                    class="form-control"
+                                    id="titleInput"
+                                    aria-describedby="titleHelp">
+                                <div id="titleHelp" class="form-text">
+                                    文章标题
                                 </div>
-                            {{end}}
-
-                            <button type="button"
-                                id="btn-remove-cover"
-                                data-img='{{ adminAssets("image/nopic.png") }}'
-                                class="btn btn-danger btn-sm">移除封面</button>
-                            <span id="btn-upload-cover"></button>
-                        </div>
-                        <div class="form-text">
-                            设置文章的封面
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="tagsInput" class="form-label">
-                            标签
-                        </label>
-                        <input type="text"
-                            name="tags"
-                            value="{{ data.Tags }}"
-                            class="form-control"
-                            id="tagsInput"
-                            aria-describedby="tagsHelp">
-                        <div id="tagsHelp" class="form-text">
-                            文章的标签
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="fromInput" class="form-label">文章来源</label>
-                        <input type="text"
-                            name="from"
-                            value="{{ data.From }}"
-                            class="form-control"
-                            id="fromInput"
-                            aria-describedby="fromHelp">
-                        <div id="fromHelp" class="form-text">
-                            文章的具体来源
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="add_timeInput" class="form-label">
-                            添加时间
-                        </label>
-                        <input type="text"
-                            name="add_time"
-                            value='{{ createTime(data.AddTime).DateTimeString() }}'
-                            class="form-control"
-                            id="add_timeInput"
-                            aria-describedby="add_timeHelp">
-                        <div id="add_timeHelp" class="form-text">
-                            文章的添加时间
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">
-                            置顶
-                        </label>
-                        <div class="form-control">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input"
-                                    type="radio"
-                                    name="is_top"
-                                    {{if data.IsTop == 1 }}
-                                    checked=""
-                                    {{end}}
-                                    id="istopRadioStatus1"
-                                    value="y">
-                                <label class="form-check-label"
-                                    for="istopRadioStatus1">是</label>
                             </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input"
-                                    type="radio"
-                                    name="is_top"
-                                    {{if data.IsTop == 0 }}
-                                    checked=""
-                                    {{end}}
-                                    id="istopRadioStatus2"
-                                    value="n">
-                                <label class="form-check-label"
-                                    for="istopRadioStatus2">否</label>
+
+                            <div class="mb-3">
+                                <label for="contentTextarea" class="form-label">
+                                    内容
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <textarea class="form-control d-none"
+                                    name="content"
+                                    placeholder="文章内容"
+                                    id="contentTextarea"
+                                    style="height: 150px;"
+                                    aria-describedby="contentHelp">{{ data.Content | raw }}</textarea>
+                                <div id="editor-toolbar" style="border: 1px solid #ced4da;border-radius: 5px 5px; 0 0"></div>
+                                <div id="editor-text-area" style="height: 350px;border: 1px solid #ced4da;border-radius: 0 0 5px 5px;"></div>
+                                <div id="contentHelp" class="form-text">
+                                    文章的内容
+                                </div>
                             </div>
+                            
+                            <div class="mb-3">
+                                <label for="descriptionTextarea" class="form-label">
+                                    描述
+                                </label>
+                                <textarea class="form-control"
+                                    name="desc"
+                                    placeholder="文章描述"
+                                    id="descriptionTextarea"
+                                    style="height: 90px;"
+                                    aria-describedby="descriptionHelp">{{ data.Description }}</textarea>
+                                <div id="descriptionHelp" class="form-text">
+                                    文章的描述
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="keywordsInput" class="form-label">
+                                    关键字
+                                </label>
+                                <input type="text"
+                                    name="keyword"
+                                    value="{{ data.Keywords }}"
+                                    class="form-control"
+                                    id="keywordsInput"
+                                    aria-describedby="keywordsHelp">
+                                <div id="keywordsHelp" class="form-text">
+                                    文章的关键字
+                                </div>
+                            </div>
+
                         </div>
-                        <div class="form-text">
-                            文章是否置顶处理
+                        
+                        <div class="tab-pane fade" 
+                            id="nav-setting" 
+                            role="tabpanel" 
+                            aria-labelledby="nav-setting-tab"
+                        >
+
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    封面
+                                </label>
+                                <input type="text"
+                                    name="cover"
+                                    value="{{ data.Cover }}"
+                                    class="form-control d-none"
+                                    id="coverInput">
+                                <div class="art-thumbnail">
+                                    {{if data.Cover != ""}}
+                                        <div class="mb-2" id="art-preview">
+                                            <img src="{{ attachUrlWithId(data.Cover) }}" class="img-thumbnail" alt="文章封面">
+                                        </div>
+                                    {{else}}
+                                        <div class="mb-2" id="art-preview">
+                                            <img src='{{ adminAssets("image/nopic.png") }}' class="img-thumbnail" alt="文章封面">
+                                        </div>
+                                    {{end}}
+
+                                    <button type="button"
+                                        id="btn-remove-cover"
+                                        data-img='{{ adminAssets("image/nopic.png") }}'
+                                        class="btn btn-danger btn-sm">移除封面</button>
+                                    <span id="btn-upload-cover"></button>
+                                </div>
+                                <div class="form-text">
+                                    设置文章的封面
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="tagsInput" class="form-label">
+                                    标签
+                                </label>
+                                <input type="text"
+                                    name="tags"
+                                    value="{{ data.Tags }}"
+                                    class="form-control"
+                                    id="tagsInput"
+                                    aria-describedby="tagsHelp">
+                                <div id="tagsHelp" class="form-text">
+                                    文章的标签
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="fromInput" class="form-label">文章来源</label>
+                                <input type="text"
+                                    name="from"
+                                    value="{{ data.From }}"
+                                    class="form-control"
+                                    id="fromInput"
+                                    aria-describedby="fromHelp">
+                                <div id="fromHelp" class="form-text">
+                                    文章的具体来源
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="add_timeInput" class="form-label">
+                                    添加时间
+                                </label>
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text">
+                                        <i class="fa fa-clock"></i>
+                                    </span>
+                                    <input type="text"
+                                        name="add_time"
+                                        value='{{ createTime(data.AddTime).DateTimeString() }}'
+                                        class="form-control"
+                                        id="add_timeInput"
+                                        aria-describedby="add_timeHelp">
+                                </div>
+                                <div id="add_timeHelp" class="form-text">
+                                    文章的添加时间
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    置顶
+                                </label>
+                                <div class="form-control">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input"
+                                            type="radio"
+                                            name="is_top"
+                                            {{if data.IsTop == 1 }}
+                                            checked=""
+                                            {{end}}
+                                            id="istopRadioStatus1"
+                                            value="y">
+                                        <label class="form-check-label"
+                                            for="istopRadioStatus1">是</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input"
+                                            type="radio"
+                                            name="is_top"
+                                            {{if data.IsTop == 0 }}
+                                            checked=""
+                                            {{end}}
+                                            id="istopRadioStatus2"
+                                            value="n">
+                                        <label class="form-check-label"
+                                            for="istopRadioStatus2">否</label>
+                                    </div>
+                                </div>
+                                <div class="form-text">
+                                    文章是否置顶处理
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    状态
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <div class="form-control">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input"
+                                            type="radio"
+                                            name="status"
+                                            {{if data.Status == 1 }}
+                                            checked=""
+                                            {{end}}
+                                            id="inlineRadioStatus1"
+                                            value="y">
+                                        <label class="form-check-label"
+                                            for="inlineRadioStatus1">启用</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input"
+                                            type="radio"
+                                            name="status"
+                                            {{if data.Status == 0 }}
+                                            checked=""
+                                            {{end}}
+                                            id="inlineRadioStatus2"
+                                            value="n">
+                                        <label class="form-check-label"
+                                            for="inlineRadioStatus2">禁用</label>
+                                    </div>
+                                </div>
+                                <div class="form-text">
+                                    文章是否开启或者关闭
+                                </div>
+                            </div>
+
                         </div>
                     </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">
-                            状态
-                            <span class="text-danger">*</span>
-                        </label>
-                        <div class="form-control">
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input"
-                                    type="radio"
-                                    name="status"
-                                    {{if data.Status == 1 }}
-                                    checked=""
-                                    {{end}}
-                                    id="inlineRadioStatus1"
-                                    value="y">
-                                <label class="form-check-label"
-                                    for="inlineRadioStatus1">启用</label>
-                            </div>
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input"
-                                    type="radio"
-                                    name="status"
-                                    {{if data.Status == 0 }}
-                                    checked=""
-                                    {{end}}
-                                    id="inlineRadioStatus2"
-                                    value="n">
-                                <label class="form-check-label"
-                                    for="inlineRadioStatus2">禁用</label>
-                            </div>
-                        </div>
-                        <div class="form-text">
-                            文章是否开启或者关闭
-                        </div>
-                    </div>
-
+                    
                     <button type="button"
                         class="btn btn-primary js-save-button"
                     >

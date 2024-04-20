@@ -65,11 +65,10 @@ func (this *Attach) Index(ctx *fiber.Ctx) error {
     total, _ := countdb.Count(new(model.Attach))
 
     // url 链接信息
-    urlPath := string(ctx.Request().URI().Path())
-    urlQuery := ctx.Request().URI().QueryArgs().String()
-    parameters, _ := gourl.ParseQuery(urlQuery)
+    uri := ctx.Request().URI()
+    parameters, _ := gourl.ParseQuery(uri.QueryArgs().String())
     pageHtml := page.New().
-        Paginate(listRows, int(total), urlPath, parameters).
+        Paginate(listRows, int(total), string(uri.Path()), parameters).
         PageHtml
 
     return this.View(ctx, "attach/index", fiber.Map{
