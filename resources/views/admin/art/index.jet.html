@@ -169,6 +169,10 @@
                                         </div>
 
                                         <div class="art-item mt-1">
+                                            {{if value.IsTop == 1 }}
+                                                <span class="badge bg-danger" title="置顶">顶</span>
+                                              {{end}}
+                                            
                                             {{ value.Title }}
                                             
                                             {{if value.Cover != ""}}
@@ -186,19 +190,15 @@
                                         {{end}}
                                     </td>
                                     <td width="75" class="text-center">
-                                        {{ value.Views }}
+                                        <span title="阅读量: {{ value.Views }}">
+                                            {{ formatViews(value.Views) }}
+                                        </span>
                                     </td>
-                                    <td width="120" class="text-center">
+                                    <td width="60" class="text-center">
                                         {{if value.Status == 1 }}
                                             <span class="badge bg-success">启用</span>
                                         {{else}}
                                             <span class="badge bg-danger">禁用</span>
-                                        {{end}}
-                                        
-                                        {{if value.IsTop == 1 }}
-                                            <span class="badge bg-primary">已置顶</span>
-                                        {{else}}
-                                            <span class="badge bg-secondary">未置顶</span>
                                         {{end}}
                                     </td>
                                     <td width="165">

@@ -37,7 +37,7 @@ doak-cms 是使用 gofiber 和 Xorm 的 go 文章管理系统
     <tr>
         <td width="50%">
             <center>
-                <img alt="文章管理" src="https://user-images.githubusercontent.com/24578855/174941958-b7127708-7c8c-4dac-98d8-efc4db0a5c8a.png" />
+                <img alt="文章管理" src="https://github.com/deatil/doak-cms/assets/24578855/26b576e1-d446-4d4b-9b8d-56ae219b1213" />
             </center>
         </td>
         <td width="50%">
@@ -89,9 +89,9 @@ go run main.go
 
  - xorm.io/xorm
 
- - github.com/smallnest/rpcx
-
  - github.com/spf13/cast
+
+ - github.com/smallnest/rpcx
 
 
 ### 开源协议

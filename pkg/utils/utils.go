@@ -51,6 +51,24 @@ func FormatSize(size int64) string {
     return fmt.Sprintf("%.2f%s", s, units[i])
 }
 
+// 格式化浏览量大小
+func FormatViews(size int64) string {
+    units := []string{"", "k", "m", "km", "wm"}
+
+    s := float64(size)
+
+    i := 0
+    for ; s >= 1000 && i < 4; i++ {
+        s /= 1000
+    }
+
+    if size < 1000 {
+        return fmt.Sprintf("%.0f", s)
+    }
+
+    return fmt.Sprintf("%.2f%s", s, units[i])
+}
+
 // 文件是否存在
 func FileExists(path string) bool {
     _, err := os.Stat(path)
