@@ -8,9 +8,13 @@ import (
     "net/url"
 )
 
-// 构造函数
-func New() *Pagination {
-    return &Pagination{}
+func Paginate(
+    listRows int,
+    total int,
+    urlPath string,
+    parameters url.Values,
+) *Pagination {
+    return New().Paginate(listRows, total, urlPath, parameters)
 }
 
 // 分页
@@ -33,6 +37,11 @@ type Pagination struct {
     Parameters url.Values
     // 生成链接
     PageHtml string
+}
+
+// 构造函数
+func New() *Pagination {
+    return &Pagination{}
 }
 
 // 每页数量

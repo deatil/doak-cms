@@ -34,7 +34,7 @@ func (this *Tag) Index(ctx *fiber.Ctx) error {
     }
 
     // 每页数量
-    listRows := 5
+    listRows := 10
     start := (currentPage - 1) * listRows
 
     // 搜索关键字
@@ -68,7 +68,7 @@ func (this *Tag) Index(ctx *fiber.Ctx) error {
     // url 链接信息
     uri := ctx.Request().URI()
     parameters, _ := url.ParseQuery(uri.QueryArgs().String())
-    pageHtml := page.New().
+    pageHtml := page.
         Paginate(listRows, int(total), string(uri.Path()), parameters).
         PageHtml
 

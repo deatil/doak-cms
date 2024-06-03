@@ -73,7 +73,7 @@ func (this *Page) Index(ctx *fiber.Ctx) error {
     // url 链接信息
     uri := ctx.Request().URI()
     parameters, _ := url.ParseQuery(uri.QueryArgs().String())
-    pageHtml := page.New().
+    pageHtml := page.
         Paginate(listRows, int(total), string(uri.Path()), parameters).
         PageHtml
 

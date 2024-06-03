@@ -31,15 +31,10 @@
                     我的信息
                 </a>
                 <a href='{{ adminUrl("profile/password") }}' class="dropdown-item">
-                    <i class="fa fa-star me-1"></i>
+                    <i class="fa fa-star me-0"></i>
                     更改密码
                 </a>
-                {{if isAdmin}}
-                <a href='{{ adminUrl("setting") }}' class="dropdown-item">
-                    <i class="fa fa-cog me-1"></i>
-                    网站设置
-                </a>
-                {{end}}
+
                 <a href="javascript:;" 
                     class="dropdown-item js-logout-btn"
                     data-url='{{ adminUrl("logout") }}'

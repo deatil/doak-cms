@@ -157,13 +157,16 @@
 (function($) {
     "use strict";
     
-    $(".sidebar-user-index").addClass("active");
-    
+    $(".sidebar-system").addClass("active show");
+    $(".sidebar-system-menu").addClass("show");
+    $(".sidebar-system-user").addClass("active");
+
     // 删除
     $('.js-delete-btn').click(function() {
         var url = $(this).data('url');
         
         layer.confirm('您确定要删除该账号吗？', {
+            title: '提示',
             offset: 'c',
             btn: ['确定', '取消']
         }, function(index){
