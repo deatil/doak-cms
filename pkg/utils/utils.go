@@ -171,3 +171,49 @@ func ListEmbedFiles(f http.File) []string {
 
     return ret
 }
+
+func ListDirs(directory string) []string {
+    if !FileExists(directory) {
+        return []string{}
+    }
+
+    fs, err := os.ReadDir(directory)
+    if err != nil {
+        return []string{}
+    }
+
+    sz := len(fs)
+    if sz == 0 {
+        return []string{}
+    }
+
+    ret := make([]string, 0, sz)
+    for i := 0; i < sz; i++ {
+        if fs[i].IsDir() {
+            ret = append(ret, fs[i].Name())
+        }
+    }
+
+    return ret
+}
+
+func ListEmbedDirs(f http.File) []string {
+    fs, err := f.Readdir(-1)
+    if err != nil {
+        return []string{}
+    }
+
+    sz := len(fs)
+    if sz == 0 {
+        return []string{}
+    }
+
+    ret := make([]string, 0, sz)
+    for i, n := 0, sz; i < n; i++ {
+        if fs[i].IsDir() {
+            ret = append(ret, fs[i].Name())
+        }
+    }
+
+    return ret
+}

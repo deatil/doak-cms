@@ -4,7 +4,7 @@ import (
     "net/url"
 
     "github.com/spf13/cast"
-    "github.com/gofiber/fiber/v2"
+    "github.com/gofiber/fiber/v3"
 
     "github.com/deatil/doak-cms/pkg/db"
     "github.com/deatil/doak-cms/pkg/page"
@@ -25,7 +25,7 @@ type Cate struct{
 }
 
 // 详情
-func (this *Cate) Index(ctx *fiber.Ctx) error {
+func (this *Cate) Index(ctx fiber.Ctx) error {
     slug := cast.ToString(ctx.Params("slug"))
 
     // 验证

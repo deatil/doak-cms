@@ -2,7 +2,7 @@ package admin
 
 import (
     "github.com/spf13/cast"
-    "github.com/gofiber/fiber/v2"
+    "github.com/gofiber/fiber/v3"
 
     "github.com/deatil/doak-cms/pkg/db"
     "github.com/deatil/doak-cms/pkg/http"
@@ -23,7 +23,7 @@ type Setting struct{
 }
 
 // 页面
-func (this *Setting) Index(ctx *fiber.Ctx) error {
+func (this *Setting) Index(ctx fiber.Ctx) error {
     configs := make([]model.Config, 0)
     db.Engine().Find(&configs)
 
@@ -40,7 +40,7 @@ func (this *Setting) Index(ctx *fiber.Ctx) error {
 }
 
 // 保存
-func (this *Setting) Save(ctx *fiber.Ctx) error {
+func (this *Setting) Save(ctx fiber.Ctx) error {
     name := cast.ToString(ctx.FormValue("website_name"))
     keywords := cast.ToString(ctx.FormValue("website_keywords"))
     description := cast.ToString(ctx.FormValue("website_description"))

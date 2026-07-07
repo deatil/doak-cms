@@ -3,7 +3,7 @@ package admin
 import (
     "strings"
 
-    "github.com/gofiber/fiber/v2"
+    "github.com/gofiber/fiber/v3"
 
     "github.com/deatil/doak-cms/resources"
     "github.com/deatil/doak-cms/pkg/utils"
@@ -28,7 +28,7 @@ func (this *Base) Theme(tpl string) string {
 }
 
 // 视图
-func (this *Base) View(ctx *fiber.Ctx, tpl string, data fiber.Map) error {
+func (this *Base) View(ctx fiber.Ctx, tpl string, data fiber.Map) error {
     // 登录数据
     data["user"] = auth.GetUserInfo(ctx)
 

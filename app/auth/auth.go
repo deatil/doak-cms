@@ -3,7 +3,7 @@ package auth
 import (
     "time"
 
-    "github.com/gofiber/fiber/v2"
+    "github.com/gofiber/fiber/v3"
 
     "github.com/deatil/doak-cms/pkg/config"
     "github.com/deatil/doak-cms/pkg/cookie"
@@ -12,7 +12,7 @@ import (
 )
 
 // 获取账号ID
-func GetUserId(ctx *fiber.Ctx) int64 {
+func GetUserId(ctx fiber.Ctx) int64 {
     userid := ctx.Locals("userid")
     if userid == nil {
         return 0
@@ -22,7 +22,7 @@ func GetUserId(ctx *fiber.Ctx) int64 {
 }
 
 // 获取账号信息
-func GetUserInfo(ctx *fiber.Ctx) model.User {
+func GetUserInfo(ctx fiber.Ctx) model.User {
     info := ctx.Locals("user")
     if info == nil {
         return model.User{}
@@ -32,7 +32,7 @@ func GetUserInfo(ctx *fiber.Ctx) model.User {
 }
 
 // 是否为管理员
-func IsAdmin(ctx *fiber.Ctx) bool {
+func IsAdmin(ctx fiber.Ctx) bool {
     id := GetUserId(ctx)
 
     adminid := config.Section("auth").Key("adminid").MustInt64(0)
@@ -46,7 +46,7 @@ func IsAdmin(ctx *fiber.Ctx) bool {
 // =====================
 
 // 设置 Cookie
-func SetCookie(ctx *fiber.Ctx, data string) {
+func SetCookie(ctx fiber.Ctx, data string) {
     cookieCfg := config.Section("cookie")
 
     cookieKey := cookieCfg.Key("key").MustString("doak")
@@ -58,7 +58,7 @@ func SetCookie(ctx *fiber.Ctx, data string) {
 }
 
 // 删除 Cookie
-func DeleteCookie(ctx *fiber.Ctx) {
+func DeleteCookie(ctx fiber.Ctx) {
     // 删除 cookie 信息
     cookieKey := config.Section("cookie").Key("key").MustString("doak")
     cookie.Delete(ctx, cookieKey)

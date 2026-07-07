@@ -1,7 +1,7 @@
 package view
 
 import (
-    "github.com/gofiber/template/jet"
+    "github.com/gofiber/template/jet/v3"
 
     "github.com/deatil/doak-cms/resources"
     "github.com/deatil/doak-cms/pkg/config"

@@ -1,7 +1,7 @@
 package cms
 
 import (
-    "github.com/gofiber/fiber/v2"
+    "github.com/gofiber/fiber/v3"
 )
 
 /**
@@ -14,6 +14,6 @@ type Index struct{
     Base
 }
 
-func (this *Index) Index(ctx *fiber.Ctx) error {
+func (this *Index) Index(ctx fiber.Ctx) error {
     return this.View(ctx, "index", fiber.Map{})
 }

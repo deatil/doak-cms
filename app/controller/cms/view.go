@@ -4,7 +4,7 @@ import (
     "strings"
 
     "github.com/spf13/cast"
-    "github.com/gofiber/fiber/v2"
+    "github.com/gofiber/fiber/v3"
 
     "github.com/deatil/doak-cms/pkg/db"
 
@@ -22,7 +22,7 @@ type View struct{
     Base
 }
 
-func (this *View) Index(ctx *fiber.Ctx) error {
+func (this *View) Index(ctx fiber.Ctx) error {
     id := cast.ToString(ctx.Params("id"))
     if id == "" {
         return response.CmsErrorRender(ctx, "数据不存在")

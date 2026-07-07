@@ -4,7 +4,7 @@ import (
     "net/url"
 
     "github.com/spf13/cast"
-    "github.com/gofiber/fiber/v2"
+    "github.com/gofiber/fiber/v3"
 
     "github.com/deatil/doak-cms/pkg/db"
     "github.com/deatil/doak-cms/pkg/page"
@@ -23,7 +23,7 @@ type Tag struct{
     Base
 }
 
-func (this *Tag) Index(ctx *fiber.Ctx) error {
+func (this *Tag) Index(ctx fiber.Ctx) error {
     tagName := cast.ToString(ctx.Params("tag"))
     if tagName == "" {
         return response.CmsErrorRender(ctx, "标签错误")

@@ -2,7 +2,7 @@ package admin
 
 import (
     "github.com/spf13/cast"
-    "github.com/gofiber/fiber/v2"
+    "github.com/gofiber/fiber/v3"
 
     "github.com/deatil/doak-cms/pkg/db"
     "github.com/deatil/doak-cms/pkg/auth"
@@ -24,12 +24,12 @@ type Profile struct{
 }
 
 // 页面
-func (this *Profile) Index(ctx *fiber.Ctx) error {
+func (this *Profile) Index(ctx fiber.Ctx) error {
     return this.View(ctx, "profile/index", fiber.Map{})
 }
 
 // 保存
-func (this *Profile) Save(ctx *fiber.Ctx) error {
+func (this *Profile) Save(ctx fiber.Ctx) error {
     nickname := cast.ToString(ctx.FormValue("nickname"))
     avatar := cast.ToString(ctx.FormValue("avatar"))
     sign := cast.ToString(ctx.FormValue("sign"))
@@ -76,12 +76,12 @@ func (this *Profile) Save(ctx *fiber.Ctx) error {
 }
 
 // 密码
-func (this *Profile) Password(ctx *fiber.Ctx) error {
+func (this *Profile) Password(ctx fiber.Ctx) error {
     return this.View(ctx, "profile/password", fiber.Map{})
 }
 
 // 保存密码
-func (this *Profile) PasswordSave(ctx *fiber.Ctx) error {
+func (this *Profile) PasswordSave(ctx fiber.Ctx) error {
     oldpassword := cast.ToString(ctx.FormValue("oldpassword"))
     newpassword := cast.ToString(ctx.FormValue("newpassword"))
     newpasswordCheck := cast.ToString(ctx.FormValue("newpassword_check"))

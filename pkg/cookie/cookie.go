@@ -3,16 +3,16 @@ package cookie
 import (
     "time"
 
-    "github.com/gofiber/fiber/v2"
+    "github.com/gofiber/fiber/v3"
 )
 
 // 获取
-func Get(ctx *fiber.Ctx, key string) string {
+func Get(ctx fiber.Ctx, key string) string {
     return ctx.Cookies(key)
 }
 
 // 设置
-func Set(ctx *fiber.Ctx, key string, value string, path string, exp time.Time) {
+func Set(ctx fiber.Ctx, key string, value string, path string, exp time.Time) {
     ctx.Cookie(&fiber.Cookie{
         Name:     key,
         Value:    value,
@@ -29,7 +29,7 @@ func Set(ctx *fiber.Ctx, key string, value string, path string, exp time.Time) {
 }
 
 // 删除
-func Delete(ctx *fiber.Ctx, key string) {
+func Delete(ctx fiber.Ctx, key string) {
     ctx.Cookie(&fiber.Cookie{
         Name:     key,
         Expires:  time.Now().Add(-(time.Hour * 2)),
@@ -39,7 +39,7 @@ func Delete(ctx *fiber.Ctx, key string) {
 }
 
 // 用[fiber.Cookie]设置
-func SetWithCookie(ctx *fiber.Ctx, data fiber.Cookie) {
+func SetWithCookie(ctx fiber.Ctx, data fiber.Cookie) {
     /*
     type fiber.Cookie struct {
         Name     string    `json:"name"`

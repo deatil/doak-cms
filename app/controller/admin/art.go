@@ -4,7 +4,8 @@ import (
     "net/url"
 
     "github.com/spf13/cast"
-    "github.com/gofiber/fiber/v2"
+    "github.com/gofiber/fiber/v3"
+    "github.com/gofiber/fiber/v3/middleware/csrf"
 
     "github.com/deatil/doak-cms/pkg/db"
     "github.com/deatil/doak-cms/pkg/log"
@@ -31,7 +32,7 @@ type Art struct{
 }
 
 // 列表
-func (this *Art) Index(ctx *fiber.Ctx) error {
+func (this *Art) Index(ctx fiber.Ctx) error {
     // 当前页码
     currentPage := cast.ToInt(ctx.Query("page", "1"))
     if currentPage < 1 {
@@ -153,6 +154,8 @@ func (this *Art) Index(ctx *fiber.Ctx) error {
         }
     }
 
+    csrf_token := csrf.TokenFromContext(ctx)
+
     return this.View(ctx, "art/index", fiber.Map{
         "keywords": keywords,
         "cateid": cateid,
@@ -168,11 +171,13 @@ func (this *Art) Index(ctx *fiber.Ctx) error {
         "list": arts,
         "currentPage": currentPage,
         "pageHtml": pageHtml,
+
+        "csrf_token": csrf_token, 
     })
 }
 
 // 添加
-func (this *Art) Add(ctx *fiber.Ctx) error {
+func (this *Art) Add(ctx fiber.Ctx) error {
     // 分类列表
     cates := make([]model.Cate, 0)
     db.Engine().
@@ -183,13 +188,16 @@ func (this *Art) Add(ctx *fiber.Ctx) error {
     // 转为树结构
     newCates := model.ToCateTree(cates, 0)
 
+    csrf_token := csrf.TokenFromContext(ctx)
+
     return this.View(ctx, "art/add", fiber.Map{
         "cates": newCates,
+        "csrf_token": csrf_token, 
     })
 }
 
 // 添加保存
-func (this *Art) AddSave(ctx *fiber.Ctx) error {
+func (this *Art) AddSave(ctx fiber.Ctx) error {
     cateId := cast.ToInt64(ctx.FormValue("cate_id"))
     title := cast.ToString(ctx.FormValue("title"))
     status := cast.ToString(ctx.FormValue("status"))
@@ -246,7 +254,7 @@ func (this *Art) AddSave(ctx *fiber.Ctx) error {
 }
 
 // 编辑
-func (this *Art) Edit(ctx *fiber.Ctx) error {
+func (this *Art) Edit(ctx fiber.Ctx) error {
     id := cast.ToInt64(ctx.Params("id"))
     if id == 0 {
         return response.AdminErrorRender(ctx, "数据不存在")
@@ -276,15 +284,18 @@ func (this *Art) Edit(ctx *fiber.Ctx) error {
     // 转为树结构
     newCates := model.ToCateTree(cates, 0)
 
+    csrf_token := csrf.TokenFromContext(ctx)
+
     return this.View(ctx, "art/edit", fiber.Map{
         "id": id,
         "data": data,
         "cates": newCates,
+        "csrf_token": csrf_token, 
     })
 }
 
 // 编辑保存
-func (this *Art) EditSave(ctx *fiber.Ctx) error {
+func (this *Art) EditSave(ctx fiber.Ctx) error {
     id := cast.ToInt64(ctx.Params("id"))
     if id == 0 {
         return http.Error(ctx, "编辑失败")
@@ -388,7 +399,7 @@ func (this *Art) EditSave(ctx *fiber.Ctx) error {
 }
 
 // 删除
-func (this *Art) Delete(ctx *fiber.Ctx) error {
+func (this *Art) Delete(ctx fiber.Ctx) error {
     id := cast.ToInt64(ctx.Params("id"))
     if id == 0 {
         return http.Error(ctx, "删除失败")

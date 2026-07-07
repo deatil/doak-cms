@@ -2,7 +2,7 @@ package cms
 
 import (
     "github.com/spf13/cast"
-    "github.com/gofiber/fiber/v2"
+    "github.com/gofiber/fiber/v3"
 
     "github.com/deatil/doak-cms/pkg/db"
     "github.com/deatil/doak-cms/pkg/validate"
@@ -22,7 +22,7 @@ type Page struct{
 }
 
 // 详情
-func (this *Page) Index(ctx *fiber.Ctx) error {
+func (this *Page) Index(ctx fiber.Ctx) error {
     name := cast.ToString(ctx.Params("name"))
 
     // 验证

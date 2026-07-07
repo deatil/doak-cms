@@ -4,7 +4,7 @@ import (
     gourl "net/url"
 
     "github.com/spf13/cast"
-    "github.com/gofiber/fiber/v2"
+    "github.com/gofiber/fiber/v3"
 
     "github.com/deatil/doak-cms/pkg/db"
     "github.com/deatil/doak-cms/pkg/page"
@@ -26,7 +26,7 @@ type Attach struct{
 }
 
 // 页面
-func (this *Attach) Index(ctx *fiber.Ctx) error {
+func (this *Attach) Index(ctx fiber.Ctx) error {
     // 当前页码
     currentPage := cast.ToInt(ctx.Query("page", "1"))
     if currentPage < 1 {
@@ -82,7 +82,7 @@ func (this *Attach) Index(ctx *fiber.Ctx) error {
 }
 
 // 删除
-func (this *Attach) Delete(ctx *fiber.Ctx) error {
+func (this *Attach) Delete(ctx fiber.Ctx) error {
     id := cast.ToString(ctx.Params("id"))
     if id == "" {
         return http.Error(ctx, "删除失败")
@@ -114,7 +114,7 @@ func (this *Attach) Delete(ctx *fiber.Ctx) error {
 }
 
 // 下载
-func (this *Attach) Download(ctx *fiber.Ctx) error {
+func (this *Attach) Download(ctx fiber.Ctx) error {
     id := cast.ToString(ctx.Params("id"))
     if id == "" {
         return ctx.SendString("附件ID不能为空")

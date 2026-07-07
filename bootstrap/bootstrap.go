@@ -4,13 +4,14 @@ import (
     "time"
     golog "log"
 
-    "github.com/gofiber/fiber/v2"
-    "github.com/gofiber/fiber/v2/utils"
-    "github.com/gofiber/fiber/v2/middleware/csrf"
-    "github.com/gofiber/fiber/v2/middleware/logger"
-    "github.com/gofiber/fiber/v2/middleware/recover"
-    "github.com/gofiber/fiber/v2/middleware/encryptcookie"
-    "github.com/gofiber/template/jet"
+    "github.com/gofiber/fiber/v3"
+    "github.com/gofiber/fiber/v3/extractors"
+    "github.com/gofiber/fiber/v3/middleware/csrf"
+    "github.com/gofiber/fiber/v3/middleware/logger"
+    "github.com/gofiber/fiber/v3/middleware/recover"
+    "github.com/gofiber/fiber/v3/middleware/encryptcookie"
+    "github.com/gofiber/utils/v2"
+    "github.com/gofiber/template/jet/v3"
 
     "github.com/json-iterator/go"
     "github.com/smallnest/rpcx/server"
@@ -19,6 +20,7 @@ import (
     "github.com/deatil/doak-cms/pkg/log"
     "github.com/deatil/doak-cms/pkg/view"
     "github.com/deatil/doak-cms/pkg/config"
+    "github.com/deatil/doak-cms/pkg/session"
     cms_utils "github.com/deatil/doak-cms/pkg/utils"
 )
 
@@ -61,7 +63,7 @@ func HttpServer(jetFunc func(*jet.Engine), appFunc func(*fiber.App)) {
         // 默认的错误处理程序
         // fiber.DefaultErrorHandler
         // 覆盖默认的错误处理程序
-        ErrorHandler: func(ctx *fiber.Ctx, err error) error {
+        ErrorHandler: func(ctx fiber.Ctx, err error) error {
             // 状态代码默认为500
             code := fiber.StatusInternalServerError
 
@@ -125,6 +127,9 @@ func HttpServer(jetFunc func(*jet.Engine), appFunc func(*fiber.App)) {
         EnableStackTrace: debug,
     }))
 
+    // session
+    app.Use(session.Store("session"))
+
     // Cookie 加密
     // 生成密钥 encryptcookie.GenerateKey()
     app.Use(encryptcookie.New(encryptcookie.Config{
@@ -133,11 +138,63 @@ func HttpServer(jetFunc func(*jet.Engine), appFunc func(*fiber.App)) {
 
     // 跨站请求伪造 CSRF
     app.Use(csrf.New(csrf.Config{
-        KeyLookup:      "cookie:doakcsrf",
-        CookieName:     "doakcsrf",
-        CookieSameSite: "Strict",
-        Expiration:     1 * time.Hour,
-        KeyGenerator:   utils.UUID,
+        CookieName:        "doakcsrf_",
+        CookieSecure:      true,
+        CookieHTTPOnly:    true,  // false for SPAs
+        CookieSameSite:    "Lax",
+        CookieSessionOnly: true,
+        IdleTimeout:       1 * time.Hour,
+        Extractor:         extractors.Chain(
+            extractors.FromHeader("X-Csrf-Token"),
+            extractors.FromForm("_doakcsrf"),
+        ),
+        KeyGenerator:      utils.SecureToken,
+
+        ErrorHandler: func(ctx fiber.Ctx, err error) error {
+            // 状态代码默认为500
+            code := fiber.StatusInternalServerError
+
+            // 如果是fiber.*Error，则检索自定义状态代码。
+            if e, ok := err.(*fiber.Error); ok {
+                code = e.Code
+            }
+
+            // 默认错误信息
+            errorMsg := cfg.Key("error-msg").String()
+
+            // 调试的时候
+            if debug {
+                errorMsg = err.Error()
+            }
+
+            method := ctx.Method()
+
+            if method == "POST" || method == "DELETE" {
+                // 发送自定义错误 JSON
+                err = ctx.Status(code).JSON(fiber.Map{
+                    "code":    code,
+                    "message": errorMsg,
+                })
+            } else {
+                // 页面地址
+                errorHtml := cfg.Key("error-html").String()
+
+                // 发送自定义错误页面
+                err = ctx.Status(code).Render(errorHtml, fiber.Map{
+                    "code":    code,
+                    "message": errorMsg,
+                })
+            }
+
+            if err != nil {
+                // 失败处理
+                return ctx.Status(fiber.StatusInternalServerError).
+                        SendString("Internal Server Error")
+            }
+
+            // 从处理程序返回
+            return nil
+        },
     }))
 
     // 添加路由

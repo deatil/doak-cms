@@ -6,15 +6,19 @@ import (
     "net/http"
 )
 
-//go:embed static/*
+//go:embed static
 var Static embed.FS
 
 //go:embed views
 var Views embed.FS
 
-// 静态文件
-func StaticAssets() http.FileSystem {
-    return http.FS(Static)
+func StaticFileSystem() fs.FS {
+    fsys, err := fs.Sub(Static, "static")
+    if err != nil {
+        panic(err) 
+    }
+
+    return fsys
 }
 
 // 模板文件

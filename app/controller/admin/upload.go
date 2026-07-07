@@ -4,7 +4,7 @@ import (
     "fmt"
     "regexp"
     "strings"
-    "github.com/gofiber/fiber/v2"
+    "github.com/gofiber/fiber/v3"
 
     "github.com/deatil/doak-cms/pkg/db"
     "github.com/deatil/doak-cms/pkg/http"
@@ -23,7 +23,7 @@ import (
 type Upload struct{}
 
 // 图片
-func (this *Upload) Image(ctx *fiber.Ctx) error {
+func (this *Upload) Image(ctx fiber.Ctx) error {
     cfg := config.Section("upload")
 
     // 接收上传的文件
@@ -102,7 +102,7 @@ func (this *Upload) Image(ctx *fiber.Ctx) error {
 }
 
 // 文件
-func (this *Upload) File(ctx *fiber.Ctx) error {
+func (this *Upload) File(ctx fiber.Ctx) error {
     cfg := config.Section("upload")
 
     // 接收上传的文件

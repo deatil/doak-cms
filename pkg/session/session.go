@@ -2,35 +2,26 @@ package session
 
 import (
     "time"
-    "sync"
 
-    "github.com/gofiber/fiber/v2"
-    "github.com/gofiber/fiber/v2/middleware/session"
-    "github.com/gofiber/storage/redis"
+    "github.com/gofiber/fiber/v3"
+    "github.com/gofiber/fiber/v3/middleware/session"
+    "github.com/gofiber/fiber/v3/extractors"
+    "github.com/gofiber/utils/v2"
+    "github.com/gofiber/storage/redis/v3"
 
+    "github.com/deatil/doak-cms/pkg/log"
     "github.com/deatil/doak-cms/pkg/config"
 )
 
-var store *session.Store
-var once sync.Once
-
 // Session
-func Session(ctx *fiber.Ctx) *session.Session {
-    once.Do(func() {
-        store = Store("session")
-    })
-
-    // 从 storage 获取 session
-    sess, err := store.Get(ctx)
-    if err != nil {
-        panic(err)
-    }
+func Session(ctx fiber.Ctx) *session.Middleware {
+    sess := session.FromContext(ctx)
 
     return sess
 }
 
 // 存储
-func Store(typ string) *session.Store {
+func Store(typ string) fiber.Handler {
     // 配置
     cfg := config.Section(typ + ".redis")
 
@@ -49,9 +40,17 @@ func Store(typ string) *session.Store {
     sessCfg := config.Section(typ)
 
     store := session.New(session.Config{
-        Storage:    storage,
-        KeyLookup:  sessCfg.Key("name").MustString(""),
-        Expiration: sessCfg.Key("exp").MustDuration() * time.Hour,
+        Storage:      storage,
+        Extractor:    extractors.FromCookie(sessCfg.Key("name").MustString("")),
+        KeyGenerator: utils.SecureToken,
+
+        IdleTimeout:     30 * time.Minute,  // Inactivity timeout
+        // AbsoluteTimeout:   24 * time.Hour,    // Maximum session duration    
+        AbsoluteTimeout: sessCfg.Key("exp").MustDuration() * time.Hour,
+
+        ErrorHandler: func(c fiber.Ctx, err error) {
+            log.Log().Error("Session error: " + err.Error())
+        },
     })
 
     return store

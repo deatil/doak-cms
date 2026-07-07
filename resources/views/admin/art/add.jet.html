@@ -97,7 +97,9 @@
                             文章是否开启或者关闭
                         </div>
                     </div>
-                    
+                  
+                    <input type="hidden" id="doakcsrf" name="_doakcsrf" value="{{ csrf_token }}" />
+
                     <button type="button" 
                         class="btn btn-primary js-save-button"
                     >
@@ -127,12 +129,14 @@
         var cate_id = $("[name=cate_id]").val();
         var title = $("[name=title]").val();
         var status = $("[name=status]:checked").val();
+        var doakcsrf = $("#doakcsrf").val();
 
         var url = '{{ adminUrl("art/add") }}';
         $.post(url, {
             cate_id: cate_id,
             title: title,
             status: status,
+            "_doakcsrf": doakcsrf,
         }, function(data) {
             if (data.code == 0) {
                 layer.msg("添加成功");

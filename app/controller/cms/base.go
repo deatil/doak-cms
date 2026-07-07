@@ -1,7 +1,7 @@
 package cms
 
 import (
-    "github.com/gofiber/fiber/v2"
+    "github.com/gofiber/fiber/v3"
 
     "github.com/deatil/doak-cms/app/data"
     "github.com/deatil/doak-cms/app/response"
@@ -21,7 +21,7 @@ func (this *Base) Theme(tpl string) string {
 }
 
 // 视图
-func (this *Base) View(ctx *fiber.Ctx, tpl string, info fiber.Map) error {
+func (this *Base) View(ctx fiber.Ctx, tpl string, info fiber.Map) error {
     // 设置数据
     info["settings"] = data.GetSettings()
 

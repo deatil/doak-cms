@@ -4,7 +4,7 @@ import (
     "net/url"
 
     "github.com/spf13/cast"
-    "github.com/gofiber/fiber/v2"
+    "github.com/gofiber/fiber/v3"
 
     "github.com/deatil/doak-cms/pkg/db"
     "github.com/deatil/doak-cms/pkg/log"
@@ -28,7 +28,7 @@ type Page struct{
 }
 
 // 列表
-func (this *Page) Index(ctx *fiber.Ctx) error {
+func (this *Page) Index(ctx fiber.Ctx) error {
     // 当前页码
     currentPage := cast.ToInt(ctx.Query("page", "1"))
     if currentPage < 1 {
@@ -89,12 +89,12 @@ func (this *Page) Index(ctx *fiber.Ctx) error {
 }
 
 // 添加
-func (this *Page) Add(ctx *fiber.Ctx) error {
+func (this *Page) Add(ctx fiber.Ctx) error {
     return this.View(ctx, "page/add", fiber.Map{})
 }
 
 // 添加保存
-func (this *Page) AddSave(ctx *fiber.Ctx) error {
+func (this *Page) AddSave(ctx fiber.Ctx) error {
     slug := cast.ToString(ctx.FormValue("slug"))
     title := cast.ToString(ctx.FormValue("title"))
     status := cast.ToString(ctx.FormValue("status"))
@@ -166,7 +166,7 @@ func (this *Page) AddSave(ctx *fiber.Ctx) error {
 }
 
 // 编辑
-func (this *Page) Edit(ctx *fiber.Ctx) error {
+func (this *Page) Edit(ctx fiber.Ctx) error {
     id := cast.ToInt64(ctx.Params("id"))
     if id == 0 {
         return response.AdminErrorRender(ctx, "数据不存在")
@@ -192,7 +192,7 @@ func (this *Page) Edit(ctx *fiber.Ctx) error {
 }
 
 // 编辑保存
-func (this *Page) EditSave(ctx *fiber.Ctx) error {
+func (this *Page) EditSave(ctx fiber.Ctx) error {
     id := cast.ToInt64(ctx.Params("id"))
     if id == 0 {
         return http.Error(ctx, "编辑失败")
@@ -281,7 +281,7 @@ func (this *Page) EditSave(ctx *fiber.Ctx) error {
 }
 
 // 删除
-func (this *Page) Delete(ctx *fiber.Ctx) error {
+func (this *Page) Delete(ctx fiber.Ctx) error {
     id := cast.ToInt64(ctx.Params("id"))
     if id == 0 {
         return http.Error(ctx, "删除失败")

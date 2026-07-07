@@ -1,8 +1,8 @@
 package router
 
 import (
-    "github.com/gofiber/fiber/v2"
-    "github.com/gofiber/fiber/v2/middleware/filesystem"
+    "github.com/gofiber/fiber/v3"
+    "github.com/gofiber/fiber/v3/middleware/static"
 
     "github.com/deatil/doak-cms/pkg/config"
 
@@ -27,17 +27,18 @@ func Http(app *fiber.App) {
 // 静态文件
 func HttpStatic(app *fiber.App) {
     // 上传文件
-    app.Static("/upload/", "./public/upload")
+    app.Use("/upload/", static.New("./public/upload"))
 
     // 静态文件
     if config.IsUseEmbed {
-        app.Use("/static", filesystem.New(filesystem.Config{
-            Root: resources.StaticAssets(),
-            PathPrefix: "static",
-            Browse: true,
+        app.Use("/static", static.New("", static.Config{
+            FS:       resources.StaticFileSystem(),
+            Browse:   true,
+            Compress: true,
+            Download: false,
         }))
     } else {
-        app.Static("/static/", "./resources/static")
+        app.Use("/static/", static.New("./resources/static"))
     }
 }
 
@@ -60,6 +61,7 @@ func HttpCms(app *fiber.App) {
 
     pageController := new(cms.Page)
     app.Get("/p/:name", siteopenCheckMiddleware, pageController.Index)
+
 }
 
 // 管理员

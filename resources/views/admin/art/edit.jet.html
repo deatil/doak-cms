@@ -255,7 +255,7 @@
                                     </div>
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input"
-                                            type="radio"
+                                            type="radio" 
                                             name="is_top"
                                             {{if data.IsTop == 0 }}
                                             checked=""
@@ -309,7 +309,9 @@
 
                         </div>
                     </div>
-                    
+
+                    <input type="hidden" id="doakcsrf" name="_doakcsrf" value="{{ csrf_token }}" />
+
                     <button type="button"
                         class="btn btn-primary js-save-button"
                     >
@@ -390,6 +392,7 @@
         var add_time = $("[name=add_time]").val();
         var is_top = $("[name=is_top]:checked").val();
         var status = $("[name=status]:checked").val();
+        var doakcsrf = $("#doakcsrf").val();
 
         var url = '{{ adminUrl("art/" + id + "/edit") }}';
         $.post(url, {
@@ -404,6 +407,7 @@
             add_time: add_time,
             is_top: is_top,
             status: status,
+            "_doakcsrf": doakcsrf,
         }, function(data) {
             if (data.code == 0) {
                 layer.msg("编辑成功");

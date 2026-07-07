@@ -1,7 +1,7 @@
 package admin
 
 import (
-    "github.com/gofiber/fiber/v2"
+    "github.com/gofiber/fiber/v3"
 
     "github.com/deatil/doak-cms/pkg/db"
 
@@ -18,7 +18,7 @@ type Index struct{
     Base
 }
 
-func (this *Index) Index(ctx *fiber.Ctx) error {
+func (this *Index) Index(ctx fiber.Ctx) error {
     // 文章总数
     artTotal, _ := db.Engine().Count(new(model.Art))
 

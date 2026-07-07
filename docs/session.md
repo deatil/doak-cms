@@ -6,15 +6,15 @@ import (
 	"sync"
 	"time"
 
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/gofiber/fiber/v3"
+	"github.com/gofiber/fiber/v3/utils"
 	"github.com/valyala/fasthttp"
 )
 
 type Session struct {
 	id         string        // session id
 	fresh      bool          // if new session
-	ctx        *fiber.Ctx    // fiber context
+	ctx        fiber.Ctx    // fiber context
 	config     *Store        // store configuration
 	data       *data         // key value data
 	byteBuffer *bytes.Buffer // byte buffer for the en- and decode

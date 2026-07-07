@@ -3,7 +3,8 @@ package admin
 import (
     "github.com/spf13/cast"
     "github.com/dchest/captcha"
-    "github.com/gofiber/fiber/v2"
+    "github.com/gofiber/fiber/v3"
+    "github.com/gofiber/fiber/v3/middleware/csrf"
 
     "github.com/deatil/doak-cms/pkg/db"
     "github.com/deatil/doak-cms/pkg/auth"
@@ -28,14 +29,11 @@ type Auth struct{
 }
 
 // 验证码
-func (this *Auth) Captcha(ctx *fiber.Ctx) error {
+func (this *Auth) Captcha(ctx fiber.Ctx) error {
     captchaId := captcha.NewLen(4)
 
     // 保存验证码ID
-    if err := session.Set(ctx, "captchaid", captchaId); err != nil {
-        ctx.SendStatus(404)
-        return nil
-    }
+    session.Set(ctx, "captchaid", captchaId)
 
     if !captcha.Reload(captchaId) {
         ctx.SendStatus(404)
@@ -48,17 +46,20 @@ func (this *Auth) Captcha(ctx *fiber.Ctx) error {
 }
 
 // 登录
-func (this *Auth) Login(ctx *fiber.Ctx) error {
+func (this *Auth) Login(ctx fiber.Ctx) error {
     userid := session.Get(ctx, "userid")
     if userid != nil {
-        return ctx.Redirect(url.AdminUrl(""))
+        return ctx.Redirect().To(url.AdminUrl(""))
     }
 
-    return ctx.Render(this.Theme("auth/login"), nil)
+    data := fiber.Map{}
+    data["csrf_token"] = csrf.TokenFromContext(ctx)
+
+    return ctx.Render(this.Theme("auth/login"), data)
 }
 
 // 验证登录
-func (this *Auth) LoginCheck(ctx *fiber.Ctx) error {
+func (this *Auth) LoginCheck(ctx fiber.Ctx) error {
     username := cast.ToString(ctx.FormValue("username"))
     password := cast.ToString(ctx.FormValue("password"))
     captchaData := cast.ToString(ctx.FormValue("captcha"))
@@ -114,9 +115,7 @@ func (this *Auth) LoginCheck(ctx *fiber.Ctx) error {
     }
 
     // 存储登录信息
-    if err := session.Set(ctx, "userid", user.Id); err != nil {
-        return http.Error(ctx, "登录失败")
-    }
+    session.Set(ctx, "userid", user.Id)
 
     if rememberme == "1" {
         // 保存 cookie 登录
@@ -127,7 +126,7 @@ func (this *Auth) LoginCheck(ctx *fiber.Ctx) error {
 }
 
 // 退出
-func (this *Auth) Logout(ctx *fiber.Ctx) error {
+func (this *Auth) Logout(ctx fiber.Ctx) error {
     // 未登录
     userid := session.Get(ctx, "userid")
     if userid == nil {
@@ -135,12 +134,10 @@ func (this *Auth) Logout(ctx *fiber.Ctx) error {
     }
 
     // 删除登录信息
-    if err := session.Delete(ctx, "userid"); err != nil {
-        return response.AdminErrorRender(ctx, "退出登录失败")
-    }
+    session.Delete(ctx, "userid")
 
     // 删除 cookie 信息
     appAuth.DeleteCookie(ctx)
 
-    return ctx.Redirect(url.AdminUrl("login"))
+    return ctx.Redirect().To(url.AdminUrl("login"))
 }

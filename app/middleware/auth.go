@@ -2,7 +2,7 @@ package middleware
 
 import (
     "github.com/spf13/cast"
-    "github.com/gofiber/fiber/v2"
+    "github.com/gofiber/fiber/v3"
 
     "github.com/deatil/doak-cms/pkg/db"
     "github.com/deatil/doak-cms/pkg/config"
@@ -16,7 +16,7 @@ import (
 
 // 登录检测
 func NewAuth() fiber.Handler {
-    return func(ctx *fiber.Ctx) error {
+    return func(ctx fiber.Ctx) error {
         userid := session.Get(ctx, "userid")
         if userid == nil {
             cookieKey := config.Section("cookie").Key("key").MustString("doak")

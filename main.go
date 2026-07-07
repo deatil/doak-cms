@@ -1,9 +1,9 @@
 package main
 
 import (
-    "github.com/gofiber/fiber/v2"
-    "github.com/gofiber/template/jet"
-    "github.com/smallnest/rpcx/server"
+    "github.com/gofiber/fiber/v3"
+    "github.com/gofiber/template/jet/v3"
+    // "github.com/smallnest/rpcx/server"
 
     "github.com/deatil/doak-cms/app/view"
     "github.com/deatil/doak-cms/app/router"
@@ -24,9 +24,11 @@ func main() {
     )
 
     // rpc 部分
+    /*
     go bootstrap.RpcServer(func(s *server.Server) {
         router.Rpc(s)
     })
+    */
 
     // 阻塞退出
     select {}
