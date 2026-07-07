@@ -22,6 +22,10 @@ func SetViewFuncs(engine *jet.Engine) {
     engine.AddFunc("adminUrl", url.AdminUrl)
     engine.AddFunc("avatarUrl", url.AvatarUrl)
 
+    engine.AddFunc("cms_route", url.CmsRoute)
+    engine.AddFunc("admin_route", url.AdminRoute)
+    engine.AddFunc("route", url.Route)
+
     // 静态文件及附件
     engine.AddFunc("assets", url.Assets)
     engine.AddFunc("adminAssets", url.AdminAssets)

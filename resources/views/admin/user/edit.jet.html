@@ -118,6 +118,8 @@
                         </div>
                     </div>
                     
+                    <input type="hidden" id="doakcsrf" name="_doakcsrf" value="{{ csrf_token }}" />
+
                     <button type="button" 
                         class="btn btn-primary js-save-button">确认修改</button>
                 </form>
@@ -148,6 +150,7 @@
         var password = $("[name=password]").val();
         var sign = $("[name=sign]").val();
         var status = $("[name=status]:checked").val();
+        var doakcsrf = $("#doakcsrf").val();
 
         var url = '{{ adminUrl("user/"+id+"/edit") }}';
         $.post(url, {
@@ -156,6 +159,7 @@
             password: password,
             sign: sign,
             status: status,
+            "_doakcsrf": doakcsrf,
         }, function(data) {
             if (data.code == 0) {
                 layer.msg("编辑成功");

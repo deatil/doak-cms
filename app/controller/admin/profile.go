@@ -3,6 +3,7 @@ package admin
 import (
     "github.com/spf13/cast"
     "github.com/gofiber/fiber/v3"
+    "github.com/gofiber/fiber/v3/middleware/csrf"
 
     "github.com/deatil/doak-cms/pkg/db"
     "github.com/deatil/doak-cms/pkg/auth"
@@ -25,7 +26,11 @@ type Profile struct{
 
 // 页面
 func (this *Profile) Index(ctx fiber.Ctx) error {
-    return this.View(ctx, "profile/index", fiber.Map{})
+    csrf_token := csrf.TokenFromContext(ctx)
+
+    return this.View(ctx, "profile/index", fiber.Map{
+        "csrf_token": csrf_token, 
+    })
 }
 
 // 保存
@@ -77,7 +82,11 @@ func (this *Profile) Save(ctx fiber.Ctx) error {
 
 // 密码
 func (this *Profile) Password(ctx fiber.Ctx) error {
-    return this.View(ctx, "profile/password", fiber.Map{})
+    csrf_token := csrf.TokenFromContext(ctx)
+
+    return this.View(ctx, "profile/password", fiber.Map{
+        "csrf_token": csrf_token, 
+    })
 }
 
 // 保存密码

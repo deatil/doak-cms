@@ -22,6 +22,8 @@ import (
     "github.com/deatil/doak-cms/pkg/config"
     "github.com/deatil/doak-cms/pkg/session"
     cms_utils "github.com/deatil/doak-cms/pkg/utils"
+
+    "github.com/deatil/doak-cms/app/state"
 )
 
 // 检测运行时目录
@@ -109,6 +111,9 @@ func HttpServer(jetFunc func(*jet.Engine), appFunc func(*fiber.App)) {
              return nil
         },
     })
+    
+    // 设置全局变量
+    state.App = app
 
     // 中间件
     if debug {

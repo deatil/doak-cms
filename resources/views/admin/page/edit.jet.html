@@ -156,7 +156,9 @@
                             单页是否开启或者关闭
                         </div>
                     </div>
-                    
+
+                    <input type="hidden" id="doakcsrf" name="_doakcsrf" value="{{ csrf_token }}" />
+
                     <button type="button" 
                         class="btn btn-primary js-save-button">确认修改</button>
                 </form>
@@ -189,6 +191,7 @@
         var description = $("[name=description]").val();
         var tpl = $("[name=tpl]").val();
         var status = $("[name=status]:checked").val();
+        var doakcsrf = $("#doakcsrf").val();
 
         var url = '{{ adminUrl("page/"+id+"/edit") }}';
         $.post(url, {
@@ -199,6 +202,7 @@
             description: description,
             tpl: tpl,
             status: status,
+            "_doakcsrf": doakcsrf,
         }, function(data) {
             if (data.code == 0) {
                 layer.msg("编辑成功");

@@ -192,7 +192,9 @@
                             选择文章详情对应的模板
                         </div>
                     </div>
-                    
+
+                    <input type="hidden" id="doakcsrf" name="_doakcsrf" value="{{ csrf_token }}" />
+
                     <button type="button" 
                         class="btn btn-primary js-save-button">确认</button>
                 </form>
@@ -224,6 +226,7 @@
         var tpl = $("[name=tpl]").val();
         var vtpl = $("[name=vtpl]").val();
         var status = $("[name=status]:checked").val();
+        var doakcsrf = $("#doakcsrf").val();
 
         var url = '{{ adminUrl("cate/"+id+"/edit") }}';
         $.post(url, {
@@ -235,6 +238,7 @@
             tpl: tpl,
             vtpl: vtpl,
             status: status,
+            "_doakcsrf": doakcsrf,
         }, function(data) {
             if (data.code == 0) {
                 layer.msg("编辑成功");

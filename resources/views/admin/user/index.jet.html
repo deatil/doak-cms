@@ -150,6 +150,8 @@
     </div>
 </div>
 
+<input type="hidden" id="doakcsrf" name="_doakcsrf" value="{{ csrf_token }}" />
+
 {{end}}
 
 {{block script_after()}}
@@ -170,7 +172,11 @@
             offset: 'c',
             btn: ['确定', '取消']
         }, function(index){
-            $.post(url, {}, function(data) {
+            var doakcsrf = $("#doakcsrf").val();
+
+            $.post(url, {
+                "_doakcsrf": doakcsrf,
+            }, function(data) {
                 if (data.code == 0) {
                     layer.msg(data.message, {
                         offset: 'c',

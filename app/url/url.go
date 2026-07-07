@@ -2,11 +2,14 @@ package url
 
 import (
     "fmt"
+    
+    "github.com/gofiber/fiber/v3"
 
     "github.com/deatil/doak-cms/pkg/db"
     "github.com/deatil/doak-cms/pkg/config"
 
     "github.com/deatil/doak-cms/app/model"
+    "github.com/deatil/doak-cms/app/state"
 )
 
 // 资源
@@ -38,6 +41,24 @@ func AdminUrl(path ...string) string {
     }
 
     return newPath
+}
+
+// 根据路由命名获取cms链接
+func CmsRoute(name string, params fiber.Map) string {
+    return Route("cms." + name)
+}
+
+// 根据路由命名获取后台链接
+func AdminRoute(name string, params fiber.Map) string {
+    return Route("admin." + name)
+}
+
+// 根据路由命名获取链接
+func Route(name string, params fiber.Map) string {
+    route := state.App.GetRoute(name)
+    url, _ := route.URL(params)
+    
+    return url
 }
 
 // =======================

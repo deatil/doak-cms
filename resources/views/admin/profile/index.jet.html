@@ -77,7 +77,9 @@
                             管理员账号的自定义签名
                         </div>
                     </div>
-                    
+
+                    <input type="hidden" id="doakcsrf" name="_doakcsrf" value="{{ csrf_token }}" />
+
                     <button type="button" 
                         class="btn btn-primary js-save-button">保存修改</button>
                 </form>
@@ -134,12 +136,14 @@
         var nickname = $("#inputNickname").val();
         var avatar = $("#avatarInput").val();
         var sign = $("#signTextarea").val();
+        var doakcsrf = $("#doakcsrf").val();
 
         var url = '{{ adminUrl("profile") }}';
         $.post(url, {
             nickname: nickname,
             avatar: avatar,
             sign: sign,
+            "_doakcsrf": doakcsrf,
         }, function(data) {
             if (data.code == 0) {
                 layer.msg("保存成功");

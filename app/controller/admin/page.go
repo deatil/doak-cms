@@ -5,6 +5,7 @@ import (
 
     "github.com/spf13/cast"
     "github.com/gofiber/fiber/v3"
+    "github.com/gofiber/fiber/v3/middleware/csrf"
 
     "github.com/deatil/doak-cms/pkg/db"
     "github.com/deatil/doak-cms/pkg/log"
@@ -77,6 +78,8 @@ func (this *Page) Index(ctx fiber.Ctx) error {
         Paginate(listRows, int(total), string(uri.Path()), parameters).
         PageHtml
 
+    csrf_token := csrf.TokenFromContext(ctx)
+
     return this.View(ctx, "page/index", fiber.Map{
         "keywords": keywords,
         "status": status,
@@ -85,12 +88,18 @@ func (this *Page) Index(ctx fiber.Ctx) error {
         "list": arts,
         "currentPage": currentPage,
         "pageHtml": pageHtml,
+
+        "csrf_token": csrf_token, 
     })
 }
 
 // 添加
 func (this *Page) Add(ctx fiber.Ctx) error {
-    return this.View(ctx, "page/add", fiber.Map{})
+    csrf_token := csrf.TokenFromContext(ctx)
+
+    return this.View(ctx, "page/add", fiber.Map{
+        "csrf_token": csrf_token, 
+    })
 }
 
 // 添加保存
@@ -184,10 +193,13 @@ func (this *Page) Edit(ctx fiber.Ctx) error {
     // 模板列表
     tpls := this.ListTplFiles("page")
 
+    csrf_token := csrf.TokenFromContext(ctx)
+
     return this.View(ctx, "page/edit", fiber.Map{
         "id": id,
         "data": data,
         "tpls": tpls,
+        "csrf_token": csrf_token, 
     })
 }
 

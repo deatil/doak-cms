@@ -5,6 +5,7 @@ import (
 
     "github.com/spf13/cast"
     "github.com/gofiber/fiber/v3"
+    "github.com/gofiber/fiber/v3/middleware/csrf"
 
     "github.com/deatil/doak-cms/pkg/db"
     "github.com/deatil/doak-cms/pkg/page"
@@ -71,6 +72,8 @@ func (this *Attach) Index(ctx fiber.Ctx) error {
         Paginate(listRows, int(total), string(uri.Path()), parameters).
         PageHtml
 
+    csrf_token := csrf.TokenFromContext(ctx)
+
     return this.View(ctx, "attach/index", fiber.Map{
         "keywords": keywords,
         "status": status,
@@ -78,6 +81,7 @@ func (this *Attach) Index(ctx fiber.Ctx) error {
         "list": cates,
         "currentPage": currentPage,
         "pageHtml": pageHtml,
+        "csrf_token": csrf_token, 
     })
 }
 

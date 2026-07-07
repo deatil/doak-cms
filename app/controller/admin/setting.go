@@ -3,6 +3,7 @@ package admin
 import (
     "github.com/spf13/cast"
     "github.com/gofiber/fiber/v3"
+    "github.com/gofiber/fiber/v3/middleware/csrf"
 
     "github.com/deatil/doak-cms/pkg/db"
     "github.com/deatil/doak-cms/pkg/http"
@@ -34,8 +35,11 @@ func (this *Setting) Index(ctx fiber.Ctx) error {
         }
     }
 
+    csrf_token := csrf.TokenFromContext(ctx)
+
     return this.View(ctx, "setting/index", fiber.Map{
         "settings": settings,
+        "csrf_token": csrf_token, 
     })
 }
 
