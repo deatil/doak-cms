@@ -26,18 +26,18 @@
             </a>
             
             <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                <a href='{{ adminUrl("profile") }}' class="dropdown-item">
+                <a href='{{ admin_route("profile.index", map()) }}' class="dropdown-item">
                     <i class="fa fa-user me-1"></i>
                     我的信息
                 </a>
-                <a href='{{ adminUrl("profile/password") }}' class="dropdown-item">
+                <a href='{{ admin_route("profile.password", map()) }}' class="dropdown-item">
                     <i class="fa fa-star me-0"></i>
                     更改密码
                 </a>
 
                 <a href="javascript:;" 
                     class="dropdown-item js-logout-btn"
-                    data-url='{{ adminUrl("logout") }}'
+                    data-url='{{ admin_route("profile.logout", map()) }}'
                 >
                     <i class="fa fa-sign-out-alt me-1"></i>
                     退出

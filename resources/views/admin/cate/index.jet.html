@@ -73,7 +73,7 @@
             <div class="bg-light rounded h-100 p-4">
                 <h6 class="mb-4">
                     分类管理
-                    <a href='{{ adminUrl("cate/add") }}' class="ms-1" title="添加分类">
+                    <a href='{{ admin_route("cate.add", map()) }}' class="ms-1" title="添加分类">
                         <i class="fa fa-plus-circle"></i>
                     </a>
                 </h6>
@@ -115,7 +115,7 @@
                                     </td>
                                     <td width="155" class="text-center">
                                         <a class="btn btn-primary btn-sm" 
-                                            href='{{ adminUrl("cate/"+value.Id+"/edit") }}' 
+                                            href='{{ admin_route("cate.edit", map("id", value.Id)) }}' 
                                         >
                                             <i class="fa fa-edit"></i>
                                             编辑
@@ -123,7 +123,7 @@
                                         
                                         <a href="javascript:;" 
                                             class="btn btn-danger btn-sm js-delete-btn"
-                                            data-url='{{ adminUrl("cate/"+value.Id+"/delete") }}'
+                                            data-url='{{ admin_route("cate.delete", map("id", value.Id)) }}'
                                         >
                                             <i class="fa fa-times"></i>
                                             删除

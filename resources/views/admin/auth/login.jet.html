@@ -47,9 +47,9 @@
                 </div>
                 
                 <div class="form-floating mb-4 login-captcha">
-                    <img src='{{ adminUrl("captcha") }}'
+                    <img src='{{ admin_route("captcha", map()) }}'
                         class="js-captcha-refresh"
-                        data-src='{{ adminUrl("captcha") }}'
+                        data-src='{{ admin_route("captcha", map()) }}'
                         alt="验证码" 
                         title="刷新验证码">
                 </div>
@@ -112,7 +112,7 @@
         var rememberme = $("#rememberme").is(":checked") ? 1 : 0;
         var doakcsrf = $("#doakcsrf").val();
 
-        var url = '{{ adminUrl("login") }}';
+        var url = '{{ admin_route("login-check", map()) }}';
         $.post(url, {
             username: username,
             password: password,
@@ -124,7 +124,7 @@
                 layer.msg("登录成功");
                 
                 setTimeout(function() {
-                    window.location.href = '{{ adminUrl("") }}';
+                    window.location.href = '{{ admin_route("index", map()) }}';
                 }, 1500);
             } else {
                 layer.msg(data.message);

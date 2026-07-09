@@ -106,7 +106,7 @@
         fileTypeExts: '*.png;*.jpg;*.JPG;*.bmp;*.gif',// 不限制上传文件请修改成'*.*'
         multi: true,
         fileSizeLimit: 1*1024*1024, // 大小限制
-        uploader : '{{ adminUrl("upload/image") }}', // 文件上传目标地址
+        uploader : '{{ admin_route("upload.image", map()) }}', // 文件上传目标地址
         buttonText : '选择文件',
         fileObjName : 'file',
         btnClass: 'btn btn-primary btn-sm',
@@ -138,7 +138,7 @@
         var sign = $("#signTextarea").val();
         var doakcsrf = $("#doakcsrf").val();
 
-        var url = '{{ adminUrl("profile") }}';
+        var url = '{{ admin_route("profile.save", map()) }}';
         $.post(url, {
             nickname: nickname,
             avatar: avatar,

@@ -67,7 +67,7 @@
     <div class="bg-light text-center rounded p-4">
         <div class="d-flex align-items-center justify-content-between mb-4">
             <h6 class="mb-0">最新发布的文章</h6>
-            <a href='{{ adminUrl("art") }}'>查看全部</a>
+            <a href='{{ admin_route("art.index", map()) }}'>查看全部</a>
         </div>
         
         <div class="table-responsive">
@@ -89,7 +89,7 @@
                             <td width="165">{{ createTime(value.AddTime).DateTimeString() }}</td>
                             <td width="95" class="text-center">
                                 <a class="btn btn-sm btn-primary" 
-                                    href='{{ adminUrl("art/"+value.Id+"/edit") }}'
+                                    href='{{ admin_route("art.edit", map("id", value.Id)) }}'
                                 >
                                     <i class="fa fa-edit"></i>
                                     编辑

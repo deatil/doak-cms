@@ -191,7 +191,7 @@
         var website_status = $(".website-status:checked").val();
         var doakcsrf = $("#doakcsrf").val();
 
-        var url = '{{ adminUrl("setting") }}';
+        var url = '{{ admin_route("setting-save", map()) }}';
         $.post(url, {
             website_name: website_name,
             website_keywords: website_keywords,

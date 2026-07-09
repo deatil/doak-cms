@@ -17,7 +17,7 @@
                 <h6 class="mb-4">
                     编辑单页
                     
-                    <a href='{{ adminUrl("page") }}' class="ms-1" title="返回列表">
+                    <a href='{{ admin_route("page.index", map()) }}' class="ms-1" title="返回列表">
                         <i class="fa fa-arrow-circle-left"></i>
                     </a>
                 </h6>
@@ -193,7 +193,7 @@
         var status = $("[name=status]:checked").val();
         var doakcsrf = $("#doakcsrf").val();
 
-        var url = '{{ adminUrl("page/"+id+"/edit") }}';
+        var url = '{{ admin_route("page.edit-save", map("id", id)) }}';
         $.post(url, {
             slug: slug,
             title: title,
@@ -237,7 +237,7 @@
         placeholder: '单页内容',
         MENU_CONF: {
           uploadImage: {
-            server: '{{ adminUrl("upload/image") }}', // 上传图片地址
+            server: '{{ admin_route("upload.image", map()) }}', // 上传图片地址
             timeout: 15 * 1000, // 5s
             fieldName: 'file',
             // meta: { token: 'xxx', a: 100 },

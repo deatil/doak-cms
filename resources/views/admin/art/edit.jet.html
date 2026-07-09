@@ -20,7 +20,7 @@
                 <h6 class="mb-4">
                     编辑文章
 
-                    <a href='{{ adminUrl("art") }}' class="ms-1" title="返回列表">
+                    <a href='{{ admin_route("art.index", map()) }}' class="ms-1" title="返回列表">
                         <i class="fa fa-arrow-circle-left"></i>
                     </a>
                 </h6>
@@ -394,7 +394,7 @@
         var status = $("[name=status]:checked").val();
         var doakcsrf = $("#doakcsrf").val();
 
-        var url = '{{ adminUrl("art/" + id + "/edit") }}';
+        var url = '{{ admin_route("art.edit-save", map("id", id)) }}';
         $.post(url, {
             cate_id: cate_id,
             title: title,
@@ -437,7 +437,7 @@
         fileTypeExts: '*.png;*.jpg;*.JPG;*.bmp;*.gif',// 不限制上传文件请修改成'*.*'
         multi: true,
         fileSizeLimit: 5*1024*1024, // 大小限制
-        uploader : '{{ adminUrl("upload/image") }}', // 文件上传目标地址
+        uploader : '{{ admin_route("upload.image", map())  }}', // 文件上传目标地址
         buttonText : '选择文件',
         fileObjName : 'file',
         btnClass: 'btn btn-primary btn-sm',
@@ -500,7 +500,7 @@
         placeholder: '文章内容',
         MENU_CONF: {
           uploadImage: {
-            server: '{{ adminUrl("upload/image") }}', // 上传图片地址
+            server: '{{ admin_route("upload.image", map()) }}', // 上传图片地址
             timeout: 15 * 1000, // 5s
             fieldName: 'file',
             // meta: { token: 'xxx', a: 100 },

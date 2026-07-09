@@ -17,7 +17,7 @@
                 <h6 class="mb-4">
                     添加文章
                     
-                    <a href='{{ adminUrl("art") }}' class="ms-1" title="返回列表">
+                    <a href='{{ admin_route("art.index", map()) }}' class="ms-1" title="返回列表">
                         <i class="fa fa-arrow-circle-left"></i>
                     </a>
                 </h6>
@@ -131,7 +131,7 @@
         var status = $("[name=status]:checked").val();
         var doakcsrf = $("#doakcsrf").val();
 
-        var url = '{{ adminUrl("art/add") }}';
+        var url = '{{ admin_route("art.add", map()) }}';
         $.post(url, {
             cate_id: cate_id,
             title: title,

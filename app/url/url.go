@@ -44,19 +44,19 @@ func AdminUrl(path ...string) string {
 }
 
 // 根据路由命名获取cms链接
-func CmsRoute(name string, params fiber.Map) string {
-    return Route("cms." + name)
+func CmsRoute(name string, params map[string]any) string {
+    return Route("cms." + name, params)
 }
 
 // 根据路由命名获取后台链接
-func AdminRoute(name string, params fiber.Map) string {
-    return Route("admin." + name)
+func AdminRoute(name string, params map[string]any) string {
+    return Route("admin." + name, params)
 }
 
 // 根据路由命名获取链接
-func Route(name string, params fiber.Map) string {
+func Route(name string, params map[string]any) string {
     route := state.App.GetRoute(name)
-    url, _ := route.URL(params)
+    url, _ := route.URL(fiber.Map(params))
     
     return url
 }

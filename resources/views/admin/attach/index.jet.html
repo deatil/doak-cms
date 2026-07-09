@@ -128,7 +128,7 @@
                                     <td width="155" class="text-center">
                                         <a class="btn btn-primary btn-sm js-download-btn" 
                                             href="javascript:;" 
-                                            data-url='{{ adminUrl("attach/download/"+value.Id) }}'
+                                            data-url='{{ admin_route("attach.download", map("id", value.Id)) }}'
                                         >
                                             <i class="fa fa-download"></i>
                                             下载
@@ -136,7 +136,7 @@
                                         
                                         <a href="javascript:;" 
                                             class="btn btn-danger btn-sm js-delete-btn"
-                                            data-url='{{ adminUrl("attach/delete/"+value.Id) }}'
+                                            data-url='{{ admin_route("attach.delete", map("id", value.Id)) }}'
                                         >
                                             <i class="fa fa-times"></i>
                                             删除
