@@ -17,7 +17,7 @@
                 <h6 class="mb-4">
                     编辑标签
                     
-                    <a href='{{ adminUrl("tag") }}' class="ms-1" title="返回列表">
+                    <a href='{{ admin_route("tag.index", map()) }}' class="ms-1" title="返回列表">
                         <i class="fa fa-arrow-circle-left"></i>
                     </a>
                 </h6>
@@ -137,7 +137,7 @@
         var status = $("[name=status]:checked").val();
         var doakcsrf = $("#doakcsrf").val();
 
-        var url = '{{ adminUrl("tag/"+id+"/edit") }}';
+        var url = '{{ admin_route("tag.edit-save", map("id", id)) }}';
         $.post(url, {
             pid: pid,
             name: name,

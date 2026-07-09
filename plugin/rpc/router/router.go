@@ -3,7 +3,7 @@ package router
 import (
     "github.com/smallnest/rpcx/server"
 
-    "github.com/deatil/doak-cms/app/service"
+    "github.com/deatil/doak-cms/plugin/rpc/service"
 )
 
 // Rpc 注册

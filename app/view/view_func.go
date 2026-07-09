@@ -19,7 +19,6 @@ func SetViewFuncs(engine *jet.Engine) {
     engine.AddFunc("formatSize", utils.FormatSize)
     engine.AddFunc("formatViews", utils.FormatViews)
 
-    engine.AddFunc("adminUrl", url.AdminUrl)
     engine.AddFunc("avatarUrl", url.AvatarUrl)
 
     engine.AddFunc("cms_route", url.CmsRoute)

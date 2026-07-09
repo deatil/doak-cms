@@ -23,7 +23,7 @@ func NewAuth() fiber.Handler {
 
             userid = cookie.Get(ctx, cookieKey)
             if userid == "" {
-                return response.AdminErrorRender(ctx, "请先登录", url.AdminUrl("login"))
+                return response.AdminErrorRender(ctx, "请先登录", url.AdminRoute("login", fiber.Map{}))
             }
         }
 

@@ -73,7 +73,7 @@
             <div class="bg-light rounded h-100 p-4">
                 <h6 class="mb-4">
                     账号管理
-                    <a href='{{ adminUrl("user/add") }}' class="ms-1" title="添加账号">
+                    <a href='{{ admin_route("user.add", map()) }}' class="ms-1" title="添加账号">
                         <i class="fa fa-plus-circle"></i>
                     </a>
                 </h6>
@@ -111,7 +111,7 @@
                                     </td>
                                     <td width="155" class="text-center">
                                         <a class="btn btn-primary btn-sm" 
-                                            href='{{ adminUrl("user/"+value.Id+"/edit") }}' 
+                                            href='{{ admin_route("user.edit", map("id", value.Id)) }}' 
                                         >
                                             <i class="fa fa-edit"></i>
                                             编辑
@@ -119,7 +119,7 @@
                                         
                                         <a href="javascript:;" 
                                             class="btn btn-danger btn-sm js-delete-btn"
-                                            data-url='{{ adminUrl("user/"+value.Id+"/delete") }}'
+                                            data-url='{{ admin_route("user.delete", map("id", value.Id)) }}'
                                         >
                                             <i class="fa fa-times"></i>
                                             删除

@@ -49,7 +49,7 @@ func (this *Auth) Captcha(ctx fiber.Ctx) error {
 func (this *Auth) Login(ctx fiber.Ctx) error {
     userid := session.Get(ctx, "userid")
     if userid != nil {
-        return ctx.Redirect().To(url.AdminUrl(""))
+        return ctx.Redirect().To(url.AdminRoute("index", fiber.Map{}))
     }
 
     data := fiber.Map{}
@@ -139,5 +139,5 @@ func (this *Auth) Logout(ctx fiber.Ctx) error {
     // 删除 cookie 信息
     appAuth.DeleteCookie(ctx)
 
-    return ctx.Redirect().To(url.AdminUrl("login"))
+    return ctx.Redirect().To(url.AdminRoute("login", fiber.Map{}))
 }

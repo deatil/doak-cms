@@ -74,7 +74,7 @@
                 <h6 class="mb-4">
                     标签管理
                     
-                    <a href='{{ adminUrl("tag/add") }}'
+                    <a href='{{ admin_route("tag.add", map()) }}'
                         class="ms-1" 
                         data-bs-toggle="tooltip" 
                         data-bs-placement="top"
@@ -119,7 +119,7 @@
                                     </td>
                                     <td width="155" class="text-center">
                                         <a class="btn btn-primary btn-sm" 
-                                            href='{{ adminUrl("tag/"+value.Id+"/edit") }}' 
+                                            href='{{ admin_route("tag.edit", map("id", value.Id)) }}' 
                                         >
                                             <i class="fa fa-edit"></i>
                                             编辑
@@ -127,7 +127,7 @@
                                         
                                         <a href="javascript:;" 
                                             class="btn btn-danger btn-sm js-delete-btn"
-                                            data-url='{{ adminUrl("tag/"+value.Id+"/delete") }}'
+                                            data-url='{{ admin_route("tag.delete", map("id", value.Id)) }}'
                                         >
                                             <i class="fa fa-times"></i>
                                             删除
