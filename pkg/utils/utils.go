@@ -4,6 +4,7 @@ import (
     "io"
     "os"
     "fmt"
+    "embed"
     "bufio"
     "errors"
     "net/http"
@@ -197,8 +198,8 @@ func ListDirs(directory string) []string {
     return ret
 }
 
-func ListEmbedDirs(f http.File) []string {
-    fs, err := f.Readdir(-1)
+func ListEmbedDirs(f embed.FS, path string) []string {
+    fs, err := f.ReadDir(path)
     if err != nil {
         return []string{}
     }

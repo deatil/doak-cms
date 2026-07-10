@@ -116,21 +116,15 @@ func (this *Base) ListDirTplThemes() []string {
     cfg := config.Section("view")
     views := cfg.Key("views").String()
 
-    themes := utils.ListDirs(views)
+    themes := utils.ListDirs(views + "/cms")
 
     return themes
 }
 
 // embed 模板列表
 func (this *Base) ListEmbedTplThemes() []string {
-    vfs := resources.ViewFileSystem()
-
-    f, err := vfs.Open("")
-    if err != nil {
-        return []string{}
-    }
-
-    themes := utils.ListEmbedDirs(f)
+    vfs := resources.Views
+    themes := utils.ListEmbedDirs(vfs, "views/cms")
 
     return themes
 }
