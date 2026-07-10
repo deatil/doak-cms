@@ -6,9 +6,9 @@ import (
     "github.com/spf13/cast"
 
     "github.com/deatil/doak-cms/pkg/db"
-    "github.com/deatil/doak-cms/pkg/rpc"
-
     "github.com/deatil/doak-cms/app/model"
+
+    "github.com/deatil/doak-cms/plugin/rpc/data"
 )
 
 /**
@@ -20,7 +20,7 @@ import (
 type Attach struct{}
 
 // 返回列表
-func (this *Attach) List(ctx context.Context, args *rpc.Args, reply *rpc.Reply) error {
+func (this *Attach) List(ctx context.Context, args *data.Args, reply *data.Reply) error {
     argsData := cast.ToStringMap(args.Body)
 
     // 每页数量
@@ -72,7 +72,7 @@ func (this *Attach) List(ctx context.Context, args *rpc.Args, reply *rpc.Reply) 
 }
 
 // 返回详情
-func (this *Attach) Info(ctx context.Context, args *rpc.Args, reply *rpc.Reply) error {
+func (this *Attach) Info(ctx context.Context, args *data.Args, reply *data.Reply) error {
     argsData := cast.ToStringMap(args.Body)
 
     // 条件
@@ -105,7 +105,7 @@ func (this *Attach) Info(ctx context.Context, args *rpc.Args, reply *rpc.Reply) 
 }
 
 // 删除
-func (this *Attach) Delete(ctx context.Context, args *rpc.Args, reply *rpc.Reply) error {
+func (this *Attach) Delete(ctx context.Context, args *data.Args, reply *data.Reply) error {
     argsData := cast.ToStringMap(args.Body)
 
     // 条件

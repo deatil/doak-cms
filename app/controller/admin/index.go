@@ -4,7 +4,6 @@ import (
     "github.com/gofiber/fiber/v3"
 
     "github.com/deatil/doak-cms/pkg/db"
-
     "github.com/deatil/doak-cms/app/model"
 )
 

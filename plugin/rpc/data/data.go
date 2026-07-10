@@ -1,4 +1,4 @@
-package rpc
+package data
 
 // 接收参数数据
 type Args struct {

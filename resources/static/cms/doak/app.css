@@ -330,6 +330,7 @@ header .header-container .header_sliding_sidebar_control {
 }
 .wrapper article .body img[src^="/storage"] {
   cursor: pointer;
+  max-width: 100%;
 }
 .wrapper article .body p {
   line-height: 30px;

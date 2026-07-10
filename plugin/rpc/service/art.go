@@ -6,9 +6,9 @@ import (
     "github.com/spf13/cast"
 
     "github.com/deatil/doak-cms/pkg/db"
-    "github.com/deatil/doak-cms/pkg/rpc"
-
     "github.com/deatil/doak-cms/app/model"
+
+    "github.com/deatil/doak-cms/plugin/rpc/data"
 )
 
 /**
@@ -20,7 +20,7 @@ import (
 type Art struct{}
 
 // 返回列表
-func (this *Art) List(ctx context.Context, args *rpc.Args, reply *rpc.Reply) error {
+func (this *Art) List(ctx context.Context, args *data.Args, reply *data.Reply) error {
     argsData := cast.ToStringMap(args.Body)
 
     // 每页数量
@@ -72,7 +72,7 @@ func (this *Art) List(ctx context.Context, args *rpc.Args, reply *rpc.Reply) err
 }
 
 // 返回详情
-func (this *Art) Info(ctx context.Context, args *rpc.Args, reply *rpc.Reply) error {
+func (this *Art) Info(ctx context.Context, args *data.Args, reply *data.Reply) error {
     argsData := cast.ToStringMap(args.Body)
 
     // 条件
@@ -105,7 +105,7 @@ func (this *Art) Info(ctx context.Context, args *rpc.Args, reply *rpc.Reply) err
 }
 
 // 添加
-func (this *Art) Add(ctx context.Context, args *rpc.Args, reply *rpc.Reply) error {
+func (this *Art) Add(ctx context.Context, args *data.Args, reply *data.Reply) error {
     argsData := cast.ToStringMap(args.Body)
 
     // 添加的数据
@@ -135,7 +135,7 @@ func (this *Art) Add(ctx context.Context, args *rpc.Args, reply *rpc.Reply) erro
 }
 
 // 编辑
-func (this *Art) Edit(ctx context.Context, args *rpc.Args, reply *rpc.Reply) error {
+func (this *Art) Edit(ctx context.Context, args *data.Args, reply *data.Reply) error {
     argsData := cast.ToStringMap(args.Body)
 
     // 条件
@@ -176,7 +176,7 @@ func (this *Art) Edit(ctx context.Context, args *rpc.Args, reply *rpc.Reply) err
 }
 
 // 删除
-func (this *Art) Delete(ctx context.Context, args *rpc.Args, reply *rpc.Reply) error {
+func (this *Art) Delete(ctx context.Context, args *data.Args, reply *data.Reply) error {
     argsData := cast.ToStringMap(args.Body)
 
     // 条件

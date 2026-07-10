@@ -99,3 +99,38 @@ func (this *Base) ListEmbedTplFiles(prefix string) []string {
 
     return newFiles
 }
+
+// =====
+
+// 模板列表
+func (this *Base) ListTplThemes() []string {
+    if config.IsUseEmbed {
+        return this.ListEmbedTplThemes()
+    } else {
+        return this.ListDirTplThemes()
+    }
+}
+
+// 模板列表
+func (this *Base) ListDirTplThemes() []string {
+    cfg := config.Section("view")
+    views := cfg.Key("views").String()
+
+    themes := utils.ListDirs(views)
+
+    return themes
+}
+
+// embed 模板列表
+func (this *Base) ListEmbedTplThemes() []string {
+    vfs := resources.ViewFileSystem()
+
+    f, err := vfs.Open("")
+    if err != nil {
+        return []string{}
+    }
+
+    themes := utils.ListEmbedDirs(f)
+
+    return themes
+}
