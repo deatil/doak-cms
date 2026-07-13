@@ -1,0 +1,209 @@
+package start
+
+import (
+    "time"
+    golog "log"
+
+    "github.com/gofiber/fiber/v3"
+    "github.com/gofiber/fiber/v3/extractors"
+    "github.com/gofiber/fiber/v3/middleware/csrf"
+    "github.com/gofiber/fiber/v3/middleware/logger"
+    "github.com/gofiber/fiber/v3/middleware/recover"
+    "github.com/gofiber/fiber/v3/middleware/encryptcookie"
+    "github.com/gofiber/utils/v2"
+    "github.com/gofiber/template/jet/v3"
+
+    "github.com/json-iterator/go"
+
+    "github.com/deatil/doak-cms/pkg/view"
+    "github.com/deatil/doak-cms/pkg/config"
+    "github.com/deatil/doak-cms/pkg/session"
+    cms_utils "github.com/deatil/doak-cms/pkg/utils"
+
+    "github.com/deatil/doak-cms/app/state"
+)
+
+// 检测运行时目录
+func checkRuntimeDir(dir string) {
+    if !cms_utils.FileExists(dir) {
+        cms_utils.MkDir(dir)
+    }
+}
+
+// http 服务
+func HttpServer(jetFunc func(*jet.Engine), appFunc func(*fiber.App)) {
+    cfg := config.Section("app")
+
+    debug := cfg.Key("debug").MustBool(false)
+    appName := cfg.Key("app-name").MustString("doak-cms")
+    runtimeLogDir := cfg.Key("runtime-log-dir").MustString("./runtime/log")
+
+    // 检测运行时目录
+    checkRuntimeDir(runtimeLogDir)
+
+    // 设置模板驱动
+    jetEngine := view.JetEngine("view")
+    jetEngine.Debug(debug)
+    jetFunc(jetEngine)
+
+    // json 处理
+    json := jsoniter.ConfigCompatibleWithStandardLibrary
+
+    // 启动 app
+    app := fiber.New(fiber.Config{
+        // app 名称
+        AppName: appName,
+        // 视图
+        Views: jetEngine,
+        // json 编码
+        JSONEncoder: json.Marshal,
+        // json 解析
+        JSONDecoder: json.Unmarshal,
+        // 默认的错误处理程序
+        // fiber.DefaultErrorHandler
+        // 覆盖默认的错误处理程序
+        ErrorHandler: func(ctx fiber.Ctx, err error) error {
+            // 状态代码默认为500
+            code := fiber.StatusInternalServerError
+
+            // 如果是fiber.*Error，则检索自定义状态代码。
+            if e, ok := err.(*fiber.Error); ok {
+                code = e.Code
+            }
+
+            // 默认错误信息
+            errorMsg := cfg.Key("error-msg").String()
+
+            // 调试的时候
+            if debug {
+                errorMsg = err.Error()
+            }
+
+            method := ctx.Method()
+
+            if method == "POST" || method == "DELETE" {
+                // 发送自定义错误 JSON
+                err = ctx.Status(code).JSON(fiber.Map{
+                    "code":    code,
+                    "message": errorMsg,
+                })
+            } else {
+                // 页面地址
+                errorHtml := cfg.Key("error-html").String()
+
+                // 发送自定义错误页面
+                err = ctx.Status(code).Render(errorHtml, fiber.Map{
+                    "code":    code,
+                    "message": errorMsg,
+                })
+            }
+
+            if err != nil {
+                // 失败处理
+               return ctx.Status(fiber.StatusInternalServerError).
+                        SendString("Internal Server Error")
+            }
+
+             // 从处理程序返回
+             return nil
+        },
+    })
+    
+    // 设置全局变量
+    state.App = app
+
+    // 中间件
+    if debug {
+        location := config.Section("time").Key("loc").MustString("")
+
+        // 日志
+        app.Use(logger.New(logger.Config{
+            Format:     "[${time}] ${status} - ${latency} ${method} ${path}\n",
+            TimeFormat: "2006-01-02 15:04:05",
+            TimeZone:   location,
+        }))
+    }
+
+    // 拦截 panic 报错
+    app.Use(recover.New(recover.Config{
+        EnableStackTrace: debug,
+    }))
+
+    // session
+    app.Use(session.Store("session"))
+
+    // Cookie 加密
+    // 生成密钥 encryptcookie.GenerateKey()
+    app.Use(encryptcookie.New(encryptcookie.Config{
+        Key: config.Section("cookie").Key("encrypt-key").MustString(""),
+    }))
+
+    // 跨站请求伪造 CSRF
+    app.Use(csrf.New(csrf.Config{
+        CookieName:        "doakcsrf_",
+        CookieSecure:      true,
+        CookieHTTPOnly:    true,  // false for SPAs
+        CookieSameSite:    "Lax",
+        CookieSessionOnly: true,
+        IdleTimeout:       1 * time.Hour,
+        Extractor:         extractors.Chain(
+            extractors.FromHeader("X-Csrf-Token"),
+            extractors.FromForm("_doakcsrf"),
+        ),
+        KeyGenerator:      utils.SecureToken,
+
+        ErrorHandler: func(ctx fiber.Ctx, err error) error {
+            // 状态代码默认为500
+            code := fiber.StatusInternalServerError
+
+            // 如果是fiber.*Error，则检索自定义状态代码。
+            if e, ok := err.(*fiber.Error); ok {
+                code = e.Code
+            }
+
+            // 默认错误信息
+            errorMsg := cfg.Key("error-msg").String()
+
+            // 调试的时候
+            if debug {
+                errorMsg = err.Error()
+            }
+
+            method := ctx.Method()
+
+            if method == "POST" || method == "DELETE" {
+                // 发送自定义错误 JSON
+                err = ctx.Status(code).JSON(fiber.Map{
+                    "code":    code,
+                    "message": errorMsg,
+                })
+            } else {
+                // 页面地址
+                errorHtml := cfg.Key("error-html").String()
+
+                // 发送自定义错误页面
+                err = ctx.Status(code).Render(errorHtml, fiber.Map{
+                    "code":    code,
+                    "message": errorMsg,
+                })
+            }
+
+            if err != nil {
+                // 失败处理
+                return ctx.Status(fiber.StatusInternalServerError).
+                        SendString("Internal Server Error")
+            }
+
+            // 从处理程序返回
+            return nil
+        },
+    }))
+
+    // 添加路由
+    appFunc(app)
+
+    // 运行端口
+    address := cfg.Key("address").String()
+    golog.Fatal(app.Listen(address))
+}
+

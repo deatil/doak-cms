@@ -1,0 +1,164 @@
+{{extends "/admin/common/base_content"}}
+
+{{block title()}}我的信息 - Doak CMS{{end}}
+
+{{block body()}}
+
+<style>
+.form-text {
+    color: #b7bbbf;
+}
+.avatar-thumbnail img {
+    width: 150px;
+}
+</style>
+
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-sm-12 col-xl-12">
+            <div class="bg-light rounded h-100 p-4">
+                <h6 class="mb-4">我的信息</h6>
+                
+                <form class="profile-form">
+                    <div class="mb-3">
+                        <label for="inputUsername" class="form-label">登录账号</label>
+                        <input type="text" 
+                            disabled=""
+                            value="{{ user.Username }}" 
+                            class="form-control" 
+                            id="inputUsername" 
+                            aria-describedby="usernameHelp">
+                        <div id="usernameHelp" class="form-text">
+                            管理员登录使用的账号，不能被修改
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="inputNickname" class="form-label">账号昵称</label>
+                        <input type="text" 
+                            name="nickname" 
+                            value="{{ user.Nickname }}" 
+                            class="form-control" 
+                            id="inputNickname" 
+                            aria-describedby="nicknameHelp">
+                        <div id="nicknameHelp" class="form-text">
+                            管理员账号的昵称
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">头像</label>
+                        <input type="text" 
+                            name="avatar" 
+                            value="{{ user.Avatar }}" 
+                            class="form-control d-none" 
+                            id="avatarInput">
+                        <div class="avatar-thumbnail">
+                            <div class="mb-2" id="avatar-preview">
+                                <img src="{{ avatarUrl(user.Avatar) }}" class="img-thumbnail" alt="头像">
+                            </div>
+                            
+                            <span id="btn-upload-avatar"></button>
+                        </div>
+                        <div class="form-text">
+                            管理员账号的头像
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="signTextarea" class="form-label">签名</label>
+                        <textarea class="form-control" 
+                            name="sign"
+                            placeholder="自定义签名" 
+                            id="signTextarea" 
+                            style="height: 150px;"
+                            aria-describedby="signHelp">{{ user.Sign }}</textarea>
+                        <div id="signHelp" class="form-text">
+                            管理员账号的自定义签名
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="doakcsrf" name="_doakcsrf" value="{{ csrf_token }}" />
+
+                    <button type="button" 
+                        class="btn btn-primary js-save-button">保存修改</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{{end}}
+
+{{block script_after()}}
+<link href='{{ adminAssets("libs/huploadify/Huploadify.css") }}' rel="stylesheet">
+<script src='{{ adminAssets("libs/huploadify/jquery.Huploadify.js") }}' type="3029259e35d7bc1c98cd40a8-text/javascript"></script>
+<script type="3029259e35d7bc1c98cd40a8-text/javascript">
+(function($) {
+    "use strict";
+    
+    $(".sidebar-doak-index").addClass("active");
+    
+    // 上传头像
+    $('#btn-upload-avatar').Huploadify({
+        auto: true,
+        fileTypeExts: '*.png;*.jpg;*.JPG;*.bmp;*.gif',// 不限制上传文件请修改成'*.*'
+        multi: true,
+        fileSizeLimit: 1*1024*1024, // 大小限制
+        uploader : '{{ admin_route("upload.image", map()) }}', // 文件上传目标地址
+        buttonText : '选择文件',
+        fileObjName : 'file',
+        btnClass: 'btn btn-primary btn-sm',
+        showUploadedPercent: false,
+        onUploadSuccess : function(file, data) {
+            data = $.parseJSON(data);
+            if (data.code == 0) {
+                var id = data.data.id;
+                var url = data.data.url;
+                var $img = $('#avatar-preview').find('img');
+                
+                $img.attr('src', url);
+                $img.attr('alt', file.name);
+                
+                $('#avatarInput').val(id);
+            } else {
+                layer.msg("上传失败：" + data.message);
+            }
+        }
+    });
+    
+    // 保存
+    $(".js-save-button").click(function(e) {
+        e.stopPropagation;
+        e.preventDefault;
+
+        var nickname = $("#inputNickname").val();
+        var avatar = $("#avatarInput").val();
+        var sign = $("#signTextarea").val();
+        var doakcsrf = $("#doakcsrf").val();
+
+        var url = '{{ admin_route("profile.save", map()) }}';
+        $.post(url, {
+            nickname: nickname,
+            avatar: avatar,
+            sign: sign,
+            "_doakcsrf": doakcsrf,
+        }, function(data) {
+            if (data.code == 0) {
+                layer.msg("保存成功");
+                
+                setTimeout(function() {
+                    window.location.reload();
+                }, 1500);
+            } else {
+                layer.msg(data.message);
+            }
+        }).fail(function (xhr, status, info) {
+            layer.msg("请求失败");
+        });
+    });
+
+})(jQuery);
+</script>
+{{end}}

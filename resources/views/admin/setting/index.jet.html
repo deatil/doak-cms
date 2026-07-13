@@ -1,0 +1,280 @@
+{{extends "/admin/common/base_content"}}
+
+{{block title()}}网站设置 - Doak CMS{{end}}
+
+{{block body()}}
+
+<style>
+.form-text {
+    color: #b7bbbf;
+}
+</style>
+
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-sm-12 col-xl-12">
+            <div class="bg-light rounded h-100 p-4">
+                <h6 class="mb-4">网站设置</h6>
+                
+                <form class="setting-form">
+                    <nav>
+                        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                            <button class="nav-link active" 
+                                id="nav-main-tab" 
+                                data-bs-toggle="tab" 
+                                data-bs-target="#nav-main" 
+                                type="button" role="tab" 
+                                aria-controls="nav-main" 
+                                aria-selected="true">网站设置</button>
+                            <button class="nav-link" 
+                                id="nav-theme-tab" 
+                                data-bs-toggle="tab" 
+                                data-bs-target="#nav-theme" 
+                                type="button" role="tab" 
+                                aria-controls="nav-theme" 
+                                aria-selected="false">主题设置</button>
+                        </div>
+                    </nav>
+
+                    <div class="tab-content pt-3" id="nav-tabContent">
+                        <div class="tab-pane fade active show" 
+                            id="nav-main" 
+                            role="tabpanel" 
+                            aria-labelledby="nav-main-tab"
+                        >
+
+                            <div class="mb-3">
+                                <label 
+                                    for="inputWebsiteName" 
+                                    class="form-label d-block"
+                                >
+                                    网站名称 
+                                    <span class="text-success pull-right">
+                                        [website_name]
+                                    </span>
+                                </label>
+                                <input type="text" 
+                                    name="website_name"
+                                    value="{{ settings.website_name }}" 
+                                    class="form-control" 
+                                    id="inputWebsiteName" 
+                                    aria-describedby="websiteNameHelp">
+                                <div id="websiteNameHelp" class="form-text">
+                                    网站的名称
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="inputWebsiteKeywords" 
+                                    class="form-label d-block"
+                                >
+                                    网站关键字
+                                    <span class="text-success pull-right">
+                                        [website_keywords]
+                                    </span>
+                                </label>
+                                <input type="text" 
+                                    name="website_keywords" 
+                                    value="{{ settings.website_keywords }}" 
+                                    class="form-control" 
+                                    id="inputWebsiteKeywords" 
+                                    aria-describedby="websiteKeywordsHelp">
+                                <div id="websiteKeywordsHelp" class="form-text">
+                                    网站的关键字
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="websiteDescriptionTextarea" 
+                                    class="form-label d-block"
+                                >
+                                    网站描述
+                                    <span class="text-success pull-right">
+                                        [website_description]
+                                    </span>
+                                </label>
+                                <textarea class="form-control" 
+                                    name="website_description"
+                                    placeholder="网站描述" 
+                                    id="websiteDescriptionTextarea" 
+                                    style="height: 150px;"
+                                    aria-describedby="websiteDescriptionHelp">{{ settings.website_description }}</textarea>
+                                <div id="websiteDescriptionHelp" class="form-text">
+                                    网站的描述
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="inputWebsiteCopyright" 
+                                    class="form-label d-block"
+                                >
+                                    版权
+                                    <span class="text-success pull-right">
+                                        [website_copyright]
+                                    </span>
+                                </label>
+                                <input type="text" 
+                                    name="website_copyright" 
+                                    value="{{ settings.website_copyright }}" 
+                                    class="form-control" 
+                                    id="inputWebsiteCopyright" 
+                                    aria-describedby="websiteCopyrightHelp">
+                                <div id="websiteCopyrightHelp" class="form-text">
+                                    网站的相关版权
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="inputWebsiteBeian" 
+                                    class="form-label d-block"
+                                >
+                                    网站备案
+                                    <span class="text-success pull-right">
+                                        [website_beian]
+                                    </span>
+                                </label>
+                                <input type="text" 
+                                    name="website_beian" 
+                                    value="{{ settings.website_beian }}" 
+                                    class="form-control" 
+                                    id="inputWebsiteBeian" 
+                                    aria-describedby="websiteBeianHelp">
+                                <div id="websiteBeianHelp" class="form-text">
+                                    网站的相关备案
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="form-label d-block">
+                                    网站状态
+                                    <span class="text-success pull-right">
+                                        [website_status]
+                                    </span>
+                                </label>
+                                <div class="form-control">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input website-status" 
+                                            type="radio" 
+                                            name="website_status" 
+                                            {{if settings.website_status == "1" }}
+                                            checked=""
+                                            {{end}}
+                                            id="inlineRadioStatus1" 
+                                            value="1">
+                                        <label class="form-check-label" 
+                                            for="inlineRadioStatus1">开启</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input website-status" 
+                                            type="radio" 
+                                            name="website_status" 
+                                            {{if settings.website_status == "2" }}
+                                            checked=""
+                                            {{end}}
+                                            id="inlineRadioStatus2" 
+                                            value="2">
+                                        <label class="form-check-label" 
+                                            for="inlineRadioStatus2">关闭</label>
+                                    </div>
+                                </div>
+                                <div class="form-text">
+                                    网站是否开启或者关闭
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="tab-pane fade active show" 
+                            id="nav-theme" 
+                            role="tabpanel" 
+                            aria-labelledby="nav-theme-tab"
+                        >
+                            <div class="mb-3">
+                                <label for="website_themeSelect" 
+                                    class="form-label"
+                                >
+                                    网站主题
+                                    
+                                    <span class="text-success pull-right">
+                                        [website_theme]
+                                    </span>
+                                </label>
+                                <select class="form-select" 
+                                    name="website_theme"
+                                    id="website_themeSelect"
+                                    aria-label="website_themeHelp"
+                                >
+                                    {{ range index, value := themes }} 
+                                        <option value="{{ value }}" {{if settings.website_theme == value}}selected=""{{end}}>{{ value }}</option>
+                                    {{ end }}
+                                </select>
+                                <div id="tplHelp" class="form-text">
+                                    选择要使用的主题
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" id="doakcsrf" name="_doakcsrf" value="{{ csrf_token }}" />
+
+                    <button type="button" 
+                        class="btn btn-primary js-save-button">保存修改</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{{end}}
+
+{{block script_after()}}
+<script type="3029259e35d7bc1c98cd40a8-text/javascript">
+(function($) {
+    "use strict";
+    
+    $(".sidebar-system").addClass("active show");
+    $(".sidebar-system-menu").addClass("show");
+    $(".sidebar-system-setting").addClass("active");
+    
+    // 保存
+    $(".js-save-button").click(function(e) {
+        e.stopPropagation;
+        e.preventDefault;
+
+        var website_name = $("#inputWebsiteName").val();
+        var website_keywords = $("#inputWebsiteKeywords").val();
+        var website_description = $("#websiteDescriptionTextarea").val();
+        var website_copyright = $("#inputWebsiteCopyright").val();
+        var website_beian = $("#inputWebsiteBeian").val();
+        var website_status = $(".website-status:checked").val();
+        var website_theme = $("[name=website_theme]").val();
+        var doakcsrf = $("#doakcsrf").val();
+
+        var url = '{{ admin_route("setting-save", map()) }}';
+        $.post(url, {
+            website_name: website_name,
+            website_keywords: website_keywords,
+            website_description: website_description,
+            website_copyright: website_copyright,
+            website_beian: website_beian,
+            website_status: website_status,
+            website_theme: website_theme,
+            "_doakcsrf": doakcsrf,
+        }, function(data) {
+            if (data.code == 0) {
+                layer.msg("保存成功");
+                
+                setTimeout(function() {
+                    window.location.reload();
+                }, 1500);
+            } else {
+                layer.msg(data.message);
+            }
+        }).fail(function (xhr, status, info) {
+            layer.msg("请求失败");
+        });
+    });
+
+})(jQuery);
+</script>
+{{end}}

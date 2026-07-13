@@ -1,0 +1,124 @@
+{{extends "/admin/common/base_content"}}
+
+{{block body()}}控制台 - Doak CMS{{end}}
+
+{{block body()}}
+
+<style>
+.nodata {
+    text-align: center;
+    padding: 15px;
+    color: #c0c3c5;
+}
+.table tr {
+    vertical-align: middle;
+}
+.table thead tr {
+    background: #ebeff1;
+}
+</style>
+
+<div class="container-fluid pt-4 px-4">
+    <div class="row g-4">
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                <i class="fa fa-table fa-3x text-primary"></i>
+                <div class="ms-3">
+                    <p class="mb-2">文章总数</p>
+                    <h6 class="mb-0">{{ artTotal }}</h6>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                <i class="fa fa-th fa-3x text-primary"></i>
+                <div class="ms-3">
+                    <p class="mb-2">分类总数</p>
+                    <h6 class="mb-0">{{ cateTotal }}</h6>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                <i class="fa fa-tags fa-3x text-primary"></i>
+                <div class="ms-3">
+                    <p class="mb-2">标签总数</p>
+                    <h6 class="mb-0">{{ tagTotal }}</h6>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-sm-6 col-xl-3">
+            <div class="bg-light rounded d-flex align-items-center justify-content-between p-4">
+                <i class="fa fa-user fa-3x text-primary"></i>
+                <div class="ms-3">
+                    <p class="mb-2">账号总数</p>
+                    <h6 class="mb-0">{{ userTotal }}</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="container-fluid pt-4 px-4">
+    <div class="bg-light text-center rounded p-4">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+            <h6 class="mb-0">最新发布的文章</h6>
+            <a href='{{ admin_route("art.index", map()) }}'>查看全部</a>
+        </div>
+        
+        <div class="table-responsive">
+            <table class="table text-start align-middle table-bordered table-hover mb-0">
+                <thead>
+                    <tr class="text-dark">
+                        <th scope="col" class="text-center">#</th>
+                        <th scope="col">标题</th>
+                        <th scope="col">添加时间</th>
+                        <th scope="col" class="text-center">操作</th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    {{ range index, value := artList }} 
+                        <tr>
+                            <td width="50" class="text-center">{{ index+1 }}</td>
+                            <td>{{ value.Title }}</td>
+                            <td width="165">{{ createTime(value.AddTime).DateTimeString() }}</td>
+                            <td width="95" class="text-center">
+                                <a class="btn btn-sm btn-primary" 
+                                    href='{{ admin_route("art.edit", map("id", value.Id)) }}'
+                                >
+                                    <i class="fa fa-edit"></i>
+                                    编辑
+                                </a>
+                            </td>
+                        </tr>
+                    {{ else }} 
+                        <tr>
+                            <td colspan="3">
+                                <div class="nodata">
+                                    无数据
+                                </div>
+                            </td>
+                        </tr>
+                    {{ end }}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{{end}}
+
+{{block script_after()}}
+<script type="3029259e35d7bc1c98cd40a8-text/javascript">
+(function($) {
+    "use strict";
+    
+    $(".sidebar-doak-index").addClass("active");
+})(jQuery);
+</script>
+{{end}}

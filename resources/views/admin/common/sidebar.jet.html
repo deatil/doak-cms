@@ -1,0 +1,61 @@
+<div class="sidebar pe-4 pb-3">
+    <nav class="navbar bg-light navbar-light">
+        <a href="index1.html" class="navbar-brand mx-4 mb-3">
+            <h3 class="text-primary">DoakCMS</h3>
+        </a>
+        
+        <div class="navbar-nav w-100">
+            <a href='{{ admin_route("index", map()) }}' class="nav-item nav-link sidebar-doak-index">
+                <i class="fa fa-tachometer-alt me-2"></i>
+                控制台
+            </a>
+            
+            <a href='{{ admin_route("art.index", map()) }}' class="nav-item nav-link sidebar-art-index">
+                <i class="fa fa-table me-2"></i>
+                文章管理
+            </a>
+            
+            {{if isAdmin}}
+            <a href='{{ admin_route("cate.index", map()) }}' class="nav-item nav-link sidebar-cate-index">
+                <i class="fa fa-th me-2"></i>
+                分类管理
+            </a>
+            <a href='{{ admin_route("tag.index", map()) }}' class="nav-item nav-link sidebar-tag-index">
+                <i class="fa fa-tags me-2"></i>
+                标签管理
+            </a>
+            <a href='{{ admin_route("page.index", map()) }}' class="nav-item nav-link sidebar-page-index">
+                <i class="fa fa-pager me-2"></i>
+                单页管理
+            </a>
+            <a href='{{ admin_route("attach.index", map()) }}' class="nav-item nav-link sidebar-attach-index">
+                <i class="fa fa-file me-2"></i>
+                附件管理
+            </a>
+            
+            <div class="nav-item dropdown">
+                <a href="#" class="nav-link dropdown-toggle sidebar-system" 
+                    data-bs-toggle="dropdown" 
+                    aria-expanded="true"
+                >
+                    <i class="fa fa-cog me-2"></i>
+                    系统设置
+                </a>
+                <div class="dropdown-menu bg-transparent border-0 sidebar-system-menu" 
+                    data-bs-popper="none"
+                >
+                    <a href='{{ admin_route("user.index", map()) }}' class="dropdown-item sidebar-system-user">
+                        <i class="fa fa-user me-2"></i>
+                        账号管理
+                    </a>
+                    <a href='{{ admin_route("setting", map()) }}' class="dropdown-item sidebar-system-setting">
+                        <i class="fa fa-cog me-1"></i>
+                        网站设置
+                    </a>
+                </div>
+            </div>
+            {{end}}
+        
+        </div>
+    </nav>
+</div>
