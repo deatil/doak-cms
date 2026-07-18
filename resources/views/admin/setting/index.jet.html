@@ -183,14 +183,14 @@
                             </div>
                         </div>
 
-                        <div class="tab-pane fade active show" 
+                        <div class="tab-pane fade" 
                             id="nav-theme" 
                             role="tabpanel" 
                             aria-labelledby="nav-theme-tab"
                         >
                             <div class="mb-3">
                                 <label for="website_themeSelect" 
-                                    class="form-label"
+                                    class="form-label d-block"
                                 >
                                     网站主题
                                     
@@ -211,6 +211,91 @@
                                     选择要使用的主题
                                 </div>
                             </div>
+                            
+                            <div class="mb-3">
+                                <label for="website_cate_url" 
+                                    class="form-label d-block"
+                                >
+                                    分类链接
+                                    <span class="text-success pull-right">
+                                        [website_cate_url]
+                                    </span>
+                                </label>
+                                <input type="text" 
+                                    name="website_cate_url" 
+                                    value="{{ settings.website_cate_url }}" 
+                                    class="form-control" 
+                                    id="website_cate_url" 
+                                    aria-describedby="website_cate_url_help">
+                                <div id="website_cate_url_help" class="form-text">
+                                    网站的分类链接，默认为
+                                    <span class="badge bg-secondary">/c/:slug</span>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="website_view_url" 
+                                    class="form-label d-block"
+                                >
+                                    详情链接
+                                    <span class="text-success pull-right">
+                                        [website_view_url]
+                                    </span>
+                                </label>
+                                <input type="text" 
+                                    name="website_view_url" 
+                                    value="{{ settings.website_view_url }}" 
+                                    class="form-control" 
+                                    id="website_view_url" 
+                                    aria-describedby="website_view_url_help">
+                                <div id="website_view_url_help" class="form-text">
+                                    网站的详情链接，默认为
+                                    <span class="badge bg-secondary">/a/:id</span>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="website_tag_url" 
+                                    class="form-label d-block"
+                                >
+                                    标签链接
+                                    <span class="text-success pull-right">
+                                        [website_tag_url]
+                                    </span>
+                                </label>
+                                <input type="text" 
+                                    name="website_tag_url" 
+                                    value="{{ settings.website_tag_url }}" 
+                                    class="form-control" 
+                                    id="website_tag_url" 
+                                    aria-describedby="website_tag_url_help">
+                                <div id="website_tag_url_help" class="form-text">
+                                    网站的标签链接，默认为
+                                    <span class="badge bg-secondary">/tag/:tag</span>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="website_page_url" 
+                                    class="form-label d-block"
+                                >
+                                    单页链接
+                                    <span class="text-success pull-right">
+                                        [website_page_url]
+                                    </span>
+                                </label>
+                                <input type="text" 
+                                    name="website_page_url" 
+                                    value="{{ settings.website_page_url }}" 
+                                    class="form-control" 
+                                    id="website_page_url" 
+                                    aria-describedby="website_page_url_help">
+                                <div id="website_page_url_help" class="form-text">
+                                    网站的单页链接，默认为
+                                    <span class="badge bg-secondary">/p/:name</span>
+                                </div>
+                            </div>
+                            
                         </div>
                     </div>
 
@@ -247,7 +332,13 @@
         var website_copyright = $("#inputWebsiteCopyright").val();
         var website_beian = $("#inputWebsiteBeian").val();
         var website_status = $(".website-status:checked").val();
+        
         var website_theme = $("[name=website_theme]").val();
+        var website_cate_url = $("[name=website_cate_url]").val();
+        var website_view_url = $("[name=website_view_url]").val();
+        var website_tag_url = $("[name=website_tag_url]").val();
+        var website_page_url = $("[name=website_page_url]").val();
+        
         var doakcsrf = $("#doakcsrf").val();
 
         var url = '{{ admin_route("setting-save", map()) }}';
@@ -258,7 +349,13 @@
             website_copyright: website_copyright,
             website_beian: website_beian,
             website_status: website_status,
+            
             website_theme: website_theme,
+            website_cate_url: website_cate_url,
+            website_view_url: website_view_url,
+            website_tag_url: website_tag_url,
+            website_page_url: website_page_url,
+            
             "_doakcsrf": doakcsrf,
         }, function(data) {
             if (data.code == 0) {

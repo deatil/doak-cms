@@ -57,6 +57,10 @@ func (this *Setting) Save(ctx fiber.Ctx) error {
     beian := cast.ToString(ctx.FormValue("website_beian"))
 
     theme := cast.ToString(ctx.FormValue("website_theme"))
+    cateUrl := cast.ToString(ctx.FormValue("website_cate_url"))
+    viewUrl := cast.ToString(ctx.FormValue("website_view_url"))
+    tagUrl := cast.ToString(ctx.FormValue("website_tag_url"))
+    pageUrl := cast.ToString(ctx.FormValue("website_page_url"))
 
     // 验证
     errs := validate.Validate(
@@ -88,6 +92,10 @@ func (this *Setting) Save(ctx fiber.Ctx) error {
         "website_beian": beian,
 
         "website_theme": theme,
+        "website_cate_url": cateUrl,
+        "website_view_url": viewUrl,
+        "website_tag_url": tagUrl,
+        "website_page_url": pageUrl,
     }
 
     // 更新
