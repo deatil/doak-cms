@@ -3,10 +3,12 @@ package data
 import (
     "github.com/spf13/cast"
     jsoniter "github.com/json-iterator/go"
+    "github.com/gofiber/fiber/v3"
 
     "github.com/deatil/doak-cms/pkg/db"
     "github.com/deatil/doak-cms/pkg/redis"
 
+    "github.com/deatil/doak-cms/app/state"
     "github.com/deatil/doak-cms/app/model"
 )
 
@@ -196,4 +198,39 @@ func GetTagList(where string, orderby string, limit int) []model.Tag {
         Find(&list)
 
     return list
+}
+
+// =================
+
+func SetCmsRouter(routes map[string]string, fn func(app *fiber.App, routes map[string]string)) {
+    cateUrl := "/c/:slug"
+    if _, ok := routes["cate_url"]; ok {
+        routes["cate_url"] = cateUrl
+    }
+
+    viewUrl := "/a/:id"
+    if _, ok := routes["view_url"]; ok {
+        routes["view_url"] = viewUrl
+    }
+
+    tagUrl := "/tag/:tag"
+    if _, ok := routes["tag_url"]; ok {
+        routes["tag_url"] = tagUrl
+    }
+
+    pageUrl := "/p/:name"
+    if _, ok := routes["page_url"]; ok {
+        routes["page_url"] = pageUrl
+    }
+
+    app := state.App
+
+    app.RemoveRouteByName("cms.cate")
+    app.RemoveRouteByName("cms.view")
+    app.RemoveRouteByName("cms.tag")
+    app.RemoveRouteByName("cms.page")
+
+    fn(app, routes)
+
+    app.RebuildTree()
 }

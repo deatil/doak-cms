@@ -97,7 +97,7 @@ CREATE TABLE `cms_config` (
 #
 
 /*!40000 ALTER TABLE `cms_config` DISABLE KEYS */;
-INSERT INTO `cms_config` VALUES (1,'website_name','热门八卦王','网站名称'),(2,'website_keywords','热门八卦王','网站关键字'),(3,'website_description','热门八卦王','网站描述'),(4,'website_copyright','版权1','版权'),(5,'website_status','1','网站关闭状态'),(6,'website_beian','ICP备123456号-1','网站备案'),(7,'website_theme','doak','网站主题'),(8,'website_cate_url','/c/:slug','分类链接'),(9,'website_view_url','/a/:id','详情链接'),(10,'website_tag_url','/tag/:tag','标签链接'),(11,'website_page_url','/p/:name','单页链接');
+INSERT INTO `cms_config` VALUES (1,'website_name','热门八卦王','网站名称'),(2,'website_keywords','热门八卦王','网站关键字'),(3,'website_description','热门八卦王','网站描述'),(4,'website_copyright','版权1','版权'),(5,'website_status','1','网站关闭状态'),(6,'website_beian','ICP备123456号-1','网站备案'),(7,'website_theme','doak','网站主题'),(8,'website_cate_url','','分类链接'),(9,'website_view_url',NULL,'详情链接'),(10,'website_tag_url',NULL,'标签链接'),(11,'website_page_url',NULL,'单页链接');
 /*!40000 ALTER TABLE `cms_config` ENABLE KEYS */;
 
 #

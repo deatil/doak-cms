@@ -7,6 +7,7 @@ import (
     "github.com/deatil/doak-cms/pkg/config"
 
     "github.com/deatil/doak-cms/resources"
+    "github.com/deatil/doak-cms/app/data"
     "github.com/deatil/doak-cms/app/middleware"
     "github.com/deatil/doak-cms/app/controller/cms"
     "github.com/deatil/doak-cms/app/controller/admin"
@@ -50,17 +51,25 @@ func HttpCms(app *fiber.App) {
     indexController := new(cms.Index)
     app.Get("/", siteopenCheckMiddleware, indexController.Index).Name("cms.index")
 
-    cateController := new(cms.Cate)
-    app.Get("/c/:slug", siteopenCheckMiddleware, cateController.Index).Name("cms.cate")
-
-    viewController := new(cms.View)
-    app.Get("/a/:id", siteopenCheckMiddleware, viewController.Index).Name("cms.view")
-
-    tagController := new(cms.Tag)
-    app.Get("/tag/:tag", siteopenCheckMiddleware, tagController.Index).Name("cms.tag")
-
-    pageController := new(cms.Page)
-    app.Get("/p/:name", siteopenCheckMiddleware, pageController.Index).Name("cms.page")
+    settings := data.GetSettings()
+    data.SetCmsRouter(map[string]string{
+        "cate_url": settings["website_cate_url"],
+        "view_url": settings["website_view_url"],
+        "tag_url": settings["website_tag_url"],
+        "page_url": settings["website_page_url"],
+    }, func(app *fiber.App, routes map[string]string) {
+        cateController := new(cms.Cate)
+        app.Get(routes["cate_url"], siteopenCheckMiddleware, cateController.Index).Name("cms.cate")
+    
+        viewController := new(cms.View)
+        app.Get(routes["view_url"], siteopenCheckMiddleware, viewController.Index).Name("cms.view")
+    
+        tagController := new(cms.Tag)
+        app.Get(routes["tag_url"], siteopenCheckMiddleware, tagController.Index).Name("cms.tag")
+    
+        pageController := new(cms.Page)
+        app.Get(routes["page_url"], siteopenCheckMiddleware, pageController.Index).Name("cms.page")    
+    })
 
 }
 
