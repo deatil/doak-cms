@@ -3,6 +3,7 @@ package router
 import (
     "github.com/gofiber/fiber/v3"
     "github.com/gofiber/fiber/v3/middleware/static"
+    "github.com/deatil/go-events/events"
 
     "github.com/deatil/doak-cms/pkg/config"
 
@@ -51,26 +52,27 @@ func HttpCms(app *fiber.App) {
     indexController := new(cms.Index)
     app.Get("/", siteopenCheckMiddleware, indexController.Index).Name("cms.index")
 
-    settings := data.GetSettings()
-    data.SetCmsRouter(map[string]string{
-        "cate_url": settings["website_cate_url"],
-        "view_url": settings["website_view_url"],
-        "tag_url": settings["website_tag_url"],
-        "page_url": settings["website_page_url"],
-    }, func(app *fiber.App, routes map[string]string) {
-        cateController := new(cms.Cate)
-        app.Get(routes["cate_url"], siteopenCheckMiddleware, cateController.Index).Name("cms.cate")
-    
-        viewController := new(cms.View)
-        app.Get(routes["view_url"], siteopenCheckMiddleware, viewController.Index).Name("cms.view")
-    
-        tagController := new(cms.Tag)
-        app.Get(routes["tag_url"], siteopenCheckMiddleware, tagController.Index).Name("cms.tag")
-    
-        pageController := new(cms.Page)
-        app.Get(routes["page_url"], siteopenCheckMiddleware, pageController.Index).Name("cms.page")    
-    })
+    cateController := new(cms.Cate)
+    viewController := new(cms.View)
+    tagController := new(cms.Tag)
+    pageController := new(cms.Page)
 
+    events.AddAction("set_cms_router", func(settings map[string]string, isRefresh bool) {
+        data.SetCmsRouter(map[string]string{
+            "cate_url": settings["website_cate_url"],
+            "view_url": settings["website_view_url"],
+            "tag_url": settings["website_tag_url"],
+            "page_url": settings["website_page_url"],
+        }, func(app *fiber.App, routes map[string]string) {
+            app.Get(routes["cate_url"], siteopenCheckMiddleware, cateController.Index).Name("cms.cate")
+            app.Get(routes["view_url"], siteopenCheckMiddleware, viewController.Index).Name("cms.view")
+            app.Get(routes["tag_url"], siteopenCheckMiddleware, tagController.Index).Name("cms.tag")
+            app.Get(routes["page_url"], siteopenCheckMiddleware, pageController.Index).Name("cms.page")    
+        }, isRefresh)
+    }, events.DefaultSort)
+
+    settings := data.GetSettings()
+    events.DoAction("set_cms_router", settings, false)
 }
 
 // 管理员

@@ -4,6 +4,7 @@ import (
     "github.com/spf13/cast"
     "github.com/gofiber/fiber/v3"
     "github.com/gofiber/fiber/v3/middleware/csrf"
+    "github.com/deatil/go-events/events"
 
     "github.com/deatil/doak-cms/pkg/db"
     "github.com/deatil/doak-cms/pkg/http"
@@ -107,6 +108,13 @@ func (this *Setting) Save(ctx fiber.Ctx) error {
                 "value": v,
             })
     }
+
+    events.DoAction("set_cms_router", map[string]string{
+        "website_cate_url": cateUrl,
+        "website_view_url": viewUrl,
+        "website_tag_url": tagUrl,
+        "website_page_url": pageUrl,
+    }, true)
 
     // 清空缓存
     redis.Storage().Delete("settings")

@@ -202,35 +202,39 @@ func GetTagList(where string, orderby string, limit int) []model.Tag {
 
 // =================
 
-func SetCmsRouter(routes map[string]string, fn func(app *fiber.App, routes map[string]string)) {
+func SetCmsRouter(routes map[string]string, fn func(app *fiber.App, routes map[string]string), isRefresh bool) {
     cateUrl := "/c/:slug"
-    if _, ok := routes["cate_url"]; ok {
+    if _, ok := routes["cate_url"]; !ok {
         routes["cate_url"] = cateUrl
     }
 
     viewUrl := "/a/:id"
-    if _, ok := routes["view_url"]; ok {
+    if _, ok := routes["view_url"]; !ok {
         routes["view_url"] = viewUrl
     }
 
     tagUrl := "/tag/:tag"
-    if _, ok := routes["tag_url"]; ok {
+    if _, ok := routes["tag_url"]; !ok {
         routes["tag_url"] = tagUrl
     }
 
     pageUrl := "/p/:name"
-    if _, ok := routes["page_url"]; ok {
+    if _, ok := routes["page_url"]; !ok {
         routes["page_url"] = pageUrl
     }
 
     app := state.App
 
-    app.RemoveRouteByName("cms.cate")
-    app.RemoveRouteByName("cms.view")
-    app.RemoveRouteByName("cms.tag")
-    app.RemoveRouteByName("cms.page")
+    if isRefresh {
+        app.RemoveRouteByName("cms.cate")
+        app.RemoveRouteByName("cms.view")
+        app.RemoveRouteByName("cms.tag")
+        app.RemoveRouteByName("cms.page")    
+    }
 
     fn(app, routes)
 
-    app.RebuildTree()
+    if isRefresh {
+        app.RebuildTree()
+    }
 }
