@@ -109,12 +109,7 @@ func (this *Setting) Save(ctx fiber.Ctx) error {
             })
     }
 
-    events.DoAction("set_cms_router", map[string]string{
-        "website_cate_url": cateUrl,
-        "website_view_url": viewUrl,
-        "website_tag_url": tagUrl,
-        "website_page_url": pageUrl,
-    }, true)
+    events.DoAction("set_cms_router", data, true)
 
     // 清空缓存
     redis.Storage().Delete("settings")
